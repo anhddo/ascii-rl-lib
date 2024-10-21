@@ -23,10 +23,10 @@ let loop () =
         [| Py.Int.of_int @@ rand_action () |]
     in
     let _state, _reward, _is_done, _truncated, _ = Py.Tuple.to_tuple5 result in
-    if step mod 50 = 0 then
+    if step mod 100 = 0 then
       let _ = Py.Callable.to_function (Core.Option.value_exn reset_fn) [||] in
       loop' (step + 1)
-    else if step < 150 then loop' (step + 1)
+    else if step < 400 then loop' (step + 1)
     else ()
   in
   loop' 0
