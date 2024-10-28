@@ -12,9 +12,10 @@ Then we also create a few simulations ourselves
 - need the physics/logic of a working simulation
 - take input from any of the RL algorithms
 - and also respond and give feedback to the algorithm
+- possibly with a graphical interface (ascii or normal depends on how well it will work) 
 
-Glue Code for running an algorithm with a particular simulation, possibly with a graphical interface (either ascii or normal)
-- ascii or normal depends on how well it will work
+Glue Code for running an algorithm with a particular simulation
 - work through the step by step action and response
+
 
 
