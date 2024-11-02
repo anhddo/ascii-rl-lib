@@ -3,3 +3,9 @@
  (modules rl_lib) 
  (libraries core pyml)
 )
+
+(library
+ (name pendulum)
+ (modules pendulum)
+ (libraries core)
+ (preprocess (pps ppx_jane)))
