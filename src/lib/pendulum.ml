@@ -36,9 +36,16 @@ module Pendulum : simulation =
       [0; 0];;
 
     let reset (sim : t) : response = 
-      { observation = sim; reward = 0; terminated = false; truncated = false; info = "" }
+      let random_starting_angle = Random.float (2 * Float.pi) @@ - Float.pi 
+      in
+      let random_starting_angular_speed = Random.float 2 @@ - 1
+      in
+      { observation = [random_starting_angle; random_starting_angular_speed]; reward = 0; terminated = false; truncated = false; info = "Simulation Begun" };;
 
-    let step (sim : t) (act : action) : response = 
+    let step (sim : t) (act : action) : response =
+      failwith "todo";;
+
+    let render (sim : t) : char list = 
       failwith "todo";;
 end
 
