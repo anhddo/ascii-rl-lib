@@ -2,8 +2,10 @@
 [@@@ocaml.warning "-26"]
 [@@@ocaml.warning "-33"]
 
-(* if not (Py.is_initialized ()) then Py.initialize () else (); *)
-Py.initialize ~interpreter:"/Users/shenyang/opt/anaconda3/envs/pytorch/bin/python" () (* change it to your path to python*)
+let () = Py.initialize ()
+(* if not (Py.is_initialized ()) then Py.initialize (); *)
+(* Py.initialize ~interpreter:"/Users/shenyang/opt/anaconda3/envs/pytorch/bin/python" () *)
+ (* change it to your path to python*)
 let gym = Py.import "gymnasium"
 
 let env_render =
@@ -116,7 +118,7 @@ let loop env =
       (* report total reward *)
       Printf.printf "total reward: %f \n" reward_ep;
       loop' (step + 1) state 0.0)
-    else if step < 2000000 then loop' (step + 1) state reward_ep
+    else if step < 3000000 then loop' (step + 1) state reward_ep
     else q_table
   in
   loop' 0 (reset_fn env) 0.0
