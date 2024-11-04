@@ -3,7 +3,7 @@
 [@@@ocaml.warning "-33"]
 
 (* if not (Py.is_initialized ()) then Py.initialize () else (); *)
-let () = Py.initialize ()
+Py.initialize ~interpreter:"/Users/shenyang/opt/anaconda3/envs/pytorch/bin/python" () (* change it to your path to python*)
 let gym = Py.import "gymnasium"
 
 let env_render =
