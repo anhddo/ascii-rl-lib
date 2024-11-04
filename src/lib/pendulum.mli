@@ -4,7 +4,7 @@ module type simulation =
   	type t = float list (* Should store all the information to uniquely identify any possible simulation state *)
 
   	(* Can change based on what the simulation needs *)
-    type action = int
+    type action = float list 
     type response = { observation : float list; reward : float; terminated : bool; truncated : bool; info : string }
 
     (* Creates a new simulation *)
@@ -19,7 +19,6 @@ module type simulation =
     (* Take a simulation and render into a viewable format *)
     val render : t -> char list (* char list is temporary idea, can and may likely change *)
   end
-
 
 
 module Pendulum : simulation
