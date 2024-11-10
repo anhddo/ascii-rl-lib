@@ -1,5 +1,18 @@
 (library
- (name pendulum)
- (modules pendulum)
- (libraries core)
- (preprocess (pps ppx_jane)))
+ (name qlearning)
+ (modules qlearning) 
+ (libraries core pyml base_algorithm)
+)
+
+(library
+ (name base_algorithm)
+ (modules base_algorithm) 
+ (libraries core pyml)
+)
+
+
+(library
+ (name animation)
+ (modules animation) 
+ (libraries core unix)
+)
