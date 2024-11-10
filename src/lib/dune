@@ -1,18 +1,28 @@
 (library
  (name qlearning)
- (modules qlearning) 
- (libraries core pyml base_algorithm)
-)
+ (modules qlearning)
+ (libraries core pyml base_algorithm))
 
 (library
  (name base_algorithm)
- (modules base_algorithm) 
- (libraries core pyml)
-)
-
+ (modules base_algorithm)
+ (libraries core pyml))
 
 (library
  (name animation)
- (modules animation) 
- (libraries core unix)
-)
+ (modules animation)
+ (libraries core unix))
+
+(library
+ (name pendulum)
+ (modules pendulum)
+ (libraries core unix simulation))
+
+(library
+ (name gym_env)
+ (modules gym_env)
+ (libraries core pyml pendulum))
+(library
+ (name simulation)
+ (modules simulation)
+ (libraries core unix))
