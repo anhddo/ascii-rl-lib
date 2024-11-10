@@ -3,11 +3,11 @@
 module type simulation =
   sig
   	(* Simulation Type *)
-  	type t 
+  	type t = float list (* Should store all the information to uniquely identify any possible simulation state *)
 
   	(* Can change based on what the simulation needs *)
-    type action = int
-    type response = { observation : float list; reward : float; terminated : bool; truncated : bool; info : string }
+    type action = float list 
+    type response = { observation : t; reward : float; terminated : bool; truncated : bool; info : string }
 
     (* Creates a new simulation *)
     val create : unit -> t 
@@ -17,27 +17,37 @@ module type simulation =
 
     (* Applies the action to the environment, and returns the corresponding response *)
     val step : t -> action -> response
+
+    (* Take a simulation and render into a viewable format *)
+    val render : t -> char list (* char list is temporary idea, can and may likely change *)
   end
 
 module Pendulum : simulation = 
   struct 
-    type t = {location : float; ang_speed : float}
-    type action = int (* amount of torque to apply *)
+    type t = float list (* Length is 2 | [location, ang_speed ] *)
+    type action = float list (* Length is 1 | [amount of torque to apply between -2 and 2] *)
     
-    (* observation : [clockwise angle from top in radians, angular speed of bar in radians per step]*)
-    (* reward : to figure out; it is documented *)
-    (* terminated : if finished at top stably with speed 0 *)
+    (* observation : the new state of the simulation; the next step call should use this value *)
+    (* reward : maximum reward is 0, achieved when pendulum is perfectly balanced *)
+    (* terminated : idk, error handling? *)
     (* truncated : idk *)
     (* info : error handling, nothing for now *)
-    type response = { observation : float list; reward : float ; terminated : bool; truncated : bool; info : string }
+    type response = { observation : t; reward : float ; terminated : bool; truncated : bool; info : string }
 
-    let create () : t = 
-      {location = 0.; ang_speed = 0.};;
+    let create : t = 
+      {location = 0; ang_speed = 0};;
 
     let reset (sim : t) : response = 
+      let random_starting_angle = Random.float (2 * Float.pi) @@ - Float.pi 
+      in
+      let random_starting_angular_speed = Random.float 2 @@ - 1
+      in
+      { observation = [random_starting_angle; random_starting_angular_speed]; reward = 0; terminated = false; truncated = false; info = "Simulation Begun" };;
+
+    let step (sim : t) (act : action) : response =
       failwith "todo";;
 
-    let step (sim : t) (act : action) : response = 
+    let render (sim : t) : char list = 
       failwith "todo";;
 end
 
