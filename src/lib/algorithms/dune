@@ -1,0 +1,12 @@
+(library
+ (name qlearning)
+ (modules qlearning) 
+ (libraries core pyml base_algorithm)
+)
+
+(library
+ (name base_algorithm)
+ (modules base_algorithm) 
+ (libraries core pyml)
+)
+

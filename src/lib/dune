@@ -1,10 +1,4 @@
 (library
- (name rl_lib)
- (modules rl_lib) 
- (libraries core pyml)
-)
-
-(library
  (name pendulum)
  (modules pendulum)
  (libraries core)

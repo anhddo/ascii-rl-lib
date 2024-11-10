@@ -5,7 +5,7 @@ module type simulation =
 
   	(* Can change based on what the simulation needs *)
     type action = int
-    type response = { observation : int list; reward : int; terminated : bool; truncated : bool; info : string }
+    type response = { observation : float list; reward : float; terminated : bool; truncated : bool; info : string }
 
     (* Creates a new simulation *)
     val create : unit -> t 

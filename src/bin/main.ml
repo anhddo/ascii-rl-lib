@@ -1,3 +1,2 @@
-Rl_lib.loop Rl_lib.env;;
-
-Rl_lib.loop Rl_lib.env_render
+(* Qlearning.train (Qlearning.init_environment "CartPole-v1") 3000;; *)
+Animation.animate ();;

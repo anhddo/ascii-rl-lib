@@ -1,7 +1,7 @@
 open OUnit2
 (* we usually open OUnit2 since it is pervasively used in test files *)
 
-open Rl_lib
+open Qlearning
 
 let tests =
   "test suite"

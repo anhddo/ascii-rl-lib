@@ -1,0 +1,5 @@
+(library
+ (name animation)
+ (modules animation) 
+ (libraries core unix)
+)

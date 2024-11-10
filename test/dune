@@ -1,4 +1,4 @@
 (test
   (name rl_test)
   (modules rl_test)
-  (libraries rl_lib ounit2 core))
+  (libraries qlearning ounit2 core))

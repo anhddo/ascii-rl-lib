@@ -1,20 +1,26 @@
+
 [@@@ocaml.warning "-27"]
 [@@@ocaml.warning "-26"]
 [@@@ocaml.warning "-33"]
 
 let () = Py.initialize ()
+
 (* if not (Py.is_initialized ()) then Py.initialize (); *)
 (* Py.initialize ~interpreter:"/Users/shenyang/opt/anaconda3/envs/pytorch/bin/python" () *)
- (* change it to your path to python*)
+(* change it to your path to python*)
 let gym = Py.import "gymnasium"
 
-let env_render =
+(* let env_render =
   Py.Module.get_function_with_keywords gym "make"
     [| Py.String.of_string "CartPole-v1" |]
     [ ("render_mode", Py.String.of_string "human") ]
 
 let env =
-  Py.Module.get_function gym "make" [| Py.String.of_string "CartPole-v1" |]
+  Py.Module.get_function gym "make" [| Py.String.of_string "CartPole-v1" |] *)
+
+
+let init_environment (str: string) =
+  Py.Module.get_function gym "make" [| Py.String.of_string str |]
 
 let reset_fn env =
   let reset_fn' = Py.Object.get_attr_string env "reset" in
@@ -48,7 +54,6 @@ let value_to_bin (value : float) (low : float) (high : float) (num_bins : int) :
     let bin = (value -. low) /. bin_width in
     int_of_float bin
 
-
 type bin = { low : float; high : float; num_bins : int }
 
 let state_to_bin_config : bin list =
@@ -78,18 +83,15 @@ let convert_state_to_bin (state : float list) : int =
   in
   convert_state_to_bin' state_bin 3
 
-
-
 let q_table = Array.make_matrix (int_of_float @@ Float.pow 20. 4.) 2 0.0
 
-let loop env =
+let train env (episode : int) =
   (* let env = env_render in *)
   let learning_rate = 0.1 in
+
   (* let state = reset_fn env in *)
   (* let dimx = int_of_float @@ Float.pow 20. 4. in *)
-
-
-  let rec loop' (step : int) (state: float list) (reward_ep : float) =
+  let rec loop' (episode : int) (state : float list) (reward_ep : float) =
     let action =
       if Float.compare (Random.float 1.0) 0.1 = -1 then Random.int 2
       else
@@ -103,7 +105,8 @@ let loop env =
     let _ =
       if is_done then q_table.(state_bin).(action) <- reward
       else
-        let max_q = max q_table.(next_state_bin).(0) q_table.(next_state_bin).(1)
+        let max_q =
+          max q_table.(next_state_bin).(0) q_table.(next_state_bin).(1)
         in
         q_table.(state_bin).(action) <-
           ((1. -. learning_rate) *. (reward +. (0.99 *. max_q)))
@@ -116,9 +119,11 @@ let loop env =
     if is_done then (
       let state = reset_fn env in
       (* report total reward *)
-      Printf.printf "total reward: %f \n" reward_ep;
-      loop' (step + 1) state 0.0)
-    else if step < 3000000 then loop' (step + 1) state reward_ep
-    else q_table
+      if episode mod 100 = 0 then
+        Printf.printf "total reward:%d %f \n" episode reward_ep;
+      loop' (episode - 1) state 0.0)
+    else if episode > 0 then loop' episode state reward_ep
+    else ()
+    (* else q_table *)
   in
-  loop' 0 (reset_fn env) 0.0
+  loop' episode (reset_fn env) 0.0

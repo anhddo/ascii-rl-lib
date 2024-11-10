@@ -1,3 +1,5 @@
+[@@@warning "-27"]
+[@@@warning "-69"]
 module type simulation =
   sig
   	(* Simulation Type *)
@@ -5,7 +7,7 @@ module type simulation =
 
   	(* Can change based on what the simulation needs *)
     type action = int
-    type response = { observation : int list; reward : int; terminated : bool; truncated : bool; info : string }
+    type response = { observation : float list; reward : float; terminated : bool; truncated : bool; info : string }
 
     (* Creates a new simulation *)
     val create : unit -> t 
@@ -29,8 +31,8 @@ module Pendulum : simulation =
     (* info : error handling, nothing for now *)
     type response = { observation : float list; reward : float ; terminated : bool; truncated : bool; info : string }
 
-    let create : t = 
-      {location = 0; ang_speed = 0};;
+    let create () : t = 
+      {location = 0.; ang_speed = 0.};;
 
     let reset (sim : t) : response = 
       failwith "todo";;
