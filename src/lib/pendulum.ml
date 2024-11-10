@@ -35,7 +35,7 @@ module Pendulum : simulation =
     type response = { observation : t; reward : float ; terminated : bool; truncated : bool; info : string }
 
     let create : t = 
-      {location = 0; ang_speed = 0};;
+      [0; 0];;
 
     let reset (sim : t) : response = 
       let random_starting_angle = Random.float (2 * Float.pi) @@ - Float.pi 
