@@ -1,3 +1,3 @@
 
 (* Cartpole is a Simulation *)
-Cartpole : Simulation.S
+Cartpole : Simulation.T
