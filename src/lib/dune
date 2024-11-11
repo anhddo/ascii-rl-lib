@@ -14,9 +14,16 @@
  (libraries core unix))
 
 (library
+ (name rocket)
+ (modules rocket)
+ (libraries core unix))
+
+(library
  (name pendulum)
  (modules pendulum)
  (libraries core unix simulation))
+
+
 
 (library
  (name gym_env)

@@ -1,2 +1,2 @@
 
-module Pendulum : Simulation.T
+module Pendulum : Simulation.S
