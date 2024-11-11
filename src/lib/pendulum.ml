@@ -43,4 +43,7 @@ Theoretically, after we finish implementing one of these, the reinforcement lear
 
 We can then get to work on making a UI to these, or making more
 
+
+Blackjack, Pendulum, Cart Pole
+
 *)
