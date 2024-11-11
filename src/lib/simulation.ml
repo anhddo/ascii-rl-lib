@@ -1,4 +1,4 @@
-module type T = sig
+module type S = sig
   (* Simulation Type *)
   type t = float list
   (* Should store all the information to uniquely identify any possible simulation state *)
@@ -21,7 +21,7 @@ module type T = sig
   val reset : t -> t * string
 
   (* Applies the action to the environment, and returns the corresponding response *)
-  val step : t -> action -> response
+  val step : action -> response
 
   (* Take a simulation and render into a viewable format *)
   val render :

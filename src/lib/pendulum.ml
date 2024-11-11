@@ -1,6 +1,6 @@
 [@@@ocaml.warning "-27"]
 
-module Pendulum : Simulation.T = struct
+module Pendulum : Simulation.S = struct
   type t = float list (* Length is 2 | [location, ang_speed ] *)
 
   type action =
@@ -33,7 +33,7 @@ module Pendulum : Simulation.T = struct
       info = "Simulation Begun";
     } *)
 
-  let step (sim : t) (act : action) : response = failwith "todo"
+  let step (act : action) : response = failwith "todo"
   let render (sim : t) : char list = failwith "todo"
 end
 
