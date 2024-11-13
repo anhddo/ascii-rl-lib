@@ -1,6 +1,9 @@
 1. An overview of the purpose of the project.
+
   The purpose of this project is to create a Reinforcement Learning library that enables users to train and test various RL algorithms within simulated environments. Our core goal is to implement key algorithms like Q-learning, Policy Gradient, and Actor-Critic from scratch, compatible with our control simulations to validate accuracy. Users will interact via a command-line interface, specifying parameters such as the algorithm, environment, and training configurations. The project is divided into two main components: the RL algorithm library and simulation environment integration, resulting in a comprehensive RL toolkit.
-2. User will interact via command line.  There are two use cases for our application: **training** a model, and **testing** a model.  The user will be able to specify the algorithm, the simulation/game, and the output file to write to.  The user will also be able to specify the number of iterations to run, the learning rate, and the regularization parameter.  
+  
+2. User will interact via command line.  There are two use cases for our application: **training** a model, and **testing** a model.  The user will be able to specify the algorithm, the simulation/game, and the output file to write to.  The user will also be able to specify the number of iterations to run, the learning rate, and the regularization parameter.
+
 `dune exec src/bin/main.exe --episode 1000 --learning_rate 0.01 --regularization 0.01 --algo qlearning --output qlearning_model.json`  
 For testing a learned model, the user will be able to specify the model file to read from, the simulation/game, and the output file to write to.  The user will also be able to specify the number of iterations to run.
 `dune exec src/bin/main.exe --episode 1000 --model qlearning_model.json --record record.gif`  
@@ -16,7 +19,11 @@ There are some algorithm that we want to implement: qlearning, policy gradient, 
 3. We aim to use no other library than what we have in class at the end of the project. We will test our control algorithm on a python simulation (gymansium) to verify the correctness of our implementation, which we will use `pyml`. After we finish implement the simulation, we will test those algorithms on the simulation and exclude the `pyml` library from our final project.
 
 4. Commented module type declarations (.mli files) which will provide you with an initial specification to code to.
-- You can change this later and don’t need every single detail filled out, but it should include as many details as you can think of, and you should try to cover the entire project.
-- Include an initial pass at key types and functions needed and a brief comment if the meaning of a function is not clear.
+
+See all .mli, excluding animation.mli
+
 5. An implementation plan: a list of the order in which you will implement features and by what date you hope to have them completed.
+
+See implementationplan.md
+  
 6. You may also include any other information that will make it easier to understand your project. 
