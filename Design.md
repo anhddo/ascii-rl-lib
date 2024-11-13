@@ -2,9 +2,9 @@
   The purpose of this project is to create a Reinforcement Learning library that enables users to train and test various RL algorithms within simulated environments. Our core goal is to implement key algorithms like Q-learning, Policy Gradient, and Actor-Critic from scratch, compatible with our control simulations to validate accuracy. Users will interact via a command-line interface, specifying parameters such as the algorithm, environment, and training configurations. The project is divided into two main components: the RL algorithm library and simulation environment integration, resulting in a comprehensive RL toolkit.
 # Mock use of application
 User will interact via command line.  There are two use cases for our application: **training** a model, and **testing** a model.  The user will be able to specify the algorithm, the simulation/game, and the output file to write to.  The user will also be able to specify the number of iterations to run, the learning rate, and the regularization parameter.  The following command is our demo for testing the library `pyml` (be sure to activate the python environment with `gymansium` installed):
-`dune exec src/bin/main.exe --episode 1000 --algo qlearning`  
+`_build/default/src/bin/main.exe -episode 1000 -algo qlearning`  
 For testing a learned model, the user will be able to specify the model file to read from, the simulation/game, and the output file to write to. User will also be able to specify the number of iterations to run. (we haven't implemented this yet) 
-`dune exec src/bin/main.exe --episode 1000 --model qlearning_model.json --record record.gif`  
+`_build/default/src/bin/main.exe  -episode 1000 -model qlearning_model.json -record record.gif`  
 This command will open the simulation and run the model for 1000 iterations, and save the result animiation output to record.gif.  
 The overall interaction protocal of our project is described as follows, 
 There is an interactive of agent and environment:
@@ -55,5 +55,10 @@ This timeline is the bare minimum that we will complete. We hope to be ahead of 
 12/12 - GUI For Both Simulation Engine
  - Complete a GUI that can display the training process for any RL-Learniing algorithm. Likely, this will be a ASCII terminal based GUI. 
 
+# Comment on module type
+4. See all .mli, excluding animation.mli and base_algorithm.mli because that likely will not find its way into the final submission.
+
+  
+6. See IMG_0235.JPEG for a flowchart of how information will flow 
 
 
