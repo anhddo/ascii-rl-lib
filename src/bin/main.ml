@@ -1,12 +1,14 @@
 let episode = ref 1
 let algo = ref "qlearning"
+let env = ref "cartpole"
  
  
 let main =
 begin
 let speclist = [
-("-episode", Arg.Int (fun n -> episode := n), "Sets maximum number of files to list");
-("-algo", Arg.String (fun s -> algo := s), "Sets maximum number of files to list");
+("-episode", Arg.Int (fun n -> episode := n), "number of episodes to train");
+("-algo", Arg.String (fun s -> algo := s), "the algorithm to use");
+("-env", Arg.String (fun s -> env := s), "the environment to use");
 ]
 in Arg.parse speclist print_endline "";
 print_int !episode;
