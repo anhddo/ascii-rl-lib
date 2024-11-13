@@ -1,6 +1,4 @@
-1. An overview of the purpose of the project.
-
-  The purpose of this project is to create a Reinforcement Learning library that enables users to train and test various RL algorithms within simulated environments. Our core goal is to implement key algorithms like Q-learning, Policy Gradient, and Actor-Critic from scratch, compatible with our control simulations to validate accuracy. Users will interact via a command-line interface, specifying parameters such as the algorithm, environment, and training configurations. The project is divided into two main components: the RL algorithm library and simulation environment integration, resulting in a comprehensive RL toolkit.
+1. The purpose of this project is to create a Reinforcement Learning library that enables users to train and test various RL algorithms within simulated environments. Our core goal is to implement key algorithms like Q-learning, Policy Gradient, and Actor-Critic from scratch, compatible with our control simulations to validate accuracy. Users will interact via a command-line interface, specifying parameters such as the algorithm, environment, and training configurations. The project is divided into two main components: the RL algorithm library and simulation environment integration, resulting in a comprehensive RL toolkit.
   
 2. User will interact via command line.  There are two use cases for our application: **training** a model, and **testing** a model.  The user will be able to specify the algorithm, the simulation/game, and the output file to write to.  The user will also be able to specify the number of iterations to run, the learning rate, and the regularization parameter.
 
@@ -18,12 +16,8 @@ There are some algorithm that we want to implement: qlearning, policy gradient, 
 
 3. We aim to use no other library than what we have in class at the end of the project. We will test our control algorithm on a python simulation (gymansium) to verify the correctness of our implementation, which we will use `pyml`. After we finish implement the simulation, we will test those algorithms on the simulation and exclude the `pyml` library from our final project.
 
-4. Commented module type declarations (.mli files) which will provide you with an initial specification to code to.
+4. See all .mli, excluding animation.mli because that likely will not find its way into the final submission.
 
-See all .mli, excluding animation.mli
-
-5. An implementation plan: a list of the order in which you will implement features and by what date you hope to have them completed.
-
-See implementationplan.md
+5. See implementationplan.md
   
-6. You may also include any other information that will make it easier to understand your project. 
+6. See IMG_0235.JPEG for a flowchart of how information will flow 
