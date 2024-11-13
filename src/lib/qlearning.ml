@@ -1,26 +1,17 @@
-
 [@@@ocaml.warning "-27"]
 [@@@ocaml.warning "-26"]
 [@@@ocaml.warning "-33"]
 
 let () = Py.initialize ()
 
-(* if not (Py.is_initialized ()) then Py.initialize (); *)
-(* Py.initialize ~interpreter:"/Users/shenyang/opt/anaconda3/envs/pytorch/bin/python" () *)
-(* change it to your path to python*)
 let gym = Py.import "gymnasium"
 
-(* let env_render =
-  Py.Module.get_function_with_keywords gym "make"
-    [| Py.String.of_string "CartPole-v1" |]
-    [ ("render_mode", Py.String.of_string "human") ]
-
-let env =
-  Py.Module.get_function gym "make" [| Py.String.of_string "CartPole-v1" |] *)
-
-
-let init_environment (str: string) =
-  Py.Module.get_function gym "make" [| Py.String.of_string str |]
+let init_environment (str : string) (render : bool) =
+  if render then
+    Py.Module.get_function_with_keywords gym "make"
+      [| Py.String.of_string str |]
+      [ ("render_mode", Py.String.of_string "human") ]
+  else Py.Module.get_function gym "make" [| Py.String.of_string str |]
 
 let reset_fn env =
   let reset_fn' = Py.Object.get_attr_string env "reset" in
@@ -122,7 +113,7 @@ let train env (episode : int) =
       if episode mod 100 = 0 then
         Printf.printf "total reward:%d %f \n" episode reward_ep;
       loop' (episode - 1) state 0.0)
-    else if episode > 0 then loop' episode state reward_ep
+    else if episode > 0 then loop' (episode - 1) state reward_ep
     else ()
     (* else q_table *)
   in

@@ -1,9 +1,9 @@
-let rec loop (state : state_t) = 
-  let action = QLearning.getNextStep state
+let rec loop (state) = 
+  let action = QLearning.get_next_state state
   in 
-  let next_state, reward, done_ = Simulation.nextStep state action  
+  let next_state, reward, done_ = Simulation.step state action  
   in
-  Graphics.draw(next_state);
+  (* Graphics.draw(next_state); we will implement this graphics later *)
   loop next_state
 
 
