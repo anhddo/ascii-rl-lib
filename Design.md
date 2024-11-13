@@ -16,7 +16,7 @@ There are some algorithm that we want to implement: qlearning, policy gradient, 
 
 3. We aim to use no other library than what we have in class at the end of the project. We will test our control algorithm on a python simulation (gymansium) to verify the correctness of our implementation, which we will use `pyml`. After we finish implement the simulation, we will test those algorithms on the simulation and exclude the `pyml` library from our final project.
 
-4. See all .mli, excluding animation.mli because that likely will not find its way into the final submission.
+4. See all .mli, excluding animation.mli and base_algorithm.mli because that likely will not find its way into the final submission.
 
 5. See implementationplan.md
   
