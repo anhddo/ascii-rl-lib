@@ -51,7 +51,7 @@ Blackjack, Pendulum, Cart Pole
 
 
 module Pendulum : Simulation.T = 
-  sig
+  struct
   	
   	type t = float list (* Length is 2 | [location, ang_speed ] *)
 
@@ -88,7 +88,7 @@ module Pendulum : Simulation.T =
       };;
 
     (* Applies the action to the environment, and returns the corresponding response *)
-    let step : (sim : t) (act : action) : response =
+    let step (sim : t) (act : action) : response =
       failwith "TODO";;
 
     (* Take a simulation and render into a viewable format *)
