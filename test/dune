@@ -2,3 +2,10 @@
   (name rl_test)
   (modules rl_test)
   (libraries qlearning ounit2 core))
+
+
+(test 
+  (name pendulum_test)
+  (modules pendulum_test)
+  (libraries pendulum ounit2 core)
+)
