@@ -16,3 +16,15 @@ print_int !episode;
 end
  
 let () = main
+
+(* This is just base code that will simuate the general idea of how our main loop will work 
+    It will not compile or do anything useful.
+    *)
+
+(* let rec loop (state : state_t) = 
+    let action = QLearning.getNextStep state
+    in 
+    let next_state, reward, done_ = Simulation.nextStep state action  
+    in
+    Graphics.draw(next_state);
+    loop next_state *)
