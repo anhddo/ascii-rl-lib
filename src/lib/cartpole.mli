@@ -1,3 +1,3 @@
 
 (* Cartpole is a Simulation *)
-Cartpole : Simulation.T
+include Simulation.T

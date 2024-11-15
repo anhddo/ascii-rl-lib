@@ -1,3 +1,3 @@
 
 (* Blackjack is a Simulation *)
-Blackjack : Simulation.T
+include Simulation.T
