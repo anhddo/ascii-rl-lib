@@ -12,4 +12,4 @@ val square : float -> float
 
 val random_between : float -> float -> float 
 
-val clip : 'a -> 'a -> 'a
+val clip : 'a -> 'a -> 'a -> 'a
