@@ -1,16 +1,5 @@
 [@@@ocaml.warning "-27"]
 
-(*
-Theoretically, after we finish implementing one of these, the reinforcement learning models can start training
-- pendulum and likely all others have full documentation on how these work
-
-We can then get to work on making a UI to these, or making more
-
-
-Blackjack, Pendulum, Cart Pole
-
-*)
-
 
 (* Returns the squre of the float *)
 let square (value : float) : float = 
@@ -41,7 +30,7 @@ type action = float list (* Length is 1 | [amount of torque to apply between -2 
 
 (* observation : the new state of the simulation; the next step call should use this value *)
 (* reward : maximum reward is 0, achieved when pendulum is perfectly balanced *)
-(* terminated : idk, error handling? *)
+(* terminated : Not relevant, since simulation is everlasting and there are no such thing as episodes ??? *)
 (* truncated : idk *)
 (* info : error handling, nothing for now *)
 type response = {
@@ -58,16 +47,14 @@ let create() : t =
 
 
 (* Resets the simulation and returns the first response again *) 
-let reset (sim : t) : response = (* TODO : possibly have the constants be held in the sim list *)
+let reset () : t = (* TODO : possibly have the constants be held in the sim list *)
   let random_starting_angle = random_between (-1.0 *. Float.pi) (Float.pi) in
   let random_starting_angular_speed = random_between (-1.) (1.) in
-  {
-    observation = [ random_starting_angle; random_starting_angular_speed ];
-    reward = 0.;
-    terminated = false;
-    truncated = false;
-    info = "Simulation Begun";
-  };;
+  [ 
+    random_starting_angle; 
+    random_starting_angular_speed;
+  ];;
+
 
 (* Applies the action to the environment, and returns the corresponding response *)
 let step (sim : t) (act : action) : response =

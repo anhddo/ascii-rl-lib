@@ -6,7 +6,8 @@ module type S = sig
   (* Can change based on what the simulation needs *)
   type action = float list
 
-  type response = {
+  type response = 
+  {
     observation : t;
     reward : float;
     terminated : bool;
@@ -28,6 +29,7 @@ module type S = sig
     t -> char list (* char list is temporary idea, can and may likely change *)
 end
 
+
 (* Our main type that will play well with the code, version above is Anh's playground so I don't wanna mess w that*)
 module type T = 
   sig
@@ -42,7 +44,7 @@ module type T =
     val create : unit -> t 
 
     (* Resets the simulation and returns the first response again *)
-    val reset : t -> response
+    val reset : unit -> t
 
     (* Applies the action to the environment, and returns the corresponding response *)
     val step : t -> action -> response

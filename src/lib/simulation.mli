@@ -44,7 +44,7 @@ module type T =
     val create : unit -> t 
 
     (* Resets the simulation and returns the first response again *)
-    val reset : t -> response
+    val reset : unit -> t
 
     (* Applies the action to the environment, and returns the corresponding response *)
     val step : t -> action -> response
