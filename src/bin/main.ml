@@ -12,7 +12,7 @@ let speclist = [
 ]
 in Arg.parse speclist print_endline "";
 print_int !episode;
-  Qlearning.train (Qlearning.init_environment "CartPole-v1" true) !episode;
+  Qlearning.train !episode;
 end
  
 let () = main

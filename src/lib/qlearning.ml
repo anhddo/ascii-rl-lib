@@ -2,38 +2,9 @@
 [@@@ocaml.warning "-26"]
 [@@@ocaml.warning "-33"]
 
-let () = Py.initialize ()
 
-let gym = Py.import "gymnasium"
+(* let gym = Py.import "gymnasium" *)
 
-let init_environment (str : string) (render : bool) =
-  if render then
-    Py.Module.get_function_with_keywords gym "make"
-      [| Py.String.of_string str |]
-      [ ("render_mode", Py.String.of_string "human") ]
-  else Py.Module.get_function gym "make" [| Py.String.of_string str |]
-
-let reset_fn env =
-  let reset_fn' = Py.Object.get_attr_string env "reset" in
-  let result = Py.Callable.to_function (Core.Option.value_exn reset_fn') [||] in
-  let result, _ = Py.Tuple.to_tuple2 result in
-  (*convert to list of float*)
-  let state = Py.List.to_list_map Py.Float.to_float result in
-  state
-
-let step_fn env action =
-  let step_fn' = Py.Object.get_attr_string env "step" in
-  let result =
-    Py.Callable.to_function
-      (Core.Option.value_exn step_fn')
-      [| Py.Int.of_int @@ action |]
-  in
-  let _state, _reward, _is_done, _truncated, _ = Py.Tuple.to_tuple5 result in
-  ( Py.List.to_list_map Py.Float.to_float _state,
-    Py.Float.to_float _reward,
-    Py.Bool.to_bool _is_done,
-    _truncated,
-    None )
 
 (* implement tabular q learning *)
 let value_to_bin (value : float) (low : float) (high : float) (num_bins : int) :
@@ -76,7 +47,7 @@ let convert_state_to_bin (state : float list) : int =
 
 let q_table = Array.make_matrix (int_of_float @@ Float.pow 20. 4.) 2 0.0
 
-let train env (episode : int) =
+let train (episode : int) =
   (* let env = env_render in *)
   let learning_rate = 0.1 in
 
@@ -89,7 +60,10 @@ let train env (episode : int) =
         let state_bin = convert_state_to_bin state in
         if q_table.(state_bin).(0) > q_table.(state_bin).(1) then 0 else 1
     in
-    let next_state, reward, is_done, _, _ = step_fn env action in
+    let response = Gym_env.step state [float_of_int action] in
+    let next_state = response.observation in
+    let reward = response.reward in
+    let is_done = response.terminated in
     let next_state_bin = convert_state_to_bin next_state in
     let state_bin = convert_state_to_bin state in
     (* update q table*)
@@ -108,13 +82,13 @@ let train env (episode : int) =
     let reward_ep = reward_ep +. reward in
     (* Printf.printf "%b %f %f \n " is_done reward reward_ep; *)
     if is_done then (
-      let state = reset_fn env in
+      let state = Gym_env.reset() in
       (* report total reward *)
-      if episode mod 100 = 0 then
+      if episode mod 1000 = 0 then
         Printf.printf "total reward:%d %f \n" episode reward_ep;
       loop' (episode - 1) state 0.0)
     else if episode > 0 then loop' (episode - 1) state reward_ep
     else ()
     (* else q_table *)
   in
-  loop' episode (reset_fn env) 0.0
+  loop' episode (Gym_env.reset ()) 0.0

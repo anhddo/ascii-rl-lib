@@ -1,3 +1,3 @@
 (executable
  (name main)
- (libraries qlearning core core_unix core_unix.sys_unix stdlib))
+ (libraries qlearning gym_env core core_unix core_unix.sys_unix stdlib))
