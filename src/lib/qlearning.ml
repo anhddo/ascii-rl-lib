@@ -2,9 +2,7 @@
 [@@@ocaml.warning "-26"]
 [@@@ocaml.warning "-33"]
 
-
 (* let gym = Py.import "gymnasium" *)
-
 
 (* implement tabular q learning *)
 let value_to_bin (value : float) (low : float) (high : float) (num_bins : int) :
@@ -46,6 +44,7 @@ let convert_state_to_bin (state : float list) : int =
   convert_state_to_bin' state_bin 3
 
 let q_table = Array.make_matrix (int_of_float @@ Float.pow 20. 4.) 2 0.0
+let choose_action (state : float list) : float list = [ 0.0 ]
 
 let train (episode : int) =
   (* let env = env_render in *)
@@ -60,7 +59,7 @@ let train (episode : int) =
         let state_bin = convert_state_to_bin state in
         if q_table.(state_bin).(0) > q_table.(state_bin).(1) then 0 else 1
     in
-    let response = Gym_env.step state [float_of_int action] in
+    let response = Gym_env.step state [ float_of_int action ] in
     let next_state = response.observation in
     let reward = response.reward in
     let is_done = response.terminated in
@@ -82,7 +81,7 @@ let train (episode : int) =
     let reward_ep = reward_ep +. reward in
     (* Printf.printf "%b %f %f \n " is_done reward reward_ep; *)
     if is_done then (
-      let state = Gym_env.reset() in
+      let state = Gym_env.reset () in
       (* report total reward *)
       if episode mod 1000 = 0 then
         Printf.printf "total reward:%d %f \n" episode reward_ep;

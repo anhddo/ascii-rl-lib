@@ -1,6 +1,6 @@
 (test
-  (name rl_test)
-  (modules rl_test)
+  (name qlearning_test)
+  (modules qlearning_test)
   (libraries qlearning ounit2 core))
 
 
