@@ -9,11 +9,6 @@
  (libraries core pyml))
 
 (library
- (name animation)
- (modules animation)
- (libraries core unix))
-
-(library
  (name rocket)
  (modules rocket)
  (libraries core unix))
