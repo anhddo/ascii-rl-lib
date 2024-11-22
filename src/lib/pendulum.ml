@@ -143,13 +143,15 @@ let render (sim_state : t) : unit =
             if i <= steps then (
               let xi = int_of_float x in
               let yi = int_of_float y in
-              if xi >= 0 && xi < term_width && yi >= 0 && yi < term_height then
+              if xi >= 0 && xi < term_width && yi >= 0 && yi < term_height then (
                 canvas.(yi).(xi) <- '.';
+                if xi + 1 < term_width then canvas.(yi).(xi + 1) <- '.';
+              );
               loop (i + 1) (x +. x_increment) (y +. y_increment))
           in
           loop 0 (float x0) (float y0)
       in
-
+      
       (* draw pivot *)
       draw_line pivot_col pivot_row col row;
 
@@ -174,5 +176,3 @@ let rec simulate sim_state =
   let response = step sim_state action in
   render response.observation;
   simulate response.observation
-
-
