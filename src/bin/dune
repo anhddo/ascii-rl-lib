@@ -1,3 +1,8 @@
 (executable
  (name main)
- (libraries qlearning gym_env core core_unix core_unix.sys_unix stdlib))
+ (libraries qlearning core unix stdlib))
+
+(executable
+ (name pendulum_main)
+ (modules pendulum_main)
+ (libraries pendulum core unix))
