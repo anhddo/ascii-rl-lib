@@ -81,19 +81,49 @@ module Make_config (M : Simulation.Config) = struct
 
   type bin = { low : float; high : float; num_bins : int }
 
+  type q_table_config = {
+    obs_dim : int;
+    action_dim : int;
+    state_bin : int;
+    action_bin : int;
+    is_continuous_action : bool;
+  }
+
+  let state_bin = 20
+
   let config =
     match M.name with
     | "CartPole-v1" ->
         {
           low_list = [ -4.8; -4.0; -0.418; -4.0 ];
           high_list = [ 4.8; 4.0; 0.418; 4.0 ];
-          num_bins = 20;
+          num_bins = state_bin;
         }
     | "Pendulum-v1" ->
         {
-          low_list = [ -1.; -1.; -8.];
+          low_list = [ -1.; -1.; -8. ];
           high_list = [ 1.; 1.; 8. ];
-          num_bins = 20;
+          num_bins = state_bin;
+        }
+    | _ -> failwith "Invalid environment name"
+
+  let q_config =
+    match M.name with
+    | "CartPole-v1" ->
+        {
+          obs_dim = 4;
+          action_dim = 2;
+          state_bin;
+          action_bin = 2;
+          is_continuous_action = false;
+        }
+    | "Pendulum-v1" ->
+        {
+          obs_dim = 3;
+          action_dim = 1;
+          state_bin;
+          action_bin = 7;
+          is_continuous_action = true;
         }
     | _ -> failwith "Invalid environment name"
 

@@ -2,34 +2,18 @@
 [@@@ocaml.warning "-26"]
 [@@@ocaml.warning "-33"]
 
-(* let gym = Py.import "gymnasium" *)
 
-(* implement tabular q learning *)
-
-(* type bin = { low : float; high : float; num_bins : int } *)
-
-(* let state_to_bin_config : bin list =
-  [
-    { low = -4.8; high = 4.8; num_bins = 20 };
-    { low = -4.0; high = 4.0; num_bins = 20 };
-    { low = -0.418; high = 0.418; num_bins = 20 };
-    { low = -4.0; high = 4.0; num_bins = 20 };
-  ] *)
-
-
-let q_table = Array.make_matrix (int_of_float @@ Float.pow 20. 4.) 2 0.0
 let choose_action (state : float list) : float list = [ 0.0 ]
 
-(* module Config = struct
-     let name = "CartPole-v1"
-     let render = false
-   end
-
-   module Env1 = Gym_env.Make (Config) *)
 
 module Make (Env_config : Simulation.Config) = struct
   module QLearningConfig = Gym_env.Make_config (Env_config)
   module Env = Gym_env.Make (Env_config)
+  let state_bin = QLearningConfig.q_config.state_bin
+  let action_bin = QLearningConfig.q_config.action_bin
+  let obs_dim = QLearningConfig.q_config.obs_dim
+
+  let q_table = Array.make_matrix (int_of_float @@ Float.pow (float_of_int state_bin) (float_of_int obs_dim)) action_bin 0.0
   let train (episode : int) =
     (* let env = env_render in *)
     let learning_rate = 0.1 in
