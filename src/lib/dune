@@ -18,7 +18,10 @@
  (modules pendulum)
  (libraries core unix simulation))
 
-
+(library
+ (name env_test)
+ (modules env_test)
+ (libraries core pyml))
 
 (library
  (name gym_env)

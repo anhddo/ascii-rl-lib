@@ -19,3 +19,8 @@ module type T =
     (* Take a simulation and render into a viewable format *)
     val render : t -> char list (* char list is temporary idea, can and may likely change *)
   end
+
+module type Config = sig
+    val name : string
+    val render : bool
+end

@@ -1,3 +1,9 @@
 (* A Testing Enviroment from Python's Gymnasium*)
-include Simulation.T
-val init_environment: string -> bool -> Py.Object.t
+
+module Make :
+  functor (_ : Simulation.Config) -> sig 
+    include Simulation.T
+    val reset : unit -> t
+    val step : t -> action -> response
+    val render : t -> char list
+  end

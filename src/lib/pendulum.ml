@@ -172,7 +172,7 @@ let render (sim_state : t) : unit =
   | _ -> failwith "Invalid simulation state"
 
 let rec simulate sim_state =
-  let action = [0.0] in
+  let action = [0.] in
   let response = step sim_state action in
   render response.observation;
   simulate response.observation

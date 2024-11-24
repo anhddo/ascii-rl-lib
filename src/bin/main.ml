@@ -1,30 +1,43 @@
-let episode = ref 1
-let algo = ref "qlearning"
-let env = ref "cartpole"
- 
- 
-let main =
-begin
-let speclist = [
-("-episode", Arg.Int (fun n -> episode := n), "number of episodes to train");
-("-algo", Arg.String (fun s -> algo := s), "the algorithm to use");
-("-env", Arg.String (fun s -> env := s), "the environment to use");
-]
-in Arg.parse speclist print_endline "";
-print_int !episode;
-  Qlearning.train !episode;
+(* let episode = ref 1
+   let algo = ref "qlearning"
+   let env = ref "cartpole" *)
+(* module Config = struct
+     let name = !env
+     let render = false
+   end
+   module Env1 = Gym_env.Make (Config) *)
+
+(* let main =
+   let speclist =
+     [
+       ( "-episode",
+         Arg.Int (fun n -> episode := n),
+         "number of episodes to train" );
+       ("-algo", Arg.String (fun s -> algo := s), "the algorithm to use");
+       ("-env", Arg.String (fun s -> env := s), "the environment to use");
+     ]
+   in
+   Arg.parse speclist print_endline "";
+   print_int !episode;
+
+   Qlearning.train !episode *)
+
+(* open Core *)
+
+module Config = struct
+  let name = "CartPole-v1"
+  let render = false
 end
- 
-let () = main
 
-(* This is just base code that will simuate the general idea of how our main loop will work 
-    It will not compile or do anything useful.
-    *)
+module Env1 = Gym_env.Make (Config)
+module QLearning1 = Qlearning.Make (Env1)
 
-(* let rec loop (state : state_t) = 
-    let action = QLearning.getNextStep state
-    in 
-    let next_state, reward, done_ = Simulation.nextStep state action  
-    in
-    Graphics.draw(next_state);
-    loop next_state *)
+let () =
+  (* let s =
+    Sys.get_argv () |> Array.to_list
+    |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
+  in
+  print_string s; *)
+  QLearning1.train 10000
+  
+
