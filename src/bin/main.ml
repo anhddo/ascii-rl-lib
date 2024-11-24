@@ -25,12 +25,12 @@
 (* open Core *)
 
 module Config = struct
+  (* let name = "Pendulum-v1" *)
   let name = "CartPole-v1"
   let render = false
 end
 
-module Env1 = Gym_env.Make (Config)
-module QLearning1 = Qlearning.Make (Env1)
+module QLearning1 = Qlearning.Make (Config)
 
 let () =
   (* let s =
