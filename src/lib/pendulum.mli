@@ -9,6 +9,7 @@ type response = {
   terminated : bool;
   truncated : bool;
   info : string;
+  internal_state : t;
 }
 
 val normalize_angle : float -> float

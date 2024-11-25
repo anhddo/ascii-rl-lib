@@ -45,6 +45,6 @@ let () =
        |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
      in
      print_string s; *)
-  QLearning1.train 300;
+  QLearning1.train 3000;
   QLearning1.save_q_table ();
   QLearning2.train 2;
