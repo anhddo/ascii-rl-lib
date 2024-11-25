@@ -4,5 +4,6 @@ include Base_algorithm.S
 
 
 module Make (_ : Simulation.Config) : sig
+  val q_table : float array array
   val train : int -> unit
 end

@@ -21,6 +21,13 @@ functor
     }
 
     (*if not inialize then initialize*)
+    type action_type = Discrete | Continuous
+
+    let action_type =
+      match Config.name with
+      | "CartPole-v1" -> Discrete
+      | "Pendulum-v1" -> Continuous
+      | _ -> failwith "Invalid environment name"
 
     let gym = Py.import "gymnasium"
 
@@ -46,10 +53,13 @@ functor
 
     let step (state : t) (action : action) =
       let step_fn' = Py.Object.get_attr_string env "step" in
+      let passing_action =
+        match action_type with
+        | Discrete -> [| Py.Int.of_int @@ int_of_float (List.hd action) |]
+        | Continuous -> [| Py.List.of_list_map Py.Float.of_float action |]
+      in
       let result =
-        Py.Callable.to_function
-          (Core.Option.value_exn step_fn')
-          [| Py.Int.of_int @@ int_of_float (List.hd action) |]
+        Py.Callable.to_function (Core.Option.value_exn step_fn') passing_action
       in
       let _state, _reward, _is_done, _truncated, _ =
         Py.Tuple.to_tuple5 result
@@ -79,13 +89,14 @@ module Make_config (M : Simulation.Config) = struct
     num_bins : int;
   }
 
-  type bin = { low : float; high : float; num_bins : int }
+  type continuous_bin = { low : float; high : float; num_bins : int }
+  type bin = Discrete of int | Continuous of continuous_bin
 
   type q_table_config = {
     obs_dim : int;
     action_dim : int;
     state_bin : int;
-    action_bin : int;
+    action_bin : bin;
     is_continuous_action : bool;
   }
 
@@ -114,22 +125,22 @@ module Make_config (M : Simulation.Config) = struct
           obs_dim = 4;
           action_dim = 2;
           state_bin;
-          action_bin = 2;
           is_continuous_action = false;
+          action_bin = Discrete 2;
         }
     | "Pendulum-v1" ->
         {
           obs_dim = 3;
           action_dim = 1;
           state_bin;
-          action_bin = 7;
+          action_bin = Continuous { low = -1.; high = 1.; num_bins = 7 };
           is_continuous_action = true;
         }
     | _ -> failwith "Invalid environment name"
 
   let state_to_bin_config : bin list =
     List.map2_exn config.low_list config.high_list ~f:(fun low high ->
-        { low; high; num_bins = config.num_bins })
+        Continuous { low; high; num_bins = config.num_bins })
 
   let value_to_bin (value : float) (low : float) (high : float) (num_bins : int)
       : int =
@@ -140,22 +151,42 @@ module Make_config (M : Simulation.Config) = struct
       let bin = (value -. low) /. bin_width in
       int_of_float bin
 
-  let rec four_float_to_bin (state : float list) (bin_config : bin list) :
+  let bin_to_value (bin : int) (bin_config : continuous_bin) : float =
+    let bin_width =
+      (bin_config.high -. bin_config.low) /. float_of_int bin_config.num_bins
+    in
+    (bin_width *. float_of_int bin) +. bin_config.low
+
+  let convert_state_to_bin_list (state : float list) (bin_config : bin list) :
       int list =
-    match (state, bin_config) with
-    | sh :: st, bh :: bt ->
-        value_to_bin sh bh.low bh.high bh.num_bins :: four_float_to_bin st bt
-    | [], [] -> []
-    | _ -> failwith "State and bin configuration lengths do not match"
+    let lz = List.zip_exn state bin_config in
+    List.fold lz ~init:[] ~f:(fun acc (s, b) ->
+        match b with
+        | Discrete _ -> failwith "Discrete bin not supported"
+        | Continuous { low; high; num_bins } ->
+            value_to_bin s low high num_bins :: acc)
+    |> List.rev
+
+  (* print state_to_bin_config *)
 
   let convert_state_to_bin (state : float list) : int =
-    let state_bin = four_float_to_bin state state_to_bin_config in
+    let state_bin_list = convert_state_to_bin_list state state_to_bin_config in
     let rec convert_state_to_bin' (state : int list) (n : int) : int =
       match state with
       | [] -> 0
       | h :: t ->
-          int_of_float (float_of_int h *. Float.( ** ) 20.0 (float_of_int n))
+          int_of_float
+            (float_of_int h
+            *. Float.( ** ) (float_of_int state_bin) (float_of_int n))
           + convert_state_to_bin' t (n - 1)
     in
-    convert_state_to_bin' state_bin 3
+    let result =
+      convert_state_to_bin' state_bin_list (List.length state_bin_list - 1)
+    in
+    Printf.printf "state: %s\n"
+      (List.to_string state ~f:Float.to_string);
+    Printf.printf "state_bin_list: %s\n"
+      (List.to_string state_bin_list ~f:Int.to_string);
+    Printf.printf "bin: %d\n" result;
+    result
 end

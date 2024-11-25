@@ -1,33 +1,54 @@
-[@@@ocaml.warning "-27"]
-[@@@ocaml.warning "-26"]
-[@@@ocaml.warning "-33"]
-
-
-let choose_action (state : float list) : float list = [ 0.0 ]
-
+open Core
+let choose_action (_ : float list) : float list = [ 0.0 ]
 
 module Make (Env_config : Simulation.Config) = struct
   module QLearningConfig = Gym_env.Make_config (Env_config)
   module Env = Gym_env.Make (Env_config)
+
   let state_bin = QLearningConfig.q_config.state_bin
   let action_bin = QLearningConfig.q_config.action_bin
   let obs_dim = QLearningConfig.q_config.obs_dim
 
-  let q_table = Array.make_matrix (int_of_float @@ Float.pow (float_of_int state_bin) (float_of_int obs_dim)) action_bin 0.0
+  let action_dim =
+    match action_bin with Discrete n -> n | Continuous x -> x.num_bins
+
+  let argmax (arr : 'a list) ~(compare : 'a -> 'a -> int) ~(init : 'a) : int =
+    let rec loop' (arr : 'a list) (max : 'a) (index : int) (i : int) =
+      match arr with
+      | [] -> index
+      | hd :: tl ->
+          if compare hd max = 1 then loop' tl hd i (i + 1)
+          else loop' tl max index (i + 1)
+    in
+    loop' arr init 0 0
+
+  let float_argmax (arr : float list) : int =
+    argmax arr ~compare:Float.compare ~init:Float.neg_infinity
+
+  let q_table =
+    Array.make_matrix
+      ~dimx:(int_of_float @@ (float_of_int state_bin ** float_of_int obs_dim))
+      ~dimy:action_dim 0.0
+
   let train (episode : int) =
-    (* let env = env_render in *)
+    (* Printf.printf "%d \n" (Array.length q_table); *)
     let learning_rate = 0.1 in
 
-    (* let state = reset_fn env in *)
-    (* let dimx = int_of_float @@ Float.pow 20. 4. in *)
     let rec loop' (episode : int) (state : float list) (reward_ep : float) =
       let action =
-        if Float.compare (Random.float 1.0) 0.1 = -1 then Random.int 2
+        if Float.compare (Random.float 1.0) 0.1 = -1 then Random.int action_dim
         else
           let state_bin = QLearningConfig.convert_state_to_bin state in
-          if q_table.(state_bin).(0) > q_table.(state_bin).(1) then 0 else 1
+          (* print_int state_bin; *)
+          q_table.(state_bin) |> Array.to_list |> float_argmax
       in
-      let response = Env.step state [ float_of_int action ] in
+      let passing_action_to_env =
+        match action_bin with
+        | Discrete _ -> [ float_of_int action ]
+        | Continuous x -> [ QLearningConfig.bin_to_value action x ]
+      in
+      (* Printf.printf "action %s\n" (List.to_string passing_action_to_env ~f:Float.to_string); *)
+      let response = Env.step state passing_action_to_env in
       let next_state = response.observation in
       let reward = response.reward in
       let is_done = response.terminated in
@@ -38,7 +59,11 @@ module Make (Env_config : Simulation.Config) = struct
         if is_done then q_table.(state_bin).(action) <- reward
         else
           let max_q =
-            max q_table.(next_state_bin).(0) q_table.(next_state_bin).(1)
+            List.max_elt
+              (q_table.(next_state_bin) |> Array.to_list)
+              ~compare:Float.compare
+            |> Option.value_exn
+            (* max q_table.(next_state_bin).(0) q_table.(next_state_bin).(1) *)
           in
           q_table.(state_bin).(action) <-
             ((1. -. learning_rate) *. (reward +. (0.99 *. max_q)))

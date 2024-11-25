@@ -25,8 +25,8 @@
 (* open Core *)
 
 module Config = struct
-  (* let name = "Pendulum-v1" *)
-  let name = "CartPole-v1"
+  let name = "Pendulum-v1"
+  (* let name = "CartPole-v1" *)
   let render = false
 end
 
@@ -38,6 +38,6 @@ let () =
     |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
   in
   print_string s; *)
-  QLearning1.train 10000
+  QLearning1.train 1000
   
 

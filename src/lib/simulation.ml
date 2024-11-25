@@ -21,6 +21,7 @@ module type T =
   end
 
 module type Config = sig
+  (* type t = { name : string; render : bool } *)
     val name : string
     val render : bool
 end
