@@ -68,7 +68,7 @@ functor
         observation = Py.List.to_list_map Py.Float.to_float _state;
         reward = Py.Float.to_float _reward;
         terminated = Py.Bool.to_bool _is_done;
-        truncated = false;
+        truncated = Py.Bool.to_bool _truncated;
         info = "";
       }
     (* ( Py.List.to_list_map Py.Float.to_float _state,
@@ -133,7 +133,7 @@ module Make_config (M : Simulation.Config) = struct
           obs_dim = 3;
           action_dim = 1;
           state_bin;
-          action_bin = Continuous { low = -1.; high = 1.; num_bins = 7 };
+          action_bin = Continuous { low = -2.; high = 2.; num_bins = 7 };
           is_continuous_action = true;
         }
     | _ -> failwith "Invalid environment name"
@@ -145,7 +145,7 @@ module Make_config (M : Simulation.Config) = struct
   let value_to_bin (value : float) (low : float) (high : float) (num_bins : int)
       : int =
     if Float.compare value low = -1 then 0
-    else if Float.compare value high = 1 then num_bins - 1
+    else if Float.compare value high <> -1 then num_bins - 1
     else
       let bin_width = (high -. low) /. float_of_int num_bins in
       let bin = (value -. low) /. bin_width in
@@ -167,8 +167,6 @@ module Make_config (M : Simulation.Config) = struct
             value_to_bin s low high num_bins :: acc)
     |> List.rev
 
-  (* print state_to_bin_config *)
-
   let convert_state_to_bin (state : float list) : int =
     let state_bin_list = convert_state_to_bin_list state state_to_bin_config in
     let rec convert_state_to_bin' (state : int list) (n : int) : int =
@@ -180,13 +178,5 @@ module Make_config (M : Simulation.Config) = struct
             *. Float.( ** ) (float_of_int state_bin) (float_of_int n))
           + convert_state_to_bin' t (n - 1)
     in
-    let result =
-      convert_state_to_bin' state_bin_list (List.length state_bin_list - 1)
-    in
-    Printf.printf "state: %s\n"
-      (List.to_string state ~f:Float.to_string);
-    Printf.printf "state_bin_list: %s\n"
-      (List.to_string state_bin_list ~f:Int.to_string);
-    Printf.printf "bin: %d\n" result;
-    result
+    convert_state_to_bin' state_bin_list (List.length state_bin_list - 1)
 end

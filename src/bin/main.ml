@@ -24,20 +24,29 @@
 
 (* open Core *)
 
-module Config = struct
+module Config : Simulation.Config = struct
+  include Simulation.Config
+
+  (* let q_table_path = "cartpole.sexp" *)
   let name = "Pendulum-v1"
-  (* let name = "CartPole-v1" *)
-  let render = false
+  let q_table_path = "pendulum.sexp"
+end
+module Config_render : Simulation.Config = struct
+  include Config
+  let render = true
 end
 
 module QLearning1 = Qlearning.Make (Config)
+module QLearning2 = Qlearning.Make (Config_render)
 
 let () =
   (* let s =
-    Sys.get_argv () |> Array.to_list
-    |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
-  in
-  print_string s; *)
-  QLearning1.train 1000
-  
-
+       Sys.get_argv () |> Array.to_list
+       |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
+     in
+     print_string s; *)
+  QLearning1.train 30000;
+  QLearning1.save_q_table ();
+  QLearning2.train 6;
+(* Qlearning.save_q_table "q_table_cartpole.sexp" *)
+(* let q_table = Qlearning.load_q_table "q_table.sexp" in*)

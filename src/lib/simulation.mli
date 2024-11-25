@@ -21,6 +21,10 @@ module type T =
   end
 
 module type Config = sig
+  (* type t = { name : string; render : bool } *)
     val name : string
     val render : bool
+    val q_table_path : string
 end
+
+module Config: Config

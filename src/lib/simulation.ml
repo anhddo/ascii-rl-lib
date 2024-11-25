@@ -24,4 +24,14 @@ module type Config = sig
   (* type t = { name : string; render : bool } *)
     val name : string
     val render : bool
+    val q_table_path : string
 end
+
+module Config: Config = struct
+  let name = "CartPole-v1"
+  let render = false
+  let q_table_path = ""
+end
+
+
+

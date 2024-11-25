@@ -4,6 +4,8 @@ open OUnit2
 open Gym_env
 
 module Config = struct
+  include Simulation.Config
+
   let name = "CartPole-v1"
   let render = false
 end
@@ -11,6 +13,8 @@ end
 module Cartpole_config = Make_config (Config)
 
 module Config1 = struct
+  include Simulation.Config
+
   let name = "Pendulum-v1"
   let render = false
 end
@@ -18,8 +22,8 @@ end
 module Pendulum_config = Make_config (Config1)
 
 let test_func x y =
-  Printf.printf "expected: %d, got: %d\n" x y;
-  assert_equal x y
+  (* Printf.printf  *)
+  assert_equal x y ~msg:Printf.(sprintf "Expected %d, got %d" x y)
 
 let tests =
   "Cartpole test"
@@ -46,8 +50,15 @@ let tests =
            test_func 401
              (Cartpole_config.convert_state_to_bin
                 [ -4.8; -3.59; -0.418; -3.59 ]) );
-          ("bin test pendulum" >:: fun _ -> test_func 1 (Pendulum_config.value_to_bin (-7.19) (-8.) 8. 20));
-           ("pendulum convert" >:: fun _ -> test_func 1 (Pendulum_config.convert_state_to_bin [ -1.; -1.; -7.19 ]));
+         ( "bin test pendulum" >:: fun _ ->
+           test_func 1 (Pendulum_config.value_to_bin (-7.19) (-8.) 8. 20) );
+         ( "bin test pendulum1 " >:: fun _ ->
+           test_func 3 (Pendulum_config.value_to_bin 1. (-1.) 1. 4) );
+         ( "bin test pendulum2 " >:: fun _ ->
+           test_func 0 (Pendulum_config.value_to_bin (-1.) (-1.) 1. 4) );
+         ( "pendulum convert" >:: fun _ ->
+           test_func 1
+             (Pendulum_config.convert_state_to_bin [ -1.; -1.; -7.19 ]) );
        ]
 
 let () = run_test_tt_main tests
