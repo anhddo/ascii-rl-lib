@@ -174,5 +174,6 @@ let render (sim_state : t) : unit =
 let rec simulate sim_state =
   let action = [0.] in
   let response = step sim_state action in
-  render response.observation;
+  Printf.printf "response: %f %f\n" (List.nth response.observation 0) (List.nth response.observation 1);
+  (* render response.observation; *)
   simulate response.observation

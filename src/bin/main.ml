@@ -45,8 +45,6 @@ let () =
        |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
      in
      print_string s; *)
-  QLearning1.train 30000;
+  QLearning1.train 300;
   QLearning1.save_q_table ();
-  QLearning2.train 6;
-(* Qlearning.save_q_table "q_table_cartpole.sexp" *)
-(* let q_table = Qlearning.load_q_table "q_table.sexp" in*)
+  QLearning2.train 2;
