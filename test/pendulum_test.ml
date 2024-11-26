@@ -1,7 +1,11 @@
 open Core
 open OUnit2
 
+module Config = struct
+  let render = false
+end
 
+module Pendulum = Pendulum.Make(Config)
 module Helper_tests =
   struct
 
