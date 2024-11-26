@@ -57,6 +57,21 @@ module QLearning2 = Qlearning.Make (Config_render) *)
 (* module QLearning3 = Qlearning.Make (Config_console)
 module QLearning4 = Qlearning.Make (Config_console_render) *)
 
+module Env_no_render = struct
+  let render = false
+end
+module Env_render = struct
+  let render = true
+end
+
+module Algo_config = struct
+  let model_path = "pendulum.sexp"
+end
+
+module Pendulum_env = Pendulum.Make (Env_no_render)
+module Pendulum_env_render = Pendulum.Make (Env_render)
+module Qlearning_algo = Qlearning.Make (Algo_config) (Pendulum_env)
+module Qlearning_algo_render = Qlearning.Make (Algo_config) (Pendulum_env_render)
 
 let () =
   (* let s =
@@ -64,9 +79,9 @@ let () =
        |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
      in
      print_string s; *)
-  (* QLearning1.train 3000;
-  QLearning1.save_q_table ();
-  QLearning2.train 2; *)
+  Qlearning_algo.train 100000;
+  Qlearning_algo.save_q_table ();
+  Qlearning_algo_render.train 2;
   Printf.printf "Pendulum\n";
 
   (* QLearning3.train 30000;

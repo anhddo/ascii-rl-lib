@@ -44,6 +44,10 @@ let tests =
                 [ -4.8; -3.59; -0.418; -3.59 ]) );
          ( "bin test pendulum" >:: fun _ ->
            test_func 1 (Pendulum_state_action.value_to_bin (-7.19) (-8.) 8. 20) );
+         ( "bin test pendulum" >:: fun _ ->
+           test_func 19 (Pendulum_state_action.value_to_bin (8.3) (-8.) 8. 20) );
+         ( "bin test pendulum" >:: fun _ ->
+           test_func 0 (Pendulum_state_action.value_to_bin (-8.3) (-8.) 8. 20) );
          ( "bin test pendulum1 " >:: fun _ ->
            test_func 3 (Pendulum_state_action.value_to_bin 1. (-1.) 1. 4) );
          ( "bin test pendulum2 " >:: fun _ ->

@@ -1,12 +1,12 @@
-; (library
-;  (name qlearning)
-;  (modules qlearning)
-;  (libraries core simulation base_algorithm state_action))
+(library
+ (name qlearning)
+ (modules qlearning)
+ (libraries core simulation base_algorithm state_action))
 
-; (library
-;  (name base_algorithm)
-;  (modules base_algorithm)
-;  (libraries core))
+(library
+ (name base_algorithm)
+ (modules base_algorithm)
+ (libraries core))
 
 (library
  (name state_action)

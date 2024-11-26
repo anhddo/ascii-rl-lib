@@ -6,7 +6,7 @@ let choose_action (_ : float list) : float list = [ 0.0 ]
 
 
 (* module Make (Env_config : Simulation.Config) = struct
-   module QLearningConfig = Make_config (Env_config)
+   module State_action = Make_config (Env_config)
 
    (* module Env = Gym_env.Make (Env_config) *)
    module Env = Pendulum *)
@@ -15,14 +15,14 @@ module type Algo_config = sig
 end
 
 module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
-  (* module QLearningConfig = Make_config (Env_config) *)
+  (* module State_action = Make_config (Env_config) *)
 
   (* module Env = Gym_env.Make (Env_config) *)
-  module QLearningConfig = State_action.Make (Env)
+  module State_action = State_action.Make (Env)
 
-  let state_bin = QLearningConfig.q_config.state_bin
-  let action_bin = QLearningConfig.q_config.action_bin
-  let obs_dim = QLearningConfig.q_config.obs_dim
+  let state_bin = State_action.q_config.state_bin
+  let action_bin = State_action.q_config.action_bin
+  let obs_dim = State_action.q_config.obs_dim
 
   let action_dim =
     match action_bin with Discrete n -> n | Continuous x -> x.num_bins
@@ -71,13 +71,13 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let action =
         if Float.compare (Random.float 1.0) 0.1 = -1 then Random.int action_dim
         else
-          let state_bin = QLearningConfig.convert_state_to_bin state in
+          let state_bin = State_action.convert_state_to_bin state in
           q_table.(state_bin) |> Array.to_list |> float_argmax
       in
       let passing_action_to_env =
         match action_bin with
         | Discrete _ -> [ float_of_int action ]
-        | Continuous x -> [ QLearningConfig.bin_to_value action x ]
+        | Continuous x -> [ State_action.bin_to_value action x ]
       in
       let response = Env.step internal_state passing_action_to_env in
       (* Printf.printf "internal_state: %s \n" (List.to_string ~f:Float.to_string response.internal_state);
@@ -86,8 +86,8 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let reward = response.reward in
       let is_done = response.terminated in
       let truncated = response.truncated in
-      let next_state_bin = QLearningConfig.convert_state_to_bin next_state in
-      let state_bin = QLearningConfig.convert_state_to_bin state in
+      let next_state_bin = State_action.convert_state_to_bin next_state in
+      let state_bin = State_action.convert_state_to_bin state in
       (* update q table*)
       let _ =
         if is_done || truncated then q_table.(state_bin).(action) <- reward

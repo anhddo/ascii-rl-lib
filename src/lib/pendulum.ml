@@ -118,66 +118,67 @@ functor
 
     let render (sim_state : t) : unit =
       (* prem *)
-      let term_width = 80 in
-      let term_height = 24 in
-      let scale = 10.0 in
+      if C.render = true then 
+        let term_width = 80 in
+        let term_height = 24 in
+        let scale = 10.0 in
 
-      match sim_state with
-      | [ theta; _; _ ] ->
-          let x = scale *. sin theta in
-          let y = scale *. cos theta in
+        match sim_state with
+        | [ theta; _; _ ] ->
+            let x = scale *. sin theta in
+            let y = scale *. cos theta in
 
-          (* project to col row *)
-          let col = int_of_float (float_of_int (term_width / 2) +. x) in
-          let row = int_of_float (float_of_int (term_height / 2) -. y) in
+            (* project to col row *)
+            let col = int_of_float (float_of_int (term_width / 2) +. x) in
+            let row = int_of_float (float_of_int (term_height / 2) -. y) in
 
-          (* init canvas *)
-          let canvas = Array.make_matrix term_height term_width ' ' in
+            (* init canvas *)
+            let canvas = Array.make_matrix term_height term_width ' ' in
 
-          (* draw pivot *)
-          let pivot_row = term_height / 2 in
-          let pivot_col = term_width / 2 in
-          canvas.(pivot_row).(pivot_col) <- '+';
+            (* draw pivot *)
+            let pivot_row = term_height / 2 in
+            let pivot_col = term_width / 2 in
+            canvas.(pivot_row).(pivot_col) <- '+';
 
-          (* draw line *)
-          let draw_line x0 y0 x1 y1 =
-            let dx = x1 - x0 in
-            let dy = y1 - y0 in
-            let steps = max (abs dx) (abs dy) in
-            if steps > 0 then
-              let x_increment = float dx /. float steps in
-              let y_increment = float dy /. float steps in
-              let rec loop i x y =
-                if i <= steps then (
-                  let xi = int_of_float x in
-                  let yi = int_of_float y in
-                  if xi >= 0 && xi < term_width && yi >= 0 && yi < term_height
-                  then (
-                    canvas.(yi).(xi) <- '.';
-                    if xi + 1 < term_width then canvas.(yi).(xi + 1) <- '.');
-                  loop (i + 1) (x +. x_increment) (y +. y_increment))
-              in
-              loop 0 (float x0) (float y0)
-          in
+            (* draw line *)
+            let draw_line x0 y0 x1 y1 =
+              let dx = x1 - x0 in
+              let dy = y1 - y0 in
+              let steps = max (abs dx) (abs dy) in
+              if steps > 0 then
+                let x_increment = float dx /. float steps in
+                let y_increment = float dy /. float steps in
+                let rec loop i x y =
+                  if i <= steps then (
+                    let xi = int_of_float x in
+                    let yi = int_of_float y in
+                    if xi >= 0 && xi < term_width && yi >= 0 && yi < term_height
+                    then (
+                      canvas.(yi).(xi) <- '.';
+                      if xi + 1 < term_width then canvas.(yi).(xi + 1) <- '.');
+                    loop (i + 1) (x +. x_increment) (y +. y_increment))
+                in
+                loop 0 (float x0) (float y0)
+            in
 
-          (* draw pivot *)
-          draw_line pivot_col pivot_row col row;
+            (* draw pivot *)
+            draw_line pivot_col pivot_row col row;
 
-          (* draw bottom *)
-          if row >= 0 && row < term_height && col >= 0 && col < term_width then
-            canvas.(row).(col) <- 'O';
+            (* draw bottom *)
+            if row >= 0 && row < term_height && col >= 0 && col < term_width then
+              canvas.(row).(col) <- 'O';
 
-          (* clean screen *)
-          print_string "\027[2J\027[H";
-          Array.iter
-            (fun row ->
-              Array.iter print_char row;
-              print_newline ())
-            canvas;
+            (* clean screen *)
+            print_string "\027[2J\027[H";
+            Array.iter
+              (fun row ->
+                Array.iter print_char row;
+                print_newline ())
+              canvas;
 
-          (* delay *)
-          Unix.sleepf 0.05
-      | _ -> failwith "Invalid simulation state"
+            (* delay *)
+            Unix.sleepf 0.05
+        | _ -> failwith "Invalid simulation state"
 
     let rec simulate sim_state =
       let action = [ 0. ] in
