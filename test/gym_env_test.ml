@@ -12,7 +12,9 @@ module Cartpole_state_action = State_action.Make (Cartpole_env)
 module Pendulum_state_action  = State_action.Make (Pendulum_env)
 
 
-
+(* next_state: (1. -1.45140206468e-008 -0.120906035639)
+next_state_bin: 8189
+Fatal error: exception Invalid_argument("index out of bounds") *)
 let test_func x y =
   (* Printf.printf  *)
   assert_equal x y ~msg:Printf.(sprintf "Expected %d, got %d" x y)

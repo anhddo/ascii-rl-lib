@@ -79,9 +79,9 @@ let () =
        |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
      in
      print_string s; *)
-  Qlearning_algo.train 100000;
-  Qlearning_algo.save_q_table ();
-  Qlearning_algo_render.train 2;
+  (* Qlearning_algo.train 100000;
+  Qlearning_algo.save_q_table (); *)
+  Qlearning_algo_render.train 4;
   Printf.printf "Pendulum\n";
 
   (* QLearning3.train 30000;

@@ -6,9 +6,8 @@ functor
   (C : Simulation.Config)
   ->
   struct
-
-
     include Simulation.T
+
     let env_type = Pendulum
 
     (* Returns the squre of the float *)
@@ -55,6 +54,9 @@ functor
 
     (* Resets the simulation and returns the first response again *)
     let reset () : t * t =
+      (* clean screen *)
+      if C.render then print_string "\027[2J\027[H";
+
       (* TODO : possibly have the constants be held in the sim list *)
       let random_starting_angle = random_between (-1.0 *. Float.pi) Float.pi in
       let random_starting_angular_speed = random_between (-1.) 1. in
@@ -82,6 +84,10 @@ functor
           let applied_torque =
             clip (Float.neg max_torque) max_torque applied_torque
           in
+          if C.render then (
+            Printf.printf "\027[1;1H";
+            (* move cursor to top left*)
+            Printf.printf "Applied_torque: %f\n" applied_torque);
           let reward =
             (* Penalizes high applied torque, high angular speeds, and deviation from the top position *)
             old_ang |> normalize_angle |> square
@@ -118,13 +124,13 @@ functor
 
     let render (sim_state : t) : unit =
       (* prem *)
-      if C.render = true then 
+      if C.render = true then
         let term_width = 80 in
         let term_height = 24 in
         let scale = 10.0 in
 
         match sim_state with
-        | [ theta; _; _ ] ->
+        | [ theta; angle_speed; time_step ] ->
             let x = scale *. sin theta in
             let y = scale *. cos theta in
 
@@ -165,11 +171,15 @@ functor
             draw_line pivot_col pivot_row col row;
 
             (* draw bottom *)
-            if row >= 0 && row < term_height && col >= 0 && col < term_width then
-              canvas.(row).(col) <- 'O';
+            if row >= 0 && row < term_height && col >= 0 && col < term_width
+            then canvas.(row).(col) <- 'O';
 
             (* clean screen *)
-            print_string "\027[2J\027[H";
+            (* print_string "\027[2J\027[H"; *)
+            Printf.printf "\027[2;1H";
+            (* move cursor to top left, this trick avoid flickering *)
+            Printf.printf "Angle: %f\nAngular speed: %f\nTime step: %d\n" theta
+              angle_speed (int_of_float time_step);
             Array.iter
               (fun row ->
                 Array.iter print_char row;

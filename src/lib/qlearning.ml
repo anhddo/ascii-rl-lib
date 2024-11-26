@@ -87,6 +87,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let is_done = response.terminated in
       let truncated = response.truncated in
       let next_state_bin = State_action.convert_state_to_bin next_state in
+      if next_state_bin >= Array.length q_table then
+        (Printf.printf "next_state: %s \n" (Core.List.to_string ~f:Float.to_string next_state);
+        Printf.printf "next_state_bin: %d \n" next_state_bin);
       let state_bin = State_action.convert_state_to_bin state in
       (* update q table*)
       let _ =
