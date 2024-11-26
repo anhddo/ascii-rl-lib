@@ -1,6 +1,6 @@
 (executable
  (name main)
- (libraries qlearning core core_unix.sys_unix))
+ (libraries qlearning core pendulum))
 
 (executable
  (name pendulum_main)

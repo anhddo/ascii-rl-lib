@@ -1,7 +1,7 @@
 (test
-  (name qlearning_test)
-  (modules qlearning_test)
-  (libraries qlearning ounit2 core))
+  (name gym_env_test)
+  (modules gym_env_test)
+  (libraries gym_env ounit2 core qlearning))
 
 
 (test 

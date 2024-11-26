@@ -1,7 +1,7 @@
 (library
  (name qlearning)
  (modules qlearning)
- (libraries core pyml simulation gym_env base_algorithm))
+ (libraries core pyml core_unix.sys_unix simulation gym_env base_algorithm))
 
 (library
  (name base_algorithm)

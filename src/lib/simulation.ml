@@ -1,26 +1,42 @@
-module type T = 
-  sig
-  	(* Simulation Type *)
-  	type t = float list (* Should store all the information to uniquely identify any possible simulation state *)
+module type T = sig
+  (* Simulation Type *)
+  type t = float list
+  (* Should store all the information to uniquely identify any possible simulation state *)
 
-  	(* Can change based on what the simulation needs *)
-    type action = float list 
-    type response = { observation : t; reward : float; terminated : bool; truncated : bool; info : string }
+  (* Can change based on what the simulation needs *)
+  type action = float list
 
-    (* Creates a new simulation *)
-    val create : unit -> t 
+  type response = {
+    observation : t;
+    reward : float;
+    terminated : bool;
+    truncated : bool;
+    info : string;
+    internal_state : t;
+  }
 
-    (* Resets the simulation and returns the first response again *)
-    val reset : unit -> t
+  (* Creates a new simulation *)
+  val create : unit -> t
 
-    (* Applies the action to the environment, and returns the corresponding response *)
-    val step : t -> action -> response
+  (* Resets the simulation and returns the first response again *)
+  val reset : unit -> t * t
 
-    (* Take a simulation and render into a viewable format *)
-    val render : t -> char list (* char list is temporary idea, can and may likely change *)
-  end
+  (* Applies the action to the environment, and returns the corresponding response *)
+  val step : t -> action -> response
+
+  (* Take a simulation and render into a viewable format *)
+  val render : t -> unit
+end
 
 module type Config = sig
-    val name : string
-    val render : bool
+  (* type t = { name : string; render : bool } *)
+  val name : string
+  val render : bool
+  val q_table_path : string
+end
+
+module Config : Config = struct
+  let name = "CartPole-v1"
+  let render = false
+  let q_table_path = ""
 end
