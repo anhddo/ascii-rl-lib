@@ -31,13 +31,32 @@ module Config : Simulation.Config = struct
   let name = "Pendulum-v1"
   let q_table_path = "pendulum.sexp"
 end
+
+module Config_console : Simulation.Config = struct
+  include Simulation.Config
+
+  (* let q_table_path = "cartpole.sexp" *)
+  let name = "Pendulum-v1"
+  let q_table_path = "console.sexp"
+end
+module Config_console_render : Simulation.Config = struct
+  include Config_console
+
+  (* let q_table_path = "cartpole.sexp" *)
+  let render = true
+end
+
 module Config_render : Simulation.Config = struct
   include Config
   let render = true
 end
 
-module QLearning1 = Qlearning.Make (Config)
-module QLearning2 = Qlearning.Make (Config_render)
+(* module QLearning1 = Qlearning.Make (Config)
+module QLearning2 = Qlearning.Make (Config_render) *)
+(* module QLearning3 = Qlearning.Make (Pendulum) *)
+module QLearning3 = Qlearning.Make (Config_console)
+module QLearning4 = Qlearning.Make (Config_console_render)
+
 
 let () =
   (* let s =
@@ -45,6 +64,11 @@ let () =
        |> List.fold ~init:"" ~f:(fun acc a -> acc ^ a)
      in
      print_string s; *)
-  QLearning1.train 3000;
+  (* QLearning1.train 3000;
   QLearning1.save_q_table ();
-  QLearning2.train 2;
+  QLearning2.train 2; *)
+
+  QLearning3.train 30000;
+  QLearning3.save_q_table ();
+  QLearning4.train 7;
+  (* QLearning3.train 30; *)

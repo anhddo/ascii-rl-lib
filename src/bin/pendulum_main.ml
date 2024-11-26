@@ -4,5 +4,5 @@ open Pendulum
 
 let () =
   Random.self_init ();
-  let init_state = reset () in
-  simulate init_state
+  let _, internal_state = reset () in
+  simulate internal_state

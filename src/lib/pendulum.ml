@@ -46,12 +46,20 @@ type response = {
 (* Creates a new simulation *)
 let create () : t = [ 0.0; 0.0 ]
 
+let convert_fo_feature (sim : t) : float list =
+  let angle = List.nth sim 0 in
+  let angular_speed = List.nth sim 1 in
+  [ Stdlib.cos angle; Stdlib.sin angle; angular_speed ]
+
 (* Resets the simulation and returns the first response again *)
-let reset () : t =
+let reset () : t * t =
   (* TODO : possibly have the constants be held in the sim list *)
   let random_starting_angle = random_between (-1.0 *. Float.pi) Float.pi in
   let random_starting_angular_speed = random_between (-1.) 1. in
-  [ random_starting_angle; random_starting_angular_speed ]
+  let internal_state =
+    [ random_starting_angle; random_starting_angular_speed; 0. ]
+  in
+  (convert_fo_feature internal_state, internal_state)
 
 (* Applies the action to the environment, and returns the corresponding response *)
 let step (sim : t) (act : action) : response =
@@ -63,7 +71,11 @@ let step (sim : t) (act : action) : response =
   let max_torque = 2. in
   let max_angspeed = 8. in
   match (sim, act) with
-  | ( [ old_ang (* radians from top *); old_angspeed (* radians per second *) ],
+  | ( [
+        old_ang (* radians from top *);
+        old_angspeed (* radians per second *);
+        timestep;
+      ],
       applied_torque (* Newton-Meters *) :: [] ) ->
       let applied_torque =
         clip (Float.neg max_torque) max_torque applied_torque
@@ -93,12 +105,12 @@ let step (sim : t) (act : action) : response =
         old_ang |> Float.add @@ (new_angspeed *. constant_timestep)
       in
       {
-        observation = [Stdlib.cos new_ang; Stdlib.sin new_ang; new_angspeed ];
+        observation = convert_fo_feature [ new_ang; new_angspeed ];
         reward;
         terminated = false;
-        truncated = false;
+        truncated = timestep > 200.;
         info = "";
-        internal_state = [ new_ang; new_angspeed ];
+        internal_state = [ new_ang; new_angspeed; timestep +. 1. ];
       }
   | _ -> failwith "Improper Input"
 
@@ -109,7 +121,7 @@ let render (sim_state : t) : unit =
   let scale = 10.0 in
 
   match sim_state with
-  | [ theta; _ ] ->
+  | [ theta; _; _ ] ->
       let x = scale *. sin theta in
       let y = scale *. cos theta in
 
@@ -167,9 +179,6 @@ let render (sim_state : t) : unit =
 let rec simulate sim_state =
   let action = [ 0. ] in
   let response = step sim_state action in
-  (* Printf.printf "response: %f %f %f\n"
-    (Stdlib.cos @@ List.nth response.observation 0)
-    (Stdlib.sin @@ List.nth response.observation 1)
-    (List.nth response.observation 2); *)
-  render response.internal_state;
+  Printf.printf "internal state: %s\n" (String.concat ", " (List.map Float.to_string response.internal_state));
+  (* render response.internal_state; *)
   simulate response.internal_state

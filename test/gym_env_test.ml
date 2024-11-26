@@ -1,7 +1,6 @@
 open OUnit2
 (* we usually open OUnit2 since it is pervasively used in test files *)
 
-open Gym_env
 
 module Config = struct
   include Simulation.Config
@@ -10,7 +9,7 @@ module Config = struct
   let render = false
 end
 
-module Cartpole_config = Make_config (Config)
+module Cartpole_config = Qlearning.Make_config (Config)
 
 module Config1 = struct
   include Simulation.Config
@@ -19,7 +18,7 @@ module Config1 = struct
   let render = false
 end
 
-module Pendulum_config = Make_config (Config1)
+module Pendulum_config = Qlearning.Make_config (Config1)
 
 let test_func x y =
   (* Printf.printf  *)
