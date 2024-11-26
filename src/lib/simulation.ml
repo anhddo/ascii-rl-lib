@@ -1,5 +1,18 @@
+module type Config = sig
+  (* type t = { name : string; render : bool } *)
+  val render : bool
+end
+
 module type T = sig
-  (* Simulation Type *)
+  type env_type =
+    | Cartpole
+    | Pendulum
+    | MountainCar
+    | Acrobot
+    | LunarLander
+    | LunarLanderContinuous
+    | BipedalWalker
+
   type t = float list
   (* Should store all the information to uniquely identify any possible simulation state *)
 
@@ -14,6 +27,14 @@ module type T = sig
     info : string;
     internal_state : t;
   }
+end
+
+module type S = sig
+  (* Simulation Type *)
+  (* include Env_type.S *)
+  include T
+
+  val env_type : env_type
 
   (* Creates a new simulation *)
   val create : unit -> t
@@ -28,15 +49,25 @@ module type T = sig
   val render : t -> unit
 end
 
-module type Config = sig
-  (* type t = { name : string; render : bool } *)
-  val name : string
-  val render : bool
-  val q_table_path : string
-end
+module T : T = struct
+  type env_type =
+    | Cartpole
+    | Pendulum
+    | MountainCar
+    | Acrobot
+    | LunarLander
+    | LunarLanderContinuous
+    | BipedalWalker
 
-module Config : Config = struct
-  let name = "CartPole-v1"
-  let render = false
-  let q_table_path = ""
+  type t = float list
+  type action = float list
+
+  type response = {
+    observation : t;
+    reward : float;
+    terminated : bool;
+    truncated : bool;
+    info : string;
+    internal_state : t;
+  }
 end

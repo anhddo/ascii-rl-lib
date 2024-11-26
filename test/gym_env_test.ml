@@ -3,18 +3,16 @@ open OUnit2
 
 
 module Config = struct
-  include Simulation.Config
-
-  let name = "CartPole-v1"
   let render = false
 end
+module Cartpole = Cartpole.Make (Config)
 
-module Cartpole_config = Qlearning.Make_config (Config)
+module Cartpole_config = State_action.Make (Config)
 
 module Config1 = struct
   include Simulation.Config
 
-  let name = "Pendulum-v1"
+  let name = "pendulum"
   let render = false
 end
 

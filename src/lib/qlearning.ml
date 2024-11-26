@@ -1,112 +1,24 @@
-open Core
+(* open Core *)
 
 let choose_action (_ : float list) : float list = [ 0.0 ]
 
-module Make_config (M : Simulation.Config) = struct
-  type qconfig = {
-    low_list : float list;
-    high_list : float list;
-    num_bins : int;
-  }
+(* module Make_state_action (_ : Simulation.S) : State_action *)
 
-  type continuous_bin = { low : float; high : float; num_bins : int }
-  type bin = Discrete of int | Continuous of continuous_bin
 
-  type q_table_config = {
-    obs_dim : int;
-    action_dim : int;
-    state_bin : int;
-    action_bin : bin;
-    is_continuous_action : bool;
-  }
+(* module Make (Env_config : Simulation.Config) = struct
+   module QLearningConfig = Make_config (Env_config)
 
-  let state_bin = 20
-
-  let config =
-    match M.name with
-    | "CartPole-v1" ->
-        {
-          low_list = [ -4.8; -4.0; -0.418; -4.0 ];
-          high_list = [ 4.8; 4.0; 0.418; 4.0 ];
-          num_bins = state_bin;
-        }
-    | "Pendulum-v1" ->
-        {
-          low_list = [ -1.; -1.; -8. ];
-          high_list = [ 1.; 1.; 8. ];
-          num_bins = state_bin;
-        }
-    | _ -> failwith "Invalid environment name"
-
-  let q_config =
-    match M.name with
-    | "CartPole-v1" ->
-        {
-          obs_dim = 4;
-          action_dim = 2;
-          state_bin;
-          is_continuous_action = false;
-          action_bin = Discrete 2;
-        }
-    | "Pendulum-v1" ->
-        {
-          obs_dim = 3;
-          action_dim = 1;
-          state_bin;
-          action_bin = Continuous { low = -2.; high = 2.; num_bins = 7 };
-          is_continuous_action = true;
-        }
-    | _ -> failwith "Invalid environment name"
-
-  let state_to_bin_config : bin list =
-    List.map2_exn config.low_list config.high_list ~f:(fun low high ->
-        Continuous { low; high; num_bins = config.num_bins })
-
-  let value_to_bin (value : float) (low : float) (high : float) (num_bins : int)
-      : int =
-    if Float.compare value low = -1 then 0
-    else if Float.compare value high <> -1 then num_bins - 1
-    else
-      let bin_width = (high -. low) /. float_of_int num_bins in
-      let bin = (value -. low) /. bin_width in
-      int_of_float bin
-
-  let bin_to_value (bin : int) (bin_config : continuous_bin) : float =
-    let bin_width =
-      (bin_config.high -. bin_config.low) /. float_of_int bin_config.num_bins
-    in
-    (bin_width *. float_of_int bin) +. bin_config.low
-
-  let convert_state_to_bin_list (state : float list) (bin_config : bin list) :
-      int list =
-    let lz = List.zip_exn state bin_config in
-    List.fold lz ~init:[] ~f:(fun acc (s, b) ->
-        match b with
-        | Discrete _ -> failwith "Discrete bin not supported"
-        | Continuous { low; high; num_bins } ->
-            value_to_bin s low high num_bins :: acc)
-    |> List.rev
-
-  let convert_state_to_bin (state : float list) : int =
-    (* Printf.printf "state: %s \n" (List.to_string ~f:Float.to_string state); *)
-    let state_bin_list = convert_state_to_bin_list state state_to_bin_config in
-    let rec convert_state_to_bin' (state : int list) (n : int) : int =
-      match state with
-      | [] -> 0
-      | h :: t ->
-          int_of_float
-            (float_of_int h
-            *. Float.( ** ) (float_of_int state_bin) (float_of_int n))
-          + convert_state_to_bin' t (n - 1)
-    in
-    convert_state_to_bin' state_bin_list (List.length state_bin_list - 1)
+   (* module Env = Gym_env.Make (Env_config) *)
+   module Env = Pendulum *)
+module type Algo_config = sig
+  val model_path : string
 end
 
-module Make (Env_config : Simulation.Config) = struct
-  module QLearningConfig = Make_config (Env_config)
+module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
+  (* module QLearningConfig = Make_config (Env_config) *)
 
   (* module Env = Gym_env.Make (Env_config) *)
-  module Env = Pendulum
+  module QLearningConfig = State_action.Make (Env)
 
   let state_bin = QLearningConfig.q_config.state_bin
   let action_bin = QLearningConfig.q_config.action_bin
@@ -129,25 +41,27 @@ module Make (Env_config : Simulation.Config) = struct
     argmax arr ~compare:Float.compare ~init:Float.neg_infinity
 
   let load_q_table (filename : string) =
-    let file_content = In_channel.read_all filename in
+    let file_content = Core.In_channel.read_all filename in
     Sexplib.Conv.array_of_sexp
       (Sexplib.Conv.array_of_sexp Sexplib.Conv.float_of_sexp)
       (Sexplib.Sexp.of_string file_content)
 
   let q_table =
-    let file_name = Env_config.q_table_path in
-    if Sys_unix.file_exists_exn file_name then load_q_table file_name
+    let file_name = Algo_config.model_path in
+    if Sys.file_exists file_name then load_q_table file_name
     else
-      Array.make_matrix
+      Core.Array.make_matrix
         ~dimx:(int_of_float @@ (float_of_int state_bin ** float_of_int obs_dim))
         ~dimy:action_dim 0.0
 
   let save_q_table () =
     let sexp_str =
-      Sexp.to_string_hum
-        (Array.sexp_of_t (Array.sexp_of_t Float.sexp_of_t) q_table)
+      Core.Sexp.to_string_hum
+        (Core.Array.sexp_of_t
+           (Core.Array.sexp_of_t Core.Float.sexp_of_t)
+           q_table)
     in
-    Out_channel.write_all Env_config.q_table_path ~data:sexp_str
+    Core.Out_channel.write_all Algo_config.model_path ~data:sexp_str
 
   let train (episode : int) =
     let learning_rate = 0.1 in
@@ -179,10 +93,10 @@ module Make (Env_config : Simulation.Config) = struct
         if is_done || truncated then q_table.(state_bin).(action) <- reward
         else
           let max_q =
-            List.max_elt
+            Core.List.max_elt
               (q_table.(next_state_bin) |> Array.to_list)
               ~compare:Float.compare
-            |> Option.value_exn
+            |> Core.Option.value_exn
             (* max q_table.(next_state_bin).(0) q_table.(next_state_bin).(1) *)
           in
           q_table.(state_bin).(action) <-
@@ -200,7 +114,7 @@ module Make (Env_config : Simulation.Config) = struct
         (* report total reward *)
         loop' (episode - 1) state internal_state 0.0)
       else if episode > 0 then (
-        if Env_config.render then Env.render response.internal_state;
+        Env.render response.internal_state;
         loop' episode state response.internal_state reward_ep)
       else ()
       (* else q_table *)

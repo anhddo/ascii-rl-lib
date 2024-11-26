@@ -1,33 +1,43 @@
-(library
- (name qlearning)
- (modules qlearning)
- (libraries core pyml core_unix.sys_unix simulation gym_env base_algorithm))
+; (library
+;  (name qlearning)
+;  (modules qlearning)
+;  (libraries core simulation base_algorithm state_action))
 
-(library
- (name base_algorithm)
- (modules base_algorithm)
- (libraries core pyml))
+; (library
+;  (name base_algorithm)
+;  (modules base_algorithm)
+;  (libraries core))
 
-(library
- (name rocket)
- (modules rocket)
- (libraries core unix))
+; (library
+;  (name state_action)
+;  (modules state_action)
+;  (libraries core simulation))
+
+; (library
+;  (name rocket)
+;  (modules rocket)
+;  (libraries core unix))
 
 (library
  (name pendulum)
  (modules pendulum)
  (libraries core unix simulation))
+; (library
+;  (name cartpole)
+;  (modules cartpole)
+;  (libraries core unix simulation))
 
-(library
- (name env_test)
- (modules env_test)
- (libraries core pyml))
+; (library
+;  (name env_type)
+;  (modules env_type)
+;  (libraries core))
 
-(library
- (name gym_env)
- (modules gym_env)
- (libraries core pyml simulation pendulum))
 (library
  (name simulation)
  (modules simulation)
- (libraries core unix))
+ (libraries core unix ))
+
+; (library
+;  (name gym_env)
+;  (modules gym_env)
+;  (libraries core pyml simulation pendulum))
