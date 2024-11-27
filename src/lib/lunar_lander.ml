@@ -5,7 +5,8 @@ functor
   struct
     include Simulation.T
 
-    let env_type = Pendulum
+    let env_type = LunarLander
+
 
     (* Returns the squre of the float *)
     let square (value : float) : float = Float.pow value 2.
@@ -190,6 +191,8 @@ functor
     let rec simulate sim_state =
       let action = [ 0. ] in
       let response = step sim_state action in
-      render response.internal_state;
+      Printf.printf "internal state: %s\n"
+        (String.concat ", " (List.map Float.to_string response.internal_state));
+      (* render response.internal_state; *)
       simulate response.internal_state
   end

@@ -15,10 +15,10 @@
  (preprocess (pps bisect_ppx))
  )
 
-; (library
-;  (name rocket)
-;  (modules rocket)
-;  (libraries core unix))
+(library
+ (name lunar_lander)
+ (modules lunar_lander)
+ (libraries core simulation))
 
 (library
  (name pendulum)
@@ -29,10 +29,6 @@
  (modules cartpole)
  (libraries core unix simulation))
 
-; (library
-;  (name env_type)
-;  (modules env_type)
-;  (libraries core))
 
 (library
  (name simulation)

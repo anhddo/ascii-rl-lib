@@ -1,15 +1,6 @@
-(* open Core *)
 
 let choose_action (_ : float list) : float list = [ 0.0 ]
 
-(* module Make_state_action (_ : Simulation.S) : State_action *)
-
-
-(* module Make (Env_config : Simulation.Config) = struct
-   module State_action = Make_config (Env_config)
-
-   (* module Env = Gym_env.Make (Env_config) *)
-   module Env = Pendulum *)
 module type Algo_config = sig
   val model_path : string
 end
