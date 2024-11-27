@@ -87,7 +87,7 @@ functor
           if C.render then (
             Printf.printf "\027[1;1H";
             (* move cursor to top left*)
-            Printf.printf "Applied_torque: %f\n" applied_torque);
+            Printf.printf "Applied_torque:\t %f\n" applied_torque);
           let reward =
             (* Penalizes high applied torque, high angular speeds, and deviation from the top position *)
             old_ang |> normalize_angle |> square
@@ -178,7 +178,7 @@ functor
             (* print_string "\027[2J\027[H"; *)
             Printf.printf "\027[2;1H";
             (* move cursor to top left, this trick avoid flickering *)
-            Printf.printf "Angle: %f\nAngular speed: %f\nTime step: %d\n" theta
+            Printf.printf "Angle:\t\t%f\nAngular speed:\t%f\nTime step:\t%d\n" theta
               angle_speed (int_of_float time_step);
             Array.iter
               (fun row ->

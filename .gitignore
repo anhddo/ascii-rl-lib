@@ -8,9 +8,11 @@
 *.cmxs
 *.cmxa
 *.sexp
+*.coverage
 
 # ocamlbuild working directory
 _build/
+_coverage/
 
 # ocamlbuild targets
 *.byte

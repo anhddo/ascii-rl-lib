@@ -11,7 +11,9 @@
 (library
  (name state_action)
  (modules state_action)
- (libraries core simulation))
+ (libraries core simulation)
+ (preprocess (pps bisect_ppx))
+ )
 
 ; (library
 ;  (name rocket)
