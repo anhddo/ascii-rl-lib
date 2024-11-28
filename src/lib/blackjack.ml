@@ -7,31 +7,6 @@
   We will assume that we are playing with an infinite deck, that is, there will be infinite replacement
 *)
 
-type t = int list (* Length is 3 | [current_sum, dealer_face_card, has_usable_ace ] *)
-
-type action = int list (* Length is 1 | [hit (if positive), stand (if 0 or negative)] *)
-
-(* observation : the new state of the simulation; the next step call should use this value *)
-(* reward : 1 for a win, 0 for a tie, -1 for a loss *)
-(* terminated : if a round has ended *)
-(* truncated : idk *)
-(* info : error handling, nothing for now *)
-type response = {
-  observation : t;
-  reward : int;
-  terminated : bool;
-  truncated : bool;
-  info : string;
-}
-
-
-(* Creates a new simulation *) (* TODO, CONSIDER IF EVEN NEEDED, probably will later as we increase code complexity *)
-let create() : t = 
-  [0; 0; 0];;
-
-
-
-
 (* State: Length is 3 | [current_sum, dealer_face_card, has_usable_ace ] *)
 (* Action: Length is 1 | [hit (if positive), stand (if 0 or negative)] *)
 (* observation : the new state of the simulation; the next step call should use this value *)
@@ -81,14 +56,16 @@ functor
           first_card +. second_card +. 10.
         else
           first_card +. second_card
-      in  
-      ([ 
+      in 
+      let state = [ 
         total_sum;
         dealer_face_card;
         if has_usable_ace 
           then 1.
         else 0.;
-        ], []);;
+        ]
+      in
+      (state, state);;
 
     (* Applies the action to the environment, and returns the corresponding response *)
     let step (sim : t) (act : action) : response =
@@ -112,11 +89,103 @@ functor
         in
         let new_sum = curr_sum +. new_card
         in
-        match (new_sum > 21.) with 
-        | true -> failwith "BUST TODO"
-        | false -> failwith "OK TODO"
+        if (new_sum > 21.) then 
+          match has_usable_ace with 
+          | 1. -> 
+            let state = [
+              new_sum -. 10.;
+              dealer_face_card;
+              0.
+            ]
+            in 
+            {
+              observation = state;
+              reward = 0.;
+              terminated = false;
+              truncated = false;
+              info = "busted, used ace to recover";
+              internal_state = state;
+            }
+          | 0. -> let state = [
+              new_sum;
+              dealer_face_card;
+              0.
+            ]
+            in
+            {
+              observation = state;
+              reward = -1.;
+              terminated = true;
+              truncated = false;
+              info = "busted";
+              internal_state = state;
+            }
+          | _ -> failwith "improper value for has usable ace"
+        else
+          let state = [
+              new_sum;
+              dealer_face_card;
+              has_usable_ace;
+            ]
+            in
+            {
+              observation = state;
+              reward = 0.;
+              terminated = true;
+              truncated = false;
+              info = "hit and okay";
+              internal_state = state;
+            }
       else
-        failwith "STAND TODO" 
+        let rec draw_for_dealer (curr_dealer_sum : float) (dealer_has_usable_ace : bool) : float =
+          if (curr_dealer_sum > 21. && dealer_has_usable_ace) then (* busted, but has ace*)
+            draw_for_dealer (curr_dealer_sum -. 10.) false
+          else if (curr_dealer_sum > 21.) then (* busted *)
+            curr_dealer_sum
+          else if (curr_dealer_sum >= 17.) then (* safely above 17,*)
+            curr_dealer_sum
+          else (* not yet safe at 17, so has to draw again*)
+            let new_card = draw_card() 
+            in
+            draw_for_dealer (new_card +. curr_dealer_sum) (dealer_has_usable_ace || new_card = 1.)
+        in 
+        let dealer_result = draw_for_dealer dealer_face_card (dealer_face_card = 1.)
+        in
+        match (dealer_result > 21.) with 
+        | true -> let state = [ (* rebuild because we need to ensure proper formatting *)
+            curr_sum;
+            dealer_face_card;
+            has_usable_ace;
+          ]
+          in 
+          {
+            observation = state;
+            reward = 1.;
+            terminated = true;
+            truncated = false;
+            info = "stand, dealer bust";
+            internal_state = state;
+          }
+        | false -> 
+          let get_reward (player_sum : float) (dealer_sum : float) : float= 
+            if (player_sum = dealer_sum) then 0.
+            else if (player_sum > dealer_sum) then 1.
+            else -1. 
+          in 
+          let state = [ (* rebuild because we need to ensure proper formatting *)
+            curr_sum;
+            dealer_face_card;
+            has_usable_ace;
+          ]
+          in 
+          {
+            observation = state;
+            reward = get_reward curr_sum dealer_result;
+            terminated = true;
+            truncated = false;
+            info = "stand, dealer played out";
+            internal_state = state;
+          };;
 
     let render (sim_state : t) : unit =
       failwith "TODO";;
