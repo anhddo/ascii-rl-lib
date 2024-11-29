@@ -1,6 +1,6 @@
 (test
-  (name gym_env_test)
-  (modules gym_env_test)
+  (name state_action_test)
+  (modules state_action_test)
   (libraries ounit2 core state_action cartpole pendulum))
 
 
