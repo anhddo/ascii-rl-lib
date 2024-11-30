@@ -9,3 +9,9 @@
   (modules pendulum_test)
   (libraries pendulum ounit2 core)
 )
+
+(test 
+  (name blackjack_test)
+  (modules blackjack_test)
+  (libraries blackjack ounit2 core)
+)

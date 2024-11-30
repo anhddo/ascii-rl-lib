@@ -12,6 +12,7 @@ module type T = sig
     | LunarLander
     | LunarLanderContinuous
     | BipedalWalker
+    | Blackjack
 
   type t = float list
   (* Should store all the information to uniquely identify any possible simulation state *)
@@ -58,6 +59,7 @@ module T : T = struct
     | LunarLander
     | LunarLanderContinuous
     | BipedalWalker
+    | Blackjack
 
   type t = float list
   type action = float list

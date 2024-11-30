@@ -29,6 +29,11 @@
  (modules cartpole)
  (libraries core unix simulation))
 
+(library
+ (name blackjack)
+ (modules blackjack)
+ (libraries core unix simulation))
+
 
 (library
  (name simulation)

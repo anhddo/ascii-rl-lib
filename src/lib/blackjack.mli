@@ -1,8 +1,7 @@
-
 (* Blackjack is a Simulation *)
-include Simulation.T
-
-val clip : 'a -> 'a -> 'a -> 'a
-
-val draw_card : unit -> int
-
+module Make (_ : Simulation.Config) : sig
+    include Simulation.S
+  
+    val clip : 'a -> 'a -> 'a -> 'a
+    val draw_card : unit -> float
+  end
