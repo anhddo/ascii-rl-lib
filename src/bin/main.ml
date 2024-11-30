@@ -14,8 +14,9 @@ module Qlearning_algo = Qlearning.Make (Algo_config) (Pendulum_env)
 
 module Qlearning_algo_render =
   Qlearning.Make (Algo_config) (Pendulum_env_render)
-
+(* open Core *)
 let () =
+  (* Sys.get_argv() |> Array.to_list |> List.to_string ~f:Fn.id |> print_endline; *)
   Qlearning_algo.train 30000;
   Qlearning_algo.save_q_table ();
   Qlearning_algo_render.train 4;
