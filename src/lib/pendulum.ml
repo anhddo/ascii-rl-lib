@@ -19,7 +19,9 @@ functor
 
     (* Normalizes an angle to be between -PI and PI*)
     let normalize_angle (ang : float) : float =
-      modulo (ang +. Float.pi) (2. *. Float.pi) |> Float.sub Float.pi
+      let normalized = modulo (ang +. Float.pi) (2. *. Float.pi) 
+      in
+      Float.sub normalized Float.pi;;
 
     (* Add These Tests And To .mli *)
     let random_between (min : float) (max : float) : float =
