@@ -9,12 +9,17 @@ module BlackjackSet = Blackjack.Make(Config)
 module Helper_tests =
   struct
 
-    let dummy_tests _ = 
-      assert_equal Int.max_value Int.max_value
+  let clip_tests _ = 
+    assert_equal 5 @@ BlackjackSet.clip 0 10 5;
+    assert_equal 10 @@ BlackjackSet.clip 0 10 100;
+    assert_equal (-1) @@ BlackjackSet.clip (-1) 305 (-305);
+    assert_equal "c" @@ BlackjackSet.clip "c" "z" "a";
+    assert_equal "e" @@ BlackjackSet.clip "c" "z" "e";
+    assert_equal "f" @@ BlackjackSet.clip "c" "f" "r"
 
     let series = 
       "Helper Function Tests" >::: [ 
-        "Dummy Tests" >:: dummy_tests
+        "Clip Tests" >:: clip_tests
       ]
   end
 
