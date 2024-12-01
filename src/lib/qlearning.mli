@@ -1,6 +1,3 @@
-include Base_algorithm.S
-
-
 module Make : functor (_ : Base_algorithm.Algo_config) (_ : Simulation.S) -> sig
   val q_table : float array array
   val train : int -> unit

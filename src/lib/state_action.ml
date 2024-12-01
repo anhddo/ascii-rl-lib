@@ -10,9 +10,11 @@ module type State_action = sig
     is_continuous_action : bool;
   }
 
+  val state_to_bin_config : bin list
   val q_config : state_action_config
   val value_to_bin : float -> float -> float -> int -> int
   val convert_state_to_bin : float list -> int
+  val convert_state_to_bin_list : float list -> bin list -> int list
   val bin_to_value : int -> continuous_bin -> float
 end
 
@@ -82,12 +84,9 @@ functor
 
     let value_to_bin (value : float) (low : float) (high : float)
         (num_bins : int) : int =
-      if Float.compare value low = -1 then 0
-      else if Float.compare value high <> -1 then num_bins - 1
-      else
-        let bin_width = (high -. low) /. float_of_int num_bins in
-        let bin = (value -. low) /. bin_width in
-        int_of_float bin
+      let bin_width = (high -. low) /. float_of_int num_bins in
+      let bin = int_of_float ((value -. low) /. bin_width) in
+      if bin >= num_bins then num_bins - 1 else if bin < 0 then 0 else bin
 
     let bin_to_value (bin : int) (bin_config : continuous_bin) : float =
       let bin_width =
