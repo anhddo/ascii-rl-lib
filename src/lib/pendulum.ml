@@ -134,7 +134,7 @@ functor
             let y = scale *. cos theta in
 
             (* project to col row *)
-            let col = int_of_float (float_of_int (term_width / 2) +. x) in
+            let col = int_of_float (float_of_int (term_width / 2) +. x/. 0.5) in
             let row = int_of_float (float_of_int (term_height / 2) -. y) in
 
             (* init canvas *)
