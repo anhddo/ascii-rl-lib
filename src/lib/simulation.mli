@@ -7,11 +7,7 @@ module type T = sig
   type env_type =
     | Cartpole
     | Pendulum
-    | MountainCar
-    | Acrobot
     | LunarLander
-    | LunarLanderContinuous
-    | BipedalWalker
     | Blackjack
 
   type t = float list
