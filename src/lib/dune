@@ -23,7 +23,9 @@
 (library
  (name pendulum)
  (modules pendulum)
- (libraries core unix simulation))
+ (libraries core unix simulation)
+ (preprocess (pps bisect_ppx)))
+
 (library
  (name cartpole)
  (modules cartpole)
@@ -32,13 +34,15 @@
 (library
  (name blackjack)
  (modules blackjack)
- (libraries core unix simulation))
+ (libraries core unix simulation)
+ (preprocess (pps bisect_ppx)))
 
 
 (library
  (name simulation)
  (modules simulation)
- (libraries core unix ))
+ (libraries core unix )
+ (preprocess (pps bisect_ppx)))
 
 ; (library
 ;  (name gym_env)

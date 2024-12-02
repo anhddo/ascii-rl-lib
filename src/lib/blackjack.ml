@@ -11,8 +11,8 @@
 (* Action: Length is 1 | [hit (if positive), stand (if 0 or negative)] *)
 (* observation : the new state of the simulation; the next step call should use this value *)
 (* reward : 1 for a win, 0 for a tie, -1 for a loss *)
-(* terminated : if a round has ended *)
-(* truncated : idk *)
+(* terminated : if a round has ended by natural reasons of the simulation *)
+(* truncated : if ended to reduce too long episodes *)
 (* info : error handling, nothing for now *)
 
 

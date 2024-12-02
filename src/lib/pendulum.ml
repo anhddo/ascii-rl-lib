@@ -44,7 +44,7 @@ functor
     (* info : error handling, nothing for now *)
 
     (* Creates a new simulation *)
-    let create () : t = [ 0.0; 0.0 ]
+    let create () : t = [ 0.0; 0.0; 0.0 ]
 
     let convert_fo_feature (sim : t) : float list =
       let angle = List.nth sim 0 in
@@ -83,7 +83,7 @@ functor
           let applied_torque =
             clip (Float.neg max_torque) max_torque applied_torque
           in
-          if C.render then (
+          if C.render then ( 
             Printf.printf "\027[1;1H";
             (* move cursor to top left*)
             Printf.printf "Applied torque:\t %f\n" applied_torque);
@@ -109,7 +109,9 @@ functor
             |> clip (Float.neg max_angspeed) max_angspeed
           in
           let new_ang =
-            old_ang |> Float.add @@ (new_angspeed *. constant_timestep)
+            old_ang 
+            |> Float.add @@ (new_angspeed *. constant_timestep)
+            |> normalize_angle
           in
           {
             observation = convert_fo_feature [ new_ang; new_angspeed ];
@@ -121,6 +123,7 @@ functor
           }
       | _ -> failwith "Improper Input"
 
+    [@@@coverage off] (* turn off coverage for rendering *)
     let render (sim_state : t) : unit =
       (* prem *)
       if C.render = true then
@@ -194,4 +197,5 @@ functor
       let response = step sim_state action in
       render response.internal_state;
       simulate response.internal_state
+    [@@@coverage on]
   end
