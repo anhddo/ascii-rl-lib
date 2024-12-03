@@ -87,7 +87,6 @@ module Action_tests =
         assert_bool "angle improper start" @@ Float.(>=) (Float.abs angle) (Float.neg Float.pi);
         assert_bool "timestep not 0" @@ Float.(=) 0. timestep;
       | (_ , _ ) -> failwith "improper state"
-
     in
     Quickcheck.test (Int.gen_incl 0 0) ~f:invariant;; 
   
