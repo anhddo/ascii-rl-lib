@@ -6,3 +6,8 @@
  (name pendulum_main)
  (modules pendulum_main)
  (libraries pendulum core unix))
+
+(executable
+ (name blackjack_main)
+ (modules blackjack_main)
+ (libraries blackjack core unix))
