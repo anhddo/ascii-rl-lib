@@ -14,9 +14,9 @@ functor
 
     let env_type = LunarLander
 
-    (* type t = float list (* Length is ? | [ ?? ] *)
-       type action = float list *)
-    (* Length is ? | [??] *)
+
+    (* type t = float list Length is ?? | [ ?? ] *)
+    (* type action = float list Length is ?? | [ ?? ] *)
 
     (* Creates a new simulation *)
     let create () : t = [ 0.0; 0.0 ]

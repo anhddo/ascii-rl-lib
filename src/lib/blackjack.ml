@@ -21,9 +21,11 @@ functor
 
     let draw_card () : float =
       let card_value = Float.of_int @@ (Random.int 13 + 1) in
-      clip 1. 10. card_value
+      clip 1. 10. card_value (* Convert Js, Qs, Ks, to 10 *)
+    
 
-    (* Convert Js, Qs, Ks, to 10 *)
+    (* type t = float list Length is 3 | [ player's hand's sum, dealer's face card, does the player have a usable ace ] *)
+    (* type action = float list Length is 1 | [ hit or stand ] *)
 
     (* Creates a new simulation *)
     let create () : t = [ 0.; 0.; 0. ]
