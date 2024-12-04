@@ -3,15 +3,13 @@ module type Algo_config = sig
 end
 
 module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
-  (* module State_action_env = Make_config (Env_config) *)
-
-  (* module Env = Gym_env.Make (Env_config) *)
   module State_action_env = State_action.Make (Env)
 
   let state_bin = State_action_env.q_config.state_bin
   let action_bin = State_action_env.q_config.action_bin
   let obs_dim = State_action_env.q_config.obs_dim
 
+  (*Get action dimension*)
   let action_dim =
     match action_bin with Discrete n -> n | Continuous x -> x.num_bins
 
@@ -28,6 +26,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   let float_argmax (arr : float list) : int =
     argmax arr ~compare:Float.compare ~init:Float.neg_infinity
 
+  (*load model*)
   let load_q_table (filename : string) =
     let file_content = Core.In_channel.read_all filename in
     Sexplib.Conv.array_of_sexp
@@ -42,6 +41,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
         ~dimx:(int_of_float @@ (float_of_int state_bin ** float_of_int obs_dim))
         ~dimy:action_dim 0.0
 
+  (*save model using Sexp*)
   let save_q_table () =
     let sexp_str =
       Core.Sexp.to_string_hum
@@ -51,25 +51,27 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     in
     Core.Out_channel.write_all Algo_config.model_path ~data:sexp_str
 
+  (*train model*)
   let train (episode : int) =
     let learning_rate = 0.1 in
 
     let rec loop' (episode : int) (state : float list)
         (internal_state : float list) (reward_ep : float) =
+      (* get action from q table*)
       let action =
         if Float.compare (Random.float 1.0) 0.1 = -1 then Random.int action_dim
         else
           let state_bin = State_action_env.convert_state_to_bin state in
           q_table.(state_bin) |> Array.to_list |> float_argmax
       in
+      (*decide how pass action to simulation depending on the type of action Discrete or Continuous*)
       let passing_action_to_env =
         match action_bin with
         | Discrete _ -> [ float_of_int action ]
         | Continuous x -> [ State_action_env.bin_to_value action x ]
       in
+      (* get next state, reward, is_done from the environment*)
       let response = Env.step internal_state passing_action_to_env in
-      (* Printf.printf "internal_state: %s \n" (List.to_string ~f:Float.to_string response.internal_state);
-         Printf.printf "truncate: %b \n" response.truncated; *)
       let next_state = response.observation in
       let reward = response.reward in
       let is_done = response.terminated in
@@ -85,7 +87,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
               (q_table.(next_state_bin) |> Array.to_list)
               ~compare:Float.compare
             |> Core.Option.value_exn
-            (* max q_table.(next_state_bin).(0) q_table.(next_state_bin).(1) *)
           in
           q_table.(state_bin).(action) <-
             ((1. -. learning_rate) *. (reward +. (0.99 *. max_q)))
@@ -95,11 +96,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let reward_ep = reward_ep +. reward in
       if is_done || truncated then (
         if episode mod 100 = 0 then
+          (* Printing out the total reward *)
           Printf.printf "episode %d reward_ep: %f\n" episode reward_ep;
-        (* Printf.printf "Episode: %d, done %b truncated: %b, reward: %f\n" *)
-        (* episode is_done truncated reward; *)
         let state, internal_state = Env.reset () in
-        (* report total reward *)
         loop' (episode - 1) state internal_state 0.0)
       else if episode > 0 then (
         Env.render response.internal_state;
