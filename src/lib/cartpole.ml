@@ -12,15 +12,9 @@ functor
     let env_type = Cartpole
 
 
-    (*TODO type t = float list (* Length is 2 | [location, ang_speed ] *)
+    (*TODO type t = float list (* Length is ? | [ ?? ] *)
        type action = float list *)
-    (* TODO Length is 1 | [amount of torque to apply between -2 and 2] *)
-
-    (* observation : the new state of the simulation; the next step call should use this value *)
-    (* reward : maximum reward is 0, achieved when pendulum is perfectly balanced *)
-    (* terminated : Not relevant, since simulation is everlasting and there are no such thing as episodes ??? *)
-    (* truncated : idk *)
-    (* info : error handling, nothing for now *)
+    (* TODO Length is ? | [ ?? ] *)
 
     (* Creates a new simulation *)
     let create () : t = 

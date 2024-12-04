@@ -1,21 +1,24 @@
-Steps to run the code
-- create python environment and install gymnasium package
-- activate the environment
-- `dune exec src/bin/main.exe` to run the code
+### What is working so far
+- We have implemented two different simulation enviroments: Pendulum, Blackjack
+- We have implemented a reinforcement learning algorithms: QLearning
+- We have an interaction between a Q-Learning Algorithm and the Pendulum Enviroment
+- We have code coverage through bisect for our simulation enviroments, and the tests run properly through `dune test`
+- We have modularized our code so that all enviroments, algorithms, and their respective configurations are all created through functors
+
+### What is actively not working
+- We want to have our main command line comment be able to take in arguments and select the appropriate reinforcement learning algorithm and simulation to pair together and render, but currently it cannot. Instead it is hard coded to always run the Pendulum enviroment with the Q-Learning Algorithm
+- There are two reinforcement learning algorithms that are not yet integrated with our own simulations: Policy Gradient, Policy Gradient with Neural Network
+
+### What we hope to add before the final submission
+- We hope to implement 1+ more enviroments (tentatively Cartpole, then Lunar Lander, hence why there are boilerplate code for them)
+- We hope to implement 1+ more reinforcement learning algorithms
 
 
-Implement multiple RL algorithm (5-6)
-- each can solve all of the simulation
-- bc the games are relatively simple
+#### How To Run
 
-Then we also create a few simulations ourselves
-- need the physics/logic of a working simulation
-- take input from any of the RL algorithms
-- and also respond and give feedback to the algorithm
-- possibly with a graphical interface (ascii or normal depends on how well it will work) 
+This is a basic way of running our demo of the Q-Learning Algorithm and the Pendulum Enviroment
+dune exec -- ./src/bin/main.exe --episode 200000 --model-path data/pendulum.sexp --render
 
-Glue Code for running an algorithm with a particular simulation
-- work through the step by step action and response
-
+If you run this command without the --render, you can train the algorithm and get better results.
 
 
