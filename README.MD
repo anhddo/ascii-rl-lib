@@ -16,9 +16,10 @@
 
 #### How To Run
 
-This is a basic way of running our demo of the Q-Learning Algorithm and the Pendulum Enviroment
+This is a basic way of running our demo of the Q-Learning Algorithm and the Pendulum Enviroment.
 dune exec -- ./src/bin/main.exe --episode 200000 --model-path data/pendulum.sexp --render
 
 If you run this command without the --render, you can train the algorithm and get better results.
-
+To save the trained results for future use and achieve better performance, please ensure that a folder named data exists in the root directory. You can create it by running the command: mkdir data
+If this data folder is not created, the program will not be able to save the results properly.
 
