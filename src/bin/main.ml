@@ -28,9 +28,9 @@ let run (episode : int) (model_path : string) (render : bool) =
   let module Pendulum_env = Pendulum.Make (struct
     let render = render
   end) in
-  let module Vpg_algo = Vpg.Make (Algo_config) (Pendulum_env) in
-  Vpg_algo.train episode;
-  Vpg_algo.save_model ()
+  let module Qlearning_algo = Qlearning.Make (Algo_config) (Pendulum_env) in
+  Qlearning_algo.train episode;
+  Qlearning_algo.save_model ()
 
 (* Entry point *)
 let () =
