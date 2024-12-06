@@ -11,24 +11,28 @@ functor
     include Simulation.T
     let env_type = Cartpole
 
+    let random_between (min : float) (max : float) : float =
+      let diff = max -. min in
+      Random.float diff +. min
 
-    (*TODO type t = float list (* Length is 2 | [location, ang_speed ] *)
-       type action = float list *)
-    (* TODO Length is 1 | [amount of torque to apply between -2 and 2] *)
-
-    (* observation : the new state of the simulation; the next step call should use this value *)
-    (* reward : maximum reward is 0, achieved when pendulum is perfectly balanced *)
-    (* terminated : Not relevant, since simulation is everlasting and there are no such thing as episodes ??? *)
-    (* truncated : idk *)
-    (* info : error handling, nothing for now *)
+    (* type t = float list Length is 4 | [ location of cart, velocity of cart, angle of pole, angular velocity of pole ] *)
+    (* type action = float list Length is 1 | [ push cart left or right ] *)
 
     (* Creates a new simulation *)
-    let create () : t = 
-      failwith "todo"
+    let create () : t = [0.; 0.; 0.; 0.]
 
     (* Resets the simulation and returns the first response again *)
     let reset () : t * t =
-      failwith "todo"
+      let min_start = -0.05 in
+      let max_start = 0.05 in 
+      let starting_state = [
+        random_between min_start max_start;
+        random_between min_start max_start;
+        random_between min_start max_start;
+        random_between min_start max_start;
+      ]
+      in
+      (starting_state, starting_state);; 
 
     (* Applies the action to the environment, and returns the corresponding response *)
     let step (sim : t) (act : action) : response =
@@ -37,11 +41,4 @@ functor
     let render (sim_state : t) : unit =
       failwith "todo"
 
-    let rec simulate sim_state =
-      let action = [ 0. ] in
-      let response = step sim_state action in
-      Printf.printf "internal state: %s\n"
-        (String.concat ", " (List.map Float.to_string response.internal_state));
-      (* render response.internal_state; *)
-      simulate response.internal_state
   end

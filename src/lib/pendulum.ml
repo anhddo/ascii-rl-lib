@@ -10,9 +10,6 @@ functor
     (* Returns the squre of the float *)
     let square (value : float) : float = Float.pow value 2.
 
-    (* if pow don't work for you use the following *)
-    (* let square (value : float) : float = value ** 2. *)
-
     (* Does floating point modulo *)
     let modulo (dividend : float) (divisor : float) : float =
       dividend -. (divisor *. floor (dividend /. divisor))
@@ -33,15 +30,8 @@ functor
       else if value > max_value then max_value
       else value
 
-    (* type t = float list (* Length is 2 | [location, ang_speed ] *)
-       type action = float list *)
-    (* Length is 1 | [amount of torque to apply between -2 and 2] *)
-
-    (* observation : the new state of the simulation; the next step call should use this value *)
-    (* reward : maximum reward is 0, achieved when pendulum is perfectly balanced *)
-    (* terminated : Not relevant, since simulation is everlasting and there are no such thing as episodes ??? *)
-    (* truncated : idk *)
-    (* info : error handling, nothing for now *)
+    (* type t = float list Length is 2 | [ angle of pendulum from upright, angular velocity of pendulum ] *)
+    (* type action = float list Length is 1 | [ amount of torque to apply ] *)
 
     (* Creates a new simulation *)
     let create () : t = [ 0.0; 0.0; 0.0 ]

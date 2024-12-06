@@ -1,7 +1,7 @@
 (library
  (name qlearning)
  (modules qlearning)
- (libraries core simulation base_algorithm state_action))
+ (libraries core core_unix simulation base_algorithm state_action))
 
 (library
  (name vpg)

@@ -1,5 +1,4 @@
 module type Config = sig
-  (* type t = { name : string; render : bool } *)
   val render : bool
 end
 
@@ -10,19 +9,19 @@ module type T = sig
     | LunarLander
     | Blackjack
 
-  type t = float list
   (* Should store all the information to uniquely identify any possible simulation state *)
+  type t = float list
 
   (* Can change based on what the simulation needs *)
   type action = float list
 
   type response = {
-    observation : t;
-    reward : float;
-    terminated : bool;
-    truncated : bool;
-    info : string;
-    internal_state : t;
+    observation : t; (* The observation of the simulation given to the reinforcement learning algorithms *)
+    reward : float; (* The reward given to the reinforcement learning algorithm *)
+    terminated : bool; (* If the natural state of the simulation calls for an end *)
+    truncated : bool; (* If the simulation ends for another reason, such as a time limit *)
+    info : string; (* Any additional information *)
+    internal_state : t; (* The observation of the simulation given back to the step function *)
   }
 end
 
