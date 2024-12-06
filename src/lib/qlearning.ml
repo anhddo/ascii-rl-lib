@@ -42,13 +42,14 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
         ~dimy:action_dim 0.0
 
   (*save model using Sexp*)
-  let save_q_table () =
+  let save_model () =
     let sexp_str =
       Core.Sexp.to_string_hum
         (Core.Array.sexp_of_t
            (Core.Array.sexp_of_t Core.Float.sexp_of_t)
            q_table)
     in
+    Core_unix.mkdir_p (Core.Filename.dirname Algo_config.model_path) ;
     Core.Out_channel.write_all Algo_config.model_path ~data:sexp_str
 
   (*train model*)
