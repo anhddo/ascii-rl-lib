@@ -3,18 +3,17 @@ module type Algo_config = sig
 end
 
 module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
-  (* module State_action_env = Make_config (Env_config) *)
-
-  (* module Env = Gym_env.Make (Env_config) *)
   module State_action_env = State_action.Make (Env)
 
   let state_bin = State_action_env.q_config.state_bin
   let action_bin = State_action_env.q_config.action_bin
   let obs_dim = State_action_env.q_config.obs_dim
 
+  (*Get action dimension*)
   let action_dim =
     match action_bin with Discrete n -> n | Continuous x -> x.num_bins
 
+  (*load model*)
   let load_vpg_params (filename : string) =
     let file_content = Core.In_channel.read_all filename in
     Sexplib.Conv.array_of_sexp
@@ -29,6 +28,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
         ~dimx:(int_of_float @@ (float_of_int state_bin ** float_of_int obs_dim))
         ~dimy:action_dim 0.0
 
+  (*save model using Sexp*)
   let save_model () =
     let sexp_str =
       Core.Sexp.to_string_hum
@@ -44,6 +44,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     let sum_exps = Array.fold_left ( +. ) 0.0 exps in
     Array.map (fun x -> x /. sum_exps) exps
 
+  (* Select an action using softmax probability sampling *)
   let select_action (state : int) : int =
     let probs = softmax vpg_params.(state) in
     let cumulative_probs = Array.make (Array.length probs) 0.0 in
@@ -60,6 +61,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     in
     find_action 0
 
+  (* Updates the vpg parameters using the discounted cumulative reward *)
   let update_policy 
       (trajectories : ((int * int) * float) list) 
       (learning_rate : float) =
@@ -78,6 +80,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       done
     done
 
+  (* Calculate the discounted cumulative reward *)
   let calculate_returns (rewards : float list) (gamma : float) : float list =   (* chronological order input and output*)
     let rec aux (acc : float) (returns : float list) = function
       | [] -> returns
@@ -87,6 +90,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     in
     aux 0.0 [] (List.rev rewards)
 
+  (* Standardize trajectories and discounted cumulative reward *)
   let update_trajectories
       (trajectories : ((int * int) * float) list) 
       (rewards : float list) 
@@ -100,6 +104,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     let standardized_returns = List.map (fun r -> (r -. mean) /. std_dev) returns in
     List.map2 (fun (s_a, _) g_t -> (s_a, g_t)) trajectories standardized_returns
       
+  (*train model*)
   let train (episode : int) =
     let learning_rate = 0.01 in
     let max_steps = 250 in
@@ -110,11 +115,8 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let rec run_step t state_bin trajectories rewards internal_state =
         if t >= max_steps then
           ()
-          (* let total_reward = List.fold_left (+.) 0.0 rewards in *)
-          (* Printf.printf "Episode %d Success: Total Reward: %f\n%!" _episode total_reward *)
         else
           let action = select_action state_bin in
-          (* Printf.printf "Selected action: %d\n%!" action; *)
           let passing_action_to_env =
             match action_bin with
             | Discrete _ -> [ float_of_int action ]
@@ -128,7 +130,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
           let next_state_bin = State_action_env.convert_state_to_bin next_state in
           let trajectories = ((state_bin, action), 0.0) :: trajectories in
           let rewards = reward :: rewards in
-          (* Printf.printf "length trajectories %d\n rewards: %d\n" (List.length trajectories) (List.length rewards); *)
           if is_done || truncated then
             let updated_trajectories = update_trajectories trajectories rewards gamma in
             update_policy updated_trajectories learning_rate;
