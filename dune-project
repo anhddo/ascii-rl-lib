@@ -2,7 +2,7 @@
 
 (generate_opam_files true)
 
-(authors "Anh Do" "Spencer Ye")
+(authors "Anh Do" "Spencer Ye" "Jishuo Yang" "Yang Shen")
 
 (maintainers "anhddo93@gmail.com")
 
