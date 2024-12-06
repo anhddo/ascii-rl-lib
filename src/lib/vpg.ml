@@ -101,8 +101,8 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     List.map2 (fun (s_a, _) g_t -> (s_a, g_t)) trajectories standardized_returns
       
   let train (episode : int) =
-    let learning_rate = 0.05 in
-    let max_steps = 400 in
+    let learning_rate = 0.01 in
+    let max_steps = 250 in
     let gamma = 0.99 in
     for _episode = 1 to episode do
       let state, internal_state = Env.reset () in
