@@ -28,15 +28,15 @@ let run (episode: int) (model_path: string) (render: bool) =
     let render = true
   end) in
 
-  let module Qlearning_algo = Qlearning.Make (Algo_config) (Pendulum_env) in
+  let module Vpg_algo = Vpg.Make (Algo_config) (Pendulum_env) in
 
-  let module Qlearning_algo_render =
-    Qlearning.Make (Algo_config) (Pendulum_env_render) in
+  let module Vpg_algo_render =
+    Vpg.Make (Algo_config) (Pendulum_env_render) in
   if render then
-    Qlearning_algo_render.train episode
+    Vpg_algo_render.train episode
   else
-  (Qlearning_algo.train episode;
-  Qlearning_algo.save_q_table ();)
+  (Vpg_algo.train episode;
+  Vpg_algo.save_model ();)
 
   
 

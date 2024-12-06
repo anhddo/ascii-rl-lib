@@ -4,6 +4,11 @@
  (libraries core simulation base_algorithm state_action))
 
 (library
+ (name vpg)
+ (modules vpg)
+ (libraries core simulation base_algorithm state_action))
+
+(library
  (name base_algorithm)
  (modules base_algorithm)
  (libraries core))
