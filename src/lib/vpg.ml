@@ -109,8 +109,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let state_bin = State_action_env.convert_state_to_bin state in
       let rec run_step t state_bin trajectories rewards internal_state =
         if t >= max_steps then
-          let total_reward = List.fold_left (+.) 0.0 rewards in
-          Printf.printf "Episode %d Success: Total Reward: %f\n%!" _episode total_reward
+          ()
+          (* let total_reward = List.fold_left (+.) 0.0 rewards in *)
+          (* Printf.printf "Episode %d Success: Total Reward: %f\n%!" _episode total_reward *)
         else
           let action = select_action state_bin in
           (* Printf.printf "Selected action: %d\n%!" action; *)
@@ -134,7 +135,8 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
             let total_reward = List.fold_left (+.) 0.0 rewards in
             Printf.printf "Episode %d: Total Reward: %f\n%!" _episode total_reward
           else
-            run_step (t + 1) next_state_bin trajectories rewards internal_state
+            Env.render response.internal_state;
+            run_step (t + 1) next_state_bin trajectories rewards response.internal_state
       in
       run_step 0 state_bin [] [] internal_state
     done
