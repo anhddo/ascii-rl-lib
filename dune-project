@@ -9,8 +9,8 @@
 (package
  (name rllib)
  (allow_empty)
- (synopsis "An OCaml library for Helpful Helloing")
- (description "A longer description")
+ (synopsis "An OCaml library for reinforcement learning")
+ (description "Reinforcement learning library")
  (depends
   (ounit2
    (>= 2.2.7))
