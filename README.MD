@@ -8,6 +8,7 @@
 ### What is actively not working
 - We want to have our main command line comment be able to take in arguments and select the appropriate reinforcement learning algorithm and simulation to pair together and render, but currently it cannot. Instead it is hard coded to always run the Pendulum enviroment with the Q-Learning Algorithm
 - There are two reinforcement learning algorithms that are not yet integrated with our own simulations: Policy Gradient, Policy Gradient with Neural Network
+- We will add the following arguments to the command line: `--algo`, `--simulation` after we integrate the other reinforcement learning algorithms and simulations in to our library.
 
 ### What we hope to add before the final submission
 - We hope to implement 1+ more enviroments (tentatively Cartpole, then Lunar Lander, hence why there are boilerplate code for them)
@@ -16,10 +17,10 @@
 
 #### How To Run
 
-This is a basic way of running our demo of the Q-Learning Algorithm and the Pendulum Enviroment.
-dune exec -- ./src/bin/main.exe --episode 200000 --model-path data/pendulum.sexp --render
+To start training the Q-Learning Algorithm with the Pendulum Simulation for 300000 episodes, you can run the following command:  
+```dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp ```
 
-If you run this command without the --render, you can train the algorithm and get better results.
-To save the trained results for future use and achieve better performance, please ensure that a folder named data exists in the root directory. You can create it by running the command: mkdir data
-If this data folder is not created, the program will not be able to save the results properly.
+It would take a minute or two to complete 300000 episodes, we can obtain a relative good policy. To view the results of the trained Q-Learning Algorithm with the Pendulum Simulation, you can add the `--render` argument:  
+```dune exec -- ./src/bin/main.exe --episode 3 --model-path data/pendulum.sexp --render```
+
 

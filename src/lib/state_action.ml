@@ -42,6 +42,7 @@ functor
 
     let state_bin = 20
 
+    (*Configuration for different simulation *)
     let config =
       match M.env_type with
       | Cartpole ->
@@ -82,6 +83,7 @@ functor
       Core.List.map2_exn config.low_list config.high_list ~f:(fun low high ->
           Continuous { low; high; num_bins = config.num_bins })
 
+    (* Convert value to a bin *)
     let value_to_bin (value : float) (low : float) (high : float)
         (num_bins : int) : int =
       let bin_width = (high -. low) /. float_of_int num_bins in
@@ -105,7 +107,6 @@ functor
       |> List.rev
 
     let convert_state_to_bin (state : float list) : int =
-      (* printf.printf "state: %s \n" (list.to_string ~f:float.to_string state); *)
       let state_bin_list =
         convert_state_to_bin_list state state_to_bin_config
       in

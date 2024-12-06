@@ -1,5 +1,5 @@
+open Base_algorithm
+
 module Make : functor (_ : Base_algorithm.Algo_config) (_ : Simulation.S) -> sig
-  val q_table : float array array
-  val train : int -> unit
-  val save_model : unit -> unit
+  include Algo_base
 end

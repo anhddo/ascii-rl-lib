@@ -1,6 +1,4 @@
-module type Algo_config = sig
-  val model_path : string
-end
+open Base_algorithm
 
 module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   module State_action_env = State_action.Make (Env)
@@ -49,7 +47,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
            (Core.Array.sexp_of_t Core.Float.sexp_of_t)
            q_table)
     in
-    Core_unix.mkdir_p (Core.Filename.dirname Algo_config.model_path) ;
+    Core_unix.mkdir_p (Core.Filename.dirname Algo_config.model_path);
     Core.Out_channel.write_all Algo_config.model_path ~data:sexp_str
 
   (*train model*)
@@ -105,7 +103,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
         Env.render response.internal_state;
         loop' episode state response.internal_state reward_ep)
       else ()
-      (* else q_table *)
     in
     let state, internal_state = Env.reset () in
     loop' episode state internal_state 0.0
