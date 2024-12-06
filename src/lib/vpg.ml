@@ -15,7 +15,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   let action_dim =
     match action_bin with Discrete n -> n | Continuous x -> x.num_bins
 
-  let load_q_table (filename : string) =
+  let load_vpg_params (filename : string) =
     let file_content = Core.In_channel.read_all filename in
     Sexplib.Conv.array_of_sexp
       (Sexplib.Conv.array_of_sexp Sexplib.Conv.float_of_sexp)
@@ -23,7 +23,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
 
   let vpg_params =
     let file_name = Algo_config.model_path in
-    if Sys.file_exists file_name then load_q_table file_name
+    if Sys.file_exists file_name then load_vpg_params file_name
     else
       Core.Array.make_matrix
         ~dimx:(int_of_float @@ (float_of_int state_bin ** float_of_int obs_dim))
