@@ -6,7 +6,6 @@ module type T = sig
   type env_type =
     | Cartpole
     | Pendulum
-    | LunarLander
     | Blackjack
 
   (* Should store all the information to uniquely identify any possible simulation state *)
@@ -49,7 +48,6 @@ module T : T = struct
   type env_type =
     | Cartpole
     | Pendulum
-    | LunarLander
     | Blackjack
 
   type t = float list
