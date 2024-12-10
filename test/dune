@@ -15,3 +15,9 @@
   (modules blackjack_test)
   (libraries blackjack ounit2 core)
 )
+
+(test 
+  (name cartpole_test)
+  (modules cartpole_test)
+  (libraries cartpole ounit2 core)
+)

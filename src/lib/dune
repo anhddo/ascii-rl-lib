@@ -21,11 +21,6 @@
  )
 
 (library
- (name lunar_lander)
- (modules lunar_lander)
- (libraries core simulation))
-
-(library
  (name pendulum)
  (modules pendulum)
  (libraries core unix simulation)
