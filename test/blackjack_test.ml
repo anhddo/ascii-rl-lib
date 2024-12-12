@@ -2,6 +2,7 @@ open Core
 open OUnit2
 
 module Config = struct
+  let simulation_name = "blackjack"
   let render = false
 end
 

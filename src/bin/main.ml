@@ -1,40 +1,70 @@
-(* Variables to store the parsed values *)
-let episode = ref 0
-let model_path = ref ""
-let render = ref false
+[@@@ocaml.warning "-32"]
 
-(* Function to set the episode *)
+type config = {
+  episode : int;
+  model_path : string;
+  render : bool;
+  simulation : string;
+  algo : string;
+}
+
+(* Default configuration *)
+let default_config =
+  {
+    episode = 0;
+    model_path = "";
+    render = false;
+    simulation = "pendulum";
+    algo = "qlearning";
+  }
 
 (* Command-line argument specification *)
-let speclist =
-  [
-    ("--episode", Arg.Set_int episode, "Set the number of episodes (integer)");
-    ( "--model-path",
-      Arg.Set_string model_path,
-      "Set the path to the model (string)" );
-    ( "--render",
-      Arg.Set render,
-      "Enable rendering (boolean flag, default: false)" );
-    (*We will include the following argument after we integrate other simulations and algorithms
-      "--algo", Arg.Set algo, "algorithm name" );
-      "--simulation", Arg.Set Simulation, "algorithm name" ); *)
-  ]
-
-(* Main program *)
-let run (episode : int) (model_path : string) (render : bool) =
-  let module Algo_config = struct
-    let model_path = model_path
-  end in
-  let module Pendulum_env = Pendulum.Make (struct
-    let render = render
-  end) in
-  let module Qlearning_algo = Qlearning.Make (Algo_config) (Pendulum_env) in
-  Qlearning_algo.train episode;
-  Qlearning_algo.save_model ()
+let parse_args () =
+  let rec update_config config args =
+    match args with
+    | [] -> config
+    | "--episode" :: value :: rest ->
+        let episode = int_of_string value in
+        update_config { config with episode } rest
+    | "--model-path" :: value :: rest ->
+        update_config { config with model_path = value } rest
+    | "--simulation" :: value :: rest ->
+        update_config { config with simulation = value } rest
+    | "--algo" :: value :: rest ->
+        update_config { config with algo = value } rest
+    | "--render" :: rest -> update_config { config with render = true } rest
+    | _ :: rest -> update_config config rest
+  in
+  update_config default_config (Array.to_list Sys.argv |> List.tl)
 
 (* Entry point *)
 let () =
-  Arg.parse speclist print_endline "";
-
-  (* Validate required arguments *)
-  run !episode !model_path !render
+  let config = parse_args () in
+  let module Sim_env = struct
+    let simulation_name = config.simulation
+    let render = config.render
+  end in
+  let module Algo_config = struct
+    let algo_name = config.algo
+    let model_path = config.model_path
+    let episode = config.episode
+    let learning_rate = 0.1
+  end in
+  let module Sim = struct
+    include
+      (val match Sim_env.simulation_name with
+           | "pendulum" -> (module Pendulum.Make (Sim_env) : Simulation.S)
+           | "cartpole" -> (module Cartpole.Make (Sim_env) : Simulation.S)
+           | "blackjack" -> (module Blackjack.Make (Sim_env) : Simulation.S)
+           | _ -> failwith "Unknown simulation")
+  end in
+  let module Algo = struct
+    include
+      (val match Algo_config.algo_name with
+           | "qlearning" ->
+               (module Qlearning.Make (Algo_config) (Sim)
+               : Base_algorithm.Algo_base)
+           | _ -> failwith "Unknown algorithm")
+  end in
+  Algo.train config.episode;
+  Algo.save_model ()

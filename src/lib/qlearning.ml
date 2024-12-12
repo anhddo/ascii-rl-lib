@@ -1,6 +1,7 @@
 open Base_algorithm
 
 module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
+  include Algo_config
   module State_action_env = State_action.Make (Env)
 
   let state_bin = State_action_env.q_config.state_bin
@@ -32,7 +33,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       (Sexplib.Sexp.of_string file_content)
 
   let q_table =
-    let file_name = Algo_config.model_path in
+    let file_name = model_path in
     if Sys.file_exists file_name then load_q_table file_name
     else
       Core.Array.make_matrix

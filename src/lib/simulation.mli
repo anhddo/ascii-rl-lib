@@ -1,5 +1,5 @@
 module type Config = sig
-  (* type t = { name : string; render : bool } *)
+  val simulation_name : string
   val render : bool
 end
 

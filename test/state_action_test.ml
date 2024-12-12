@@ -3,6 +3,7 @@ open OUnit2
 
 
 module Config = struct
+  let simulation_name = ""
   let render = false
 end
 module Cartpole_env = Cartpole.Make (Config)

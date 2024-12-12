@@ -1,7 +1,8 @@
 module type Algo_config = sig
+  val algo_name : string
   val model_path : string
-  (* val episode: int (we will incorporate these latter)
-     val learning_rate: float *)
+  val episode : int
+  val learning_rate : float
 end
 
 module type Algo_base = sig
