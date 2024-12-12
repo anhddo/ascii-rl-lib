@@ -19,6 +19,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   (* let load_vpg_params (filename : string) =
     () *)
 
+    
   let build_model input_size output_size hidden_size =
     let vs = Var_store.create ~name:"nn" () in
     let fc1 = Layer.linear vs ~input_dim:input_size hidden_size in
