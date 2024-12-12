@@ -113,6 +113,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let state, internal_state = Env.reset () in
       let state_bin = State_action_env.convert_state_to_bin state in
       let rec run_step t state_bin trajectories rewards internal_state =
+        (* Printf.printf "Time step T: %d\n" t; *)
         if t >= max_steps then
           ()
         else

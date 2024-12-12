@@ -33,18 +33,15 @@ let run (algo_name : string) (episode : int) (model_path : string) (render : boo
     let render = render
   end) in
 
-  (* 使用 match 动态选择算法模块 *)
   let module RL_algo = (val (
     match algo_name with
     | "qlearning" -> (module Qlearning.Make (Algo_config) (Pendulum_env) : Algo_base)
     | "vpg" -> (module Vpg.Make (Algo_config) (Pendulum_env) : Algo_base)
-    (* | "vpgnn" -> (module Vpgnn.Make (Algo_config) (Pendulum_env) : Algo_base) *)
+    | "vpgnn" -> (module Vpgnn.Make (Algo_config) (Pendulum_env) : Algo_base)
     | _ ->
         Printf.eprintf "Error: Unsupported algorithm '%s'.\n" algo_name;
         exit 1
   )) in
-
-  (* 调用选定模块的方法 *)
   RL_algo.train episode;
   RL_algo.save_model ()
 
