@@ -36,9 +36,16 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   let hidden_size = 3
   let model = build_model input_size output_size hidden_size
 
+  let save_vars vs filename =
+    let vars = Var_store.all_vars vs in
+    Serialize.save_multi ~named_tensors:vars ~filename;
+    Printf.printf "All variables saved to %s\n" filename
+
   (*save model using Sexp*)
   let save_model () =
-    Printf.printf "save to path: %s" Algo_config.model_path
+    let vs = model#var_store in
+    save_vars vs Algo_config.model_path;
+    Printf.printf "Model saved to path: %s\n" Algo_config.model_path
 
   (* Select an action using softmax probability sampling *)
   let select_action model obs =
@@ -118,7 +125,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let state, internal_state = Env.reset () in
       let state = Array.of_list state in
       let rec run_step t state rewards probs internal_state =
-        Printf.printf "Time step T: %d\n" t;
+        (* Printf.printf "Time step T: %d\n" t; *)
         if t >= max_steps then
           (* Printf.printf "Episode %d Success: Time Steps: %d\n%!" episode t *)
           ()
