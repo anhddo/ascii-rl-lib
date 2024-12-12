@@ -31,10 +31,42 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
         |> Layer.forward fc2
       method var_store = vs
     end
-  let input_size = obs_dim
+  (* let input_size = obs_dim
   let output_size = action_dim
-  let hidden_size = 3
-  let model = build_model input_size output_size hidden_size
+  let hidden_size = 3 *)
+  (* let model = build_model input_size output_size hidden_size *)
+
+  let load_vars vs filename =
+    let tensors_fn = Serialize.load_multi ~filename in
+    let names = Var_store.all_vars vs |> List.map fst in
+    let tensors = tensors_fn ~names in
+    Tensor.no_grad (fun () ->
+        List.iter2
+          (fun name tensor ->
+            match List.assoc_opt name (Var_store.all_vars vs) with
+            | Some existing_tensor -> Tensor.copy_ ~src:tensor existing_tensor
+            | None -> Printf.eprintf "Warning: Tensor %s not found in Var_store\n" name)
+          names tensors);
+    List.iter
+      (fun (_, tensor) -> ignore (Tensor.set_requires_grad ~r:true tensor))
+      (Var_store.all_vars vs);
+    Printf.printf "All variables loaded from %s\n" filename
+
+    let initialize_or_load_model () =
+      let input_size = obs_dim in
+      let output_size = action_dim in
+      let hidden_size = 3 in
+      let model_path = Algo_config.model_path in
+      let model = build_model input_size output_size hidden_size in
+      if Sys.file_exists model_path then (
+        Printf.printf "Model file found at %s. Loading model...\n" model_path;
+        load_vars model#var_store model_path
+      ) else (
+        Printf.printf "No model file found at %s. Initializing new model...\n" model_path
+      );
+      model
+
+  let model = initialize_or_load_model ()
 
   let save_vars vs filename =
     let vars = Var_store.all_vars vs in
