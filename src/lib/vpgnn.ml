@@ -19,7 +19,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   (* let load_vpg_params (filename : string) =
     () *)
 
-    
+
   let build_model input_size output_size hidden_size =
     let vs = Var_store.create ~name:"nn" () in
     let fc1 = Layer.linear vs ~input_dim:input_size hidden_size in
@@ -147,8 +147,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     
   
   
-  
-    (*train model*)
+  (*train model*)
   let train (episode : int) =
     let learning_rate = 0.01 in
     let max_steps = 250 in
