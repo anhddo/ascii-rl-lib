@@ -162,7 +162,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
           let truncated = response.truncated in
           let next_state = Array.of_list next_state in
           let rewards = reward :: rewards in
-          if is_done || truncated then
+          if is_done || truncated then (
           (* if true then *)
             let rewards_tensor = update_trajectories rewards gamma in
             (* print_weights model#var_store; *)
@@ -170,9 +170,11 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
             update_policy rewards_tensor probs optimizer;
             let total_reward = List.fold_left (+.) 0.0 rewards in
             Printf.printf "Episode %d: Total Reward: %f\n%!" _episode total_reward
-          else
+          )
+          else (
             Env.render response.internal_state;
             run_step (t + 1) next_state rewards probs response.internal_state
+          )
       in
       let probs = Tensor.zeros [0] in
       run_step 0 state [] probs internal_state
