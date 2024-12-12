@@ -113,6 +113,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       let state, internal_state = Env.reset () in
       let state_bin = State_action_env.convert_state_to_bin state in
       let rec run_step t state_bin trajectories rewards internal_state =
+        (* Printf.printf "Time step T: %d\n" t; *)
         if t >= max_steps then
           ()
         else
@@ -130,14 +131,16 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
           let next_state_bin = State_action_env.convert_state_to_bin next_state in
           let trajectories = ((state_bin, action), 0.0) :: trajectories in
           let rewards = reward :: rewards in
-          if is_done || truncated then
+          if is_done || truncated then (
             let updated_trajectories = update_trajectories trajectories rewards gamma in
             update_policy updated_trajectories learning_rate;
             let total_reward = List.fold_left (+.) 0.0 rewards in
             Printf.printf "Episode %d: Total Reward: %f\n%!" _episode total_reward
-          else
+          )
+          else (
             Env.render response.internal_state;
             run_step (t + 1) next_state_bin trajectories rewards response.internal_state
+          )
       in
       run_step 0 state_bin [] [] internal_state
     done

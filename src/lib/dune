@@ -9,27 +9,28 @@
  (libraries core simulation base_algorithm state_action))
 
 (library
+ (name vpgnn)
+ (modules vpgnn)
+ (libraries core torch simulation base_algorithm state_action))
+
+(library
  (name base_algorithm)
  (modules base_algorithm)
- (libraries core simulation pendulum cartpole blackjack lunar_lander ))
+ (libraries core simulation pendulum cartpole blackjack))
 
 (library
  (name state_action)
  (modules state_action)
  (libraries core simulation)
- (preprocess (pps bisect_ppx))
- )
-
-(library
- (name lunar_lander)
- (modules lunar_lander)
- (libraries core simulation))
+ (preprocess
+  (pps bisect_ppx)))
 
 (library
  (name pendulum)
  (modules pendulum)
  (libraries core unix simulation)
- (preprocess (pps bisect_ppx)))
+ (preprocess
+  (pps bisect_ppx)))
 
 (library
  (name cartpole)
@@ -40,14 +41,15 @@
  (name blackjack)
  (modules blackjack)
  (libraries core unix simulation)
- (preprocess (pps bisect_ppx)))
-
+ (preprocess
+  (pps bisect_ppx)))
 
 (library
  (name simulation)
  (modules simulation)
- (libraries core unix )
- (preprocess (pps bisect_ppx)))
+ (libraries core unix)
+ (preprocess
+  (pps bisect_ppx)))
 
 ; (library
 ;  (name gym_env)

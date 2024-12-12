@@ -1,6 +1,6 @@
 (executable
  (name main)
- (libraries qlearning vpg core pendulum))
+ (libraries qlearning vpg vpgnn core pendulum base_algorithm))
 
 (executable
  (name pendulum_main)
