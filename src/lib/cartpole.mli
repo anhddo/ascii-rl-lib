@@ -3,5 +3,6 @@ module Make (_ : Simulation.Config) : sig
 
   val random_between : float -> float -> float
   val square : float -> float
+  val simulate : t -> unit
 
 end

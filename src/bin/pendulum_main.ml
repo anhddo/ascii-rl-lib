@@ -1,5 +1,3 @@
-(* pendulum_main.ml *)
-
 let () =
   (* let module Config = struct let render = true end in *)
   let module Pendulum = Pendulum.Make (struct
