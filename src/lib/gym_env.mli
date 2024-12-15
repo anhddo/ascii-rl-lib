@@ -1,7 +1,7 @@
 (* A Testing Enviroment from Python's Gymnasium*)
 
-module Make : functor (_ : Simulation.Config) -> sig
-  include Simulation.T
+module Make (_ : Simulation.Config) : sig
+  include Simulation.S
 
   val reset : unit -> t
   val step : t -> action -> response

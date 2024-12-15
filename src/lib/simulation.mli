@@ -8,6 +8,7 @@ module type T = sig
     | Cartpole
     | Pendulum
     | Blackjack
+    | Gym_env
 
   type t = float list
   (* Should store all the information to uniquely identify any possible simulation state *)

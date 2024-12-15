@@ -8,6 +8,7 @@ module type T = sig
     | Cartpole
     | Pendulum
     | Blackjack
+    | Gym_env
 
   (* Should store all the information to uniquely identify any possible simulation state *)
   type t = float list
@@ -50,6 +51,7 @@ module T : T = struct
     | Cartpole
     | Pendulum
     | Blackjack
+    | Gym_env
 
   type t = float list
   type action = float list

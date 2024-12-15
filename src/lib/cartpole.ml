@@ -227,10 +227,12 @@ functor
         | _ -> failwith "Invalid simulation state"
 
     let rec simulate (sim_state : t) =
-      if C.render then Unix.sleepf 0.1;
+      if C.render then Unix.sleepf 0.07;
       let action = [ (if Random.bool () then 1. else 0.) ] in
       let response = step sim_state action in
       render response.internal_state;
-      if not response.terminated then simulate response.internal_state
-      else Printf.printf "Episode terminated. Reward: %f\n" response.reward
+      (* Printf.printf "Episode terminated. Reward: %f\n" response.reward; *)
+      simulate response.internal_state
+      (* if not response.terminated then simulate response.internal_state
+      else Printf.printf "Episode terminated. Reward: %f\n" response.reward *)
   end

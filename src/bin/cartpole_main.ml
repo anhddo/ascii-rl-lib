@@ -12,4 +12,4 @@ let () =
     ) else
       ()
   in
-  run_episodes 10
+  run_episodes 2

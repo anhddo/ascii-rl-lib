@@ -1,13 +1,13 @@
-[@@@ocaml.warning "-27"]
-[@@@ocaml.warning "-32"]
-
 module Make =
 functor
-  (Config : Simulation.Config)
+  (C : Simulation.Config)
   ->
   struct
+    include Simulation.T
+
+    let env_type = Gym_env
     (* if not initialize then initialized*)
-    if not (Py.is_initialized ()) then Py.initialize ()
+  (* if not (Py.is_initialized ()) then Py.initialize () *)
 
     type t = float list (* Length is 2 | [location, ang_speed ] *)
     type action = float list
