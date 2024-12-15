@@ -87,7 +87,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
             |> Core.Option.value_exn
           in
           q_table.(state_bin).(action) <-
-            ((1. -. learning_rate) *. (reward +. (0.99 *. max_q)))
+            ((1. -. learning_rate) *. (reward +. (gamma *. max_q)))
             +. (learning_rate *. q_table.(state_bin).(action))
       in
       let state = next_state in
