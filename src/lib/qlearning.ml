@@ -53,8 +53,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
 
   (*train model*)
   let train () =
-    let learning_rate = 0.1 in
-
     let rec loop' (episode : int) (state : float list)
         (internal_state : float list) (reward_ep : float) =
       (* get action from q table*)

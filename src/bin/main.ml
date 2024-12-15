@@ -2,6 +2,8 @@
 
 type config = {
   episode : int;
+  learning_rate : float;
+  gamma : float;
   model_path : string;
   render : bool;
   simulation : string;
@@ -12,6 +14,8 @@ type config = {
 let default_config =
   {
     episode = 0;
+    learning_rate = 0.1;
+    gamma = 0.99;
     model_path = "";
     render = false;
     simulation = "pendulum";
@@ -26,12 +30,16 @@ let parse_args () =
     | "--episode" :: value :: rest ->
         let episode = int_of_string value in
         update_config { config with episode } rest
-    | "--model-path" :: value :: rest ->
-        update_config { config with model_path = value } rest
     | "--simulation" :: value :: rest ->
         update_config { config with simulation = value } rest
     | "--algo" :: value :: rest ->
         update_config { config with algo = value } rest
+    | "--model-path" :: value :: rest ->
+        update_config { config with model_path = value } rest
+    | "--learning-rate" :: value :: rest ->
+        update_config { config with learning_rate = float_of_string value } rest
+    | "--gamma" :: value :: rest ->
+        update_config { config with gamma = float_of_string value } rest
     | "--render" :: rest -> update_config { config with render = true } rest
     | _ :: rest -> update_config config rest
   in
@@ -48,7 +56,8 @@ let () =
     let algo_name = config.algo
     let model_path = config.model_path
     let episode = config.episode
-    let learning_rate = 0.1
+    let learning_rate = config.learning_rate
+    let gamma = config.gamma
   end in
   let module Sim = struct
     include
