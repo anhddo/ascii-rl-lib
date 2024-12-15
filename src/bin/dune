@@ -11,3 +11,8 @@
  (name blackjack_main)
  (modules blackjack_main)
  (libraries blackjack core unix))
+
+(executable
+ (name cartpole_main)
+ (modules cartpole_main)
+ (libraries cartpole))
