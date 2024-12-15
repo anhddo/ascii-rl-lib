@@ -1,5 +1,6 @@
 let () =
   let module Cartpole = Cartpole.Make (struct
+    let simulation_name = "cartpole"
     let render = true
   end) in
   Random.self_init ();
