@@ -70,5 +70,5 @@ let () =
                (module Vpgnn.Make (Algo_config) (Sim) : Base_algorithm.Algo_base)
            | _ -> failwith "Unknown algorithm")
   end in
-  Algo.train config.episode;
+  Algo.train ();
   Algo.save_model ()

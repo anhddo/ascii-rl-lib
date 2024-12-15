@@ -52,7 +52,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     Core.Out_channel.write_all Algo_config.model_path ~data:sexp_str
 
   (*train model*)
-  let train (episode : int) =
+  let train () =
     let learning_rate = 0.1 in
 
     let rec loop' (episode : int) (state : float list)

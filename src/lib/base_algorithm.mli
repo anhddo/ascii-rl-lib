@@ -6,7 +6,7 @@ module type Algo_config = sig
 end
 
 module type Algo_base = sig
-  val train : int -> unit
+  val train : unit -> unit
   val save_model : unit -> unit
 end
 

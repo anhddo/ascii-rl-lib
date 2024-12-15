@@ -1,8 +1,7 @@
-module type Algo_config = sig
-  val model_path : string
-end
+open Base_algorithm
 
 module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
+include Algo_config
   module State_action_env = State_action.Make (Env)
 
   let state_bin = State_action_env.q_config.state_bin
@@ -21,7 +20,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       (Sexplib.Sexp.of_string file_content)
 
   let vpg_params =
-    let file_name = Algo_config.model_path in
+    let file_name = model_path in
     if Sys.file_exists file_name then load_vpg_params file_name
     else
       Core.Array.make_matrix
@@ -36,7 +35,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
            (Core.Array.sexp_of_t Core.Float.sexp_of_t)
            vpg_params)
     in
-    Core.Out_channel.write_all Algo_config.model_path ~data:sexp_str
+    Core.Out_channel.write_all model_path ~data:sexp_str
 
   let softmax (arr : float array) : float array =
     let max_elem = Array.fold_left max neg_infinity arr in
@@ -105,7 +104,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     List.map2 (fun (s_a, _) g_t -> (s_a, g_t)) trajectories standardized_returns
       
   (*train model*)
-  let train (episode : int) =
+  let train () =
     let learning_rate = 0.01 in
     let max_steps = 250 in
     let gamma = 0.99 in
