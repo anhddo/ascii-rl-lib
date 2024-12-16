@@ -12,18 +12,25 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   let action_dim =
     match action_bin with Discrete n -> n | Continuous x -> x.num_bins
 
+  type nn_model = {
+    var_store : Var_store.t;
+    forward : Tensor.t -> Tensor.t;
+  }
+
   (*Helper function for building neural network model*)
-  let build_model (input_size : int) (output_size : int) (hidden_size : int) :
-    < forward : Tensor.t -> Tensor.t; var_store : Var_store.t > =
+  let build_model (input_size : int) (output_size : int) (hidden_size : int) : nn_model =
     let vs = Var_store.create ~name:"nn" () in
     let fc1 = Layer.linear vs ~input_dim:input_size hidden_size in
     let fc2 = Layer.linear vs ~input_dim:hidden_size output_size in
-    object
-      method forward input =
-        input |> Layer.forward fc1 |> Tensor.relu |> Layer.forward fc2
-
-      method var_store = vs
-    end
+    {
+      var_store = vs;
+      forward = (fun input ->
+        input
+        |> Layer.forward fc1
+        |> Tensor.relu
+        |> Layer.forward fc2
+      );
+    }
 
   (*Load parameters from a file for a neural network model*)
   let load_vars (vs : Var_store.t) (filename : string) : unit =
@@ -45,8 +52,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     Printf.printf "All variables loaded from %s\n" filename
 
   (*Initialize a new model or load model parameters. Wrap the 'load_vars' function*)
-  let initialize_or_load_model () :
-    < forward : Tensor.t -> Tensor.t; var_store : Var_store.t > =
+  let initialize_or_load_model () : nn_model =
     let input_size = obs_dim in
     let output_size = action_dim in
     let hidden_size = 3 in
@@ -54,7 +60,8 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     let model = build_model input_size output_size hidden_size in
     if Sys.file_exists model_path then (
       Printf.printf "Model file found at %s. Loading model...\n" model_path;
-      load_vars model#var_store model_path)
+      load_vars model.var_store model_path
+    )
     else
       Printf.printf "No model file found at %s. Initializing new model...\n"
         model_path;
@@ -70,15 +77,15 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
 
   (*Interface of Vpgnn. Wrap the 'save_vars' function*)
   let save_model () : unit =
-    let vs = model#var_store in
+    let vs = model.var_store in
     save_vars vs model_path;
     Printf.printf "Model saved to path: %s\n" model_path
 
   (* Select an action using softmax probability sampling *)
-  let select_action (model : < forward : Tensor.t -> Tensor.t; .. >) (obs : float array) : int * Tensor.t =
+  let select_action (model : nn_model) (obs : float array) : int * Tensor.t =
     let obs_tensor = Tensor.of_float1 obs |> Tensor.unsqueeze ~dim:0 in
     let probs =
-      model#forward obs_tensor
+      model.forward obs_tensor
       |> Tensor.softmax ~dim:(-1) ~dtype:(Torch_core.Kind.T Float)
     in
     (* Sample an action based on the probabilities *)
@@ -136,7 +143,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     let learning_rate = 0.01 in
     let max_steps = 250 in
     let gamma = 0.7 in
-    let optimizer = Optimizer.adam model#var_store ~learning_rate in
+    let optimizer = Optimizer.adam model.var_store ~learning_rate in
     for _episode = 1 to episode do
       let state, internal_state = Env.reset () in
       let state = Array.of_list state in
