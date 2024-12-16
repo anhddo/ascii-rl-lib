@@ -1,15 +1,16 @@
 open Torch
 open Base_algorithm
+open Utils
 
 module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   include Algo_config
   module State_action_env = State_action.Make (Env)
 
   (*Type for neural network model*)
-  type nn_model = {
+  (* type nn_model = {
     var_store : Var_store.t;
     forward : Tensor.t -> Tensor.t;
-  }
+  } *)
 
   let action_bin = State_action_env.q_config.action_bin
   let obs_dim = State_action_env.q_config.obs_dim
@@ -102,7 +103,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     (action, action_prob)
 
   (* Updates the vpgnn parameters through training neural network with discounted cumulative rewards *)
-  let update_policy (rewards : Tensor.t) (probs : Tensor.t) (optimizer : Optimizer.t) : float =
+  let update_parameters (rewards : Tensor.t) (probs : Tensor.t) (optimizer : Optimizer.t) : float =
     let log_probs = Tensor.log probs in
     let loss = Tensor.neg (Tensor.sum (Tensor.mul log_probs rewards)) in
     Optimizer.zero_grad optimizer;
@@ -111,7 +112,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     Tensor.float_value loss
 
   (* Calculate the discounted cumulative reward *)
-  let calculate_returns (rewards : float list) (gamma : float) : float list =
+  (* let calculate_returns (rewards : float list) (gamma : float) : float list =
     (* chronological order input and output*)
     let rec aux (acc : float) (returns : float list) = function
       | [] -> returns
@@ -119,7 +120,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
           let g_t = r +. (gamma *. acc) in
           aux g_t (g_t :: returns) rs
     in
-    aux 0.0 [] (List.rev rewards)
+    aux 0.0 [] (List.rev rewards) *)
 
   (* Standardize and discounted cumulative reward *)
   let update_rewards (rewards : float list) (gamma : float) : Tensor.t =
@@ -178,7 +179,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
           let rewards = reward :: rewards in
           if is_done || truncated then (
             let rewards_tensor = update_rewards rewards gamma in
-            let loss = update_policy rewards_tensor probs optimizer in
+            let loss = update_parameters rewards_tensor probs optimizer in
             let total_reward = List.fold_left ( +. ) 0.0 rewards in
             Printf.printf "Episode %d: Total Reward: %f, Loss: %f\n%!" _episode total_reward loss
           )

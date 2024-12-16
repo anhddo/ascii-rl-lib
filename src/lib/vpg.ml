@@ -1,4 +1,5 @@
 open Base_algorithm
+open Utils
 
 module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
 include Algo_config
@@ -37,11 +38,11 @@ include Algo_config
     in
     Core.Out_channel.write_all model_path ~data:sexp_str
 
-  let softmax (arr : float array) : float array =
+  (* let softmax (arr : float array) : float array =
     let max_elem = Array.fold_left max neg_infinity arr in
     let exps = Array.map (fun x -> exp (x -. max_elem)) arr in
     let sum_exps = Array.fold_left ( +. ) 0.0 exps in
-    Array.map (fun x -> x /. sum_exps) exps
+    Array.map (fun x -> x /. sum_exps) exps *)
 
   (* Select an action using softmax probability sampling *)
   let select_action (state : int) : int =
@@ -61,7 +62,7 @@ include Algo_config
     find_action 0
 
   (* Updates the vpg parameters using the discounted cumulative reward *)
-  let update_policy 
+  let update_parameters
       (trajectories : ((int * int) * float) list) 
       (learning_rate : float) =
     let returns = Array.of_list (List.map snd trajectories) in
@@ -80,14 +81,14 @@ include Algo_config
     done
 
   (* Calculate the discounted cumulative reward *)
-  let calculate_returns (rewards : float list) (gamma : float) : float list =   (* chronological order input and output*)
+  (* let calculate_returns (rewards : float list) (gamma : float) : float list =   (* chronological order input and output*)
     let rec aux (acc : float) (returns : float list) = function
       | [] -> returns
       | r :: rs ->
           let g_t = r +. gamma *. acc in
           aux g_t (g_t :: returns) rs
     in
-    aux 0.0 [] (List.rev rewards)
+    aux 0.0 [] (List.rev rewards) *)
 
   (* Standardize trajectories and discounted cumulative reward *)
   let update_trajectories
@@ -137,7 +138,7 @@ include Algo_config
           let rewards = reward :: rewards in
           if is_done || truncated then (
             let updated_trajectories = update_trajectories trajectories rewards gamma in
-            update_policy updated_trajectories learning_rate;
+          update_parameters updated_trajectories learning_rate;
             let total_reward = List.fold_left (+.) 0.0 rewards in
             Printf.printf "Episode %d: Total Reward: %f\n%!" _episode total_reward
           )
