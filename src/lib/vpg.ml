@@ -111,7 +111,12 @@ include Algo_config
     for _episode = 1 to episode do
       let state, internal_state = Env.reset () in
       let state_bin = State_action_env.convert_state_to_bin state in
-      let rec run_step t state_bin trajectories rewards internal_state =
+      let rec run_step
+        (t : int)
+        (state_bin : int)
+        (trajectories : ((int * int) * float) list)
+        (rewards : float list)
+        (internal_state : Env.t) : unit =
         (* Printf.printf "Time step T: %d\n" t; *)
         if t >= max_steps then
           ()
