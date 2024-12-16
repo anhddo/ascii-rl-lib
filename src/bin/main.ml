@@ -1,13 +1,11 @@
-[@@@ocaml.warning "-32"]
-
 type config = {
-  episode : int;
-  learning_rate : float;
-  gamma : float;
-  model_path : string;
-  render : bool;
-  simulation : string;
-  algo : string;
+  algo : string; (* algorithm to run *)
+  simulation : string; (* simulation to run *)
+  episode : int; (* number of episodes *)
+  learning_rate : float; (* learning rate for the algorithm *)
+  gamma : float; (* discount factor *)
+  model_path : string; (* path to save the model *)
+  render : bool; (* render the simulation *)
 }
 
 (* Default configuration *)

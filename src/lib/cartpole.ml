@@ -20,18 +20,24 @@ functor
 
     (* Resets the simulation and returns the first response again *)
     let reset () : t * t =
+      if C.render then (
+        print_string "\027[2J\027";
+        Printf.printf "\027[1;1H";
+        print_string "[Cartpole] Starting new episode\n";
+        flush stdout;
+        Unix.sleepf 0.5);
       let min_start = -0.05 in
       let max_start = 0.05 in
-      let starting_state =
+      let observation =
         [
           random_between min_start max_start;
           random_between min_start max_start;
           random_between min_start max_start;
           random_between min_start max_start;
-          -1.;
         ]
       in
-      (starting_state, starting_state)
+      let starting_state = observation @ [ -1.; 0.0 ] in
+      (observation, starting_state)
 
     (* Applies the action to the environment, and returns the corresponding response *)
     let step (sim : t) (act : action) : response =
@@ -55,7 +61,8 @@ functor
             cart_velocity,
             pole_angle,
             pole_ang_velocity,
-            steps_past_terminated ) =
+            steps_past_terminated,
+            step ) =
         match sim with
         | [
          cart_location;
@@ -63,12 +70,14 @@ functor
          pole_angle;
          pole_ang_velocity;
          steps_past_terminated;
+         step;
         ] ->
             ( cart_location,
               cart_velocity,
               pole_angle,
               pole_ang_velocity,
-              steps_past_terminated )
+              steps_past_terminated,
+              step )
         | _ -> failwith "invalid state"
       in
       let sintheta = Float.sin pole_angle in
@@ -112,17 +121,17 @@ functor
         | true, true -> (0., steps_past_terminated +. 1.)
         | true, false -> (1., 0.)
       in
-      let new_state =
+      let observation =
         [
           new_cart_location;
           new_cart_velocity;
           new_pole_angle;
           new_pole_ang_velocity;
-          steps_past_terminated;
         ]
       in
+      let new_state = observation @ [ steps_past_terminated; step +. 1.0 ] in
       {
-        observation = new_state;
+        observation;
         reward;
         terminated;
         truncated = false;
@@ -147,8 +156,9 @@ functor
          pole_angle;
          pole_ang_velocity;
          steps_past_terminated;
+         step;
         ] ->
-            Printf.printf "\027[2J\027[H";
+            (* Printf.printf "\027[2J\027[H"; *)
             let canvas = Array.make_matrix term_height term_width ' ' in
             for i = 0 to term_width - 1 do
               canvas.(pivot_row + 1).(i) <- '-'
@@ -207,15 +217,17 @@ functor
                 loop 0 (float x0) (float y0)
             in
             draw_line_with_char x0 y0 x1 y1 'O' pole_char;
- 
+
+            Printf.printf "\027[1;1H";
             Printf.printf
               "Cart Position: %f\n\
                Cart Velocity: %f\n\
                Pole Angle (rad): %f\n\
                Pole Angular Velocity: %f\n\
-               Steps Past Terminated: %f\n"
+               Steps Past Terminated: %f\n\n\
+              \               Steps: %f\n"
               cart_x cart_velocity pole_angle pole_ang_velocity
-              steps_past_terminated;
+              steps_past_terminated step;
 
             Array.iter
               (fun row ->
@@ -223,16 +235,17 @@ functor
                 print_newline ())
               canvas;
 
+            Unix.sleepf 0.05;
             flush stdout
         | _ -> failwith "Invalid simulation state"
 
     let rec simulate (sim_state : t) =
-      if C.render then Unix.sleepf 0.07;
+      (* if C.render then Unix.sleepf 0.07; *)
       let action = [ (if Random.bool () then 1. else 0.) ] in
       let response = step sim_state action in
       render response.internal_state;
       (* Printf.printf "Episode terminated. Reward: %f\n" response.reward; *)
       simulate response.internal_state
-      (* if not response.terminated then simulate response.internal_state
+    (* if not response.terminated then simulate response.internal_state
       else Printf.printf "Episode terminated. Reward: %f\n" response.reward *)
   end
