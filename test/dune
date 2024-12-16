@@ -1,23 +1,24 @@
 (test
-  (name state_action_test)
-  (modules state_action_test)
-  (libraries ounit2 core state_action cartpole pendulum))
+ (name state_action_test)
+ (modules state_action_test)
+ (libraries ounit2 core state_action cartpole pendulum))
 
+(test
+ (name utils_test)
+ (modules utils_test)
+ (libraries ounit2 core utils))
 
-(test 
-  (name pendulum_test)
-  (modules pendulum_test)
-  (libraries pendulum ounit2 core)
-)
+(test
+ (name pendulum_test)
+ (modules pendulum_test)
+ (libraries pendulum ounit2 core))
 
-(test 
-  (name blackjack_test)
-  (modules blackjack_test)
-  (libraries blackjack ounit2 core)
-)
+(test
+ (name blackjack_test)
+ (modules blackjack_test)
+ (libraries blackjack ounit2 core))
 
-(test 
-  (name cartpole_test)
-  (modules cartpole_test)
-  (libraries cartpole ounit2 core)
-)
+(test
+ (name cartpole_test)
+ (modules cartpole_test)
+ (libraries cartpole ounit2 core))
