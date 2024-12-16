@@ -1,3 +1,6 @@
+(* Main entry point for the reinforcement learning library *)
+
+(* Configuration type *)
 type config = {
   algo : string; (* algorithm to run *)
   simulation : string; (* simulation to run *)
@@ -57,6 +60,7 @@ let () =
     let learning_rate = config.learning_rate
     let gamma = config.gamma
   end in
+  (* Choose the simulation modules *)
   let module Sim = struct
     include
       (val match Sim_env.simulation_name with
@@ -65,6 +69,7 @@ let () =
            | "blackjack" -> (module Blackjack.Make (Sim_env) : Simulation.S)
            | _ -> failwith "Unknown simulation")
   end in
+  (* Choose the algorithm modules *)
   let module Algo = struct
     include
       (val match Algo_config.algo_name with
