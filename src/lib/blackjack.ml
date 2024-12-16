@@ -14,14 +14,9 @@ functor
 
     let env_type = Blackjack
 
-    let clip (min_value : 'a) (max_value : 'a) (value : 'a) : 'a =
-      if value < min_value then min_value
-      else if value > max_value then max_value
-      else value
-
     let draw_card () : float =
       let card_value = Float.of_int @@ (Random.int 13 + 1) in
-      clip 1. 10. card_value (* Convert Js, Qs, Ks, to 10 *)
+      Utils.clip 1. 10. card_value (* Convert Js, Qs, Ks, to 10 *)
     
 
     (* type t = float list Length is 3 | [ player's hand's sum, dealer's face card, does the player have a usable ace ] *)

@@ -10,14 +10,6 @@ module BlackjackSet = Blackjack.Make(Config)
 module Helper_tests =
   struct
 
-  let clip_tests _ = 
-    assert_equal 5 @@ BlackjackSet.clip 0 10 5;
-    assert_equal 10 @@ BlackjackSet.clip 0 10 100;
-    assert_equal (-1) @@ BlackjackSet.clip (-1) 305 (-305);
-    assert_equal "c" @@ BlackjackSet.clip "c" "z" "a";
-    assert_equal "e" @@ BlackjackSet.clip "c" "z" "e";
-    assert_equal "f" @@ BlackjackSet.clip "c" "f" "r"
-
   let draw_card_test _= 
     let invariant (_ : int) =
       let rand = BlackjackSet.draw_card()
@@ -29,7 +21,6 @@ module Helper_tests =
     let series = 
       "Helper Function Tests" >::: [ 
         "Draw Card Tests" >:: draw_card_test;
-        "Clip Tests" >:: clip_tests
       ]
   end
 
