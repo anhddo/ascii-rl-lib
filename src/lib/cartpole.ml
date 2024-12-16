@@ -225,9 +225,9 @@ functor
                Pole Angle (rad): %f\n\
                Pole Angular Velocity: %f\n\
                Steps Past Terminated: %f\n\n\
-              \               Steps: %f\n"
+              \               Steps: %d\n"
               cart_x cart_velocity pole_angle pole_ang_velocity
-              steps_past_terminated step;
+              steps_past_terminated (int_of_float step);
 
             Array.iter
               (fun row ->
@@ -240,12 +240,8 @@ functor
         | _ -> failwith "Invalid simulation state"
 
     let rec simulate (sim_state : t) =
-      (* if C.render then Unix.sleepf 0.07; *)
       let action = [ (if Random.bool () then 1. else 0.) ] in
       let response = step sim_state action in
       render response.internal_state;
-      (* Printf.printf "Episode terminated. Reward: %f\n" response.reward; *)
       simulate response.internal_state
-    (* if not response.terminated then simulate response.internal_state
-      else Printf.printf "Episode terminated. Reward: %f\n" response.reward *)
   end
