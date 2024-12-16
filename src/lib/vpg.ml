@@ -38,12 +38,6 @@ include Algo_config
     in
     Core.Out_channel.write_all model_path ~data:sexp_str
 
-  (* let softmax (arr : float array) : float array =
-    let max_elem = Array.fold_left max neg_infinity arr in
-    let exps = Array.map (fun x -> exp (x -. max_elem)) arr in
-    let sum_exps = Array.fold_left ( +. ) 0.0 exps in
-    Array.map (fun x -> x /. sum_exps) exps *)
-
   (* Select an action using softmax probability sampling *)
   let select_action (state : int) : int =
     let probs = softmax vpg_params.(state) in
@@ -79,16 +73,6 @@ include Algo_config
         vpg_params.(state).(a) +. learning_rate *. grad *. returns.(i)
       done
     done
-
-  (* Calculate the discounted cumulative reward *)
-  (* let calculate_returns (rewards : float list) (gamma : float) : float list =   (* chronological order input and output*)
-    let rec aux (acc : float) (returns : float list) = function
-      | [] -> returns
-      | r :: rs ->
-          let g_t = r +. gamma *. acc in
-          aux g_t (g_t :: returns) rs
-    in
-    aux 0.0 [] (List.rev rewards) *)
 
   (* Standardize trajectories and discounted cumulative reward *)
   let update_trajectories

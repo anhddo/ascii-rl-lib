@@ -6,12 +6,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   include Algo_config
   module State_action_env = State_action.Make (Env)
 
-  (*Type for neural network model*)
-  (* type nn_model = {
-    var_store : Var_store.t;
-    forward : Tensor.t -> Tensor.t;
-  } *)
-
   let action_bin = State_action_env.q_config.action_bin
   let obs_dim = State_action_env.q_config.obs_dim
 
@@ -110,17 +104,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     Tensor.backward loss ~keep_graph:true;
     Optimizer.step optimizer;
     Tensor.float_value loss
-
-  (* Calculate the discounted cumulative reward *)
-  (* let calculate_returns (rewards : float list) (gamma : float) : float list =
-    (* chronological order input and output*)
-    let rec aux (acc : float) (returns : float list) = function
-      | [] -> returns
-      | r :: rs ->
-          let g_t = r +. (gamma *. acc) in
-          aux g_t (g_t :: returns) rs
-    in
-    aux 0.0 [] (List.rev rewards) *)
 
   (* Standardize and discounted cumulative reward *)
   let update_rewards (rewards : float list) (gamma : float) : Tensor.t =
