@@ -6,8 +6,6 @@ open Utils
 let tests =
   "State_action tests"
   >::: [
-         (* ( "argmax test" >:: fun _ ->
-           assert_equal 2 (argmax [ 1; 2; 3 ] ~compare:( - ) ~init:0) ); *)
          ( "float argmax test1" >:: fun _ -> assert_equal 2 (float_argmax [ 1.0; 2.0; 3.0 ]) );
          ( "float argmax test2" >:: fun _ -> assert_equal 0 (float_argmax [ 3.0; 2.0; 1.0 ]) );
        ]
