@@ -5,17 +5,18 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   include Algo_config
   module State_action_env = State_action.Make (Env)
 
+  (*Type for neural network model*)
+  type nn_model = {
+    var_store : Var_store.t;
+    forward : Tensor.t -> Tensor.t;
+  }
+
   let action_bin = State_action_env.q_config.action_bin
   let obs_dim = State_action_env.q_config.obs_dim
 
   (*Get action dimension*)
   let action_dim =
     match action_bin with Discrete n -> n | Continuous x -> x.num_bins
-
-  type nn_model = {
-    var_store : Var_store.t;
-    forward : Tensor.t -> Tensor.t;
-  }
 
   (*Helper function for building neural network model*)
   let build_model (input_size : int) (output_size : int) (hidden_size : int) : nn_model =
@@ -66,7 +67,8 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       Printf.printf "No model file found at %s. Initializing new model...\n"
         model_path;
     model
-
+  
+  (*Get the neural network model*)
   let model = initialize_or_load_model ()
 
   (*Load parameters of a neural network model into a file*)
@@ -100,13 +102,13 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     (action, action_prob)
 
   (* Updates the vpgnn parameters through training neural network with discounted cumulative rewards *)
-  let update_policy (rewards : Tensor.t) (probs : Tensor.t) (optimizer : Optimizer.t) : unit =
+  let update_policy (rewards : Tensor.t) (probs : Tensor.t) (optimizer : Optimizer.t) : float =
     let log_probs = Tensor.log probs in
     let loss = Tensor.neg (Tensor.sum (Tensor.mul log_probs rewards)) in
     Optimizer.zero_grad optimizer;
     Tensor.backward loss ~keep_graph:true;
     Optimizer.step optimizer;
-    Printf.printf "Loss: %f\n%!" (Tensor.float_value loss)
+    Tensor.float_value loss
 
   (* Calculate the discounted cumulative reward *)
   let calculate_returns (rewards : float list) (gamma : float) : float list =
@@ -176,10 +178,10 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
           let rewards = reward :: rewards in
           if is_done || truncated then (
             let rewards_tensor = update_rewards rewards gamma in
-            update_policy rewards_tensor probs optimizer;
+            let loss = update_policy rewards_tensor probs optimizer in
             let total_reward = List.fold_left ( +. ) 0.0 rewards in
-            Printf.printf "Episode %d: Total Reward: %f\n%!" _episode
-              total_reward)
+            Printf.printf "Episode %d: Total Reward: %f, Loss: %f\n%!" _episode total_reward loss
+          )
           else (
             Env.render response.internal_state;
             run_step (t + 1) next_state rewards probs response.internal_state)
