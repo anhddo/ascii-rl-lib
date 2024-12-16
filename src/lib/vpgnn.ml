@@ -5,7 +5,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   include Algo_config
   module State_action_env = State_action.Make (Env)
 
-  (* let state_bin = State_action_env.q_config.state_bin *)
   let action_bin = State_action_env.q_config.action_bin
   let obs_dim = State_action_env.q_config.obs_dim
 
@@ -13,11 +12,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   let action_dim =
     match action_bin with Discrete n -> n | Continuous x -> x.num_bins
 
-  (*load model*)
-  (* let load_vpg_params (filename : string) =
-     () *)
-
-  let build_model input_size output_size hidden_size =
+  (*Helper function for building neural network model*)
+  let build_model (input_size : int) (output_size : int) (hidden_size : int) :
+    < forward : Tensor.t -> Tensor.t; var_store : Var_store.t > =
     let vs = Var_store.create ~name:"nn" () in
     let fc1 = Layer.linear vs ~input_dim:input_size hidden_size in
     let fc2 = Layer.linear vs ~input_dim:hidden_size output_size in
@@ -27,12 +24,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
 
       method var_store = vs
     end
-  (* let input_size = obs_dim
-     let output_size = action_dim
-     let hidden_size = 3 *)
-  (* let model = build_model input_size output_size hidden_size *)
 
-  let load_vars vs filename =
+  (*Load parameters from a file for a neural network model*)
+  let load_vars (vs : Var_store.t) (filename : string) : unit =
     let tensors_fn = Serialize.load_multi ~filename in
     let names = Var_store.all_vars vs |> List.map fst in
     let tensors = tensors_fn ~names in
@@ -50,7 +44,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
       (Var_store.all_vars vs);
     Printf.printf "All variables loaded from %s\n" filename
 
-  let initialize_or_load_model () =
+  (*Initialize a new model or load model parameters. Wrap the 'load_vars' function*)
+  let initialize_or_load_model () :
+    < forward : Tensor.t -> Tensor.t; var_store : Var_store.t > =
     let input_size = obs_dim in
     let output_size = action_dim in
     let hidden_size = 3 in
@@ -66,28 +62,25 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
 
   let model = initialize_or_load_model ()
 
-  let save_vars vs filename =
+  (*Load parameters of a neural network model into a file*)
+  let save_vars (vs : Var_store.t) (filename : string) : unit =
     let vars = Var_store.all_vars vs in
     Serialize.save_multi ~named_tensors:vars ~filename;
     Printf.printf "All variables saved to %s\n" filename
 
-  (*save model using Sexp*)
-  let save_model () =
+  (*Interface of Vpgnn. Wrap the 'save_vars' function*)
+  let save_model () : unit =
     let vs = model#var_store in
     save_vars vs model_path;
     Printf.printf "Model saved to path: %s\n" model_path
 
   (* Select an action using softmax probability sampling *)
-  let select_action model obs =
+  let select_action (model : < forward : Tensor.t -> Tensor.t; .. >) (obs : float array) : int * Tensor.t =
     let obs_tensor = Tensor.of_float1 obs |> Tensor.unsqueeze ~dim:0 in
     let probs =
       model#forward obs_tensor
       |> Tensor.softmax ~dim:(-1) ~dtype:(Torch_core.Kind.T Float)
     in
-
-    (* let probs_ = Tensor.squeeze probs in
-       print_tensor_info probs_; *)
-
     (* Sample an action based on the probabilities *)
     let action_tensor =
       Tensor.multinomial probs ~num_samples:1 ~replacement:true
@@ -99,11 +92,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     let action_prob = Tensor.select probs ~dim:1 ~index:action in
     (action, action_prob)
 
-  (* Updates the vpg parameters using the discounted cumulative reward *)
-  let update_policy rewards probs optimizer =
+  (* Updates the vpgnn parameters through training neural network with discounted cumulative rewards *)
+  let update_policy (rewards : Tensor.t) (probs : Tensor.t) (optimizer : Optimizer.t) : unit =
     let log_probs = Tensor.log probs in
-    (* print_tensor_info rewards;
-       print_tensor_info log_probs; *)
     let loss = Tensor.neg (Tensor.sum (Tensor.mul log_probs rewards)) in
     Optimizer.zero_grad optimizer;
     Tensor.backward loss ~keep_graph:true;
@@ -121,19 +112,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     in
     aux 0.0 [] (List.rev rewards)
 
-  (* Standardize trajectories and discounted cumulative reward *)
-  let update_trajectories (rewards : float list) (gamma : float) =
+  (* Standardize and discounted cumulative reward *)
+  let update_rewards (rewards : float list) (gamma : float) : Tensor.t =
     let returns = calculate_returns (List.rev rewards) gamma in
-
-    (* let print_rewards rewards =
-         List.iter (fun r -> Printf.printf "%f " r) rewards;
-         print_endline ""
-       in
-       print_rewards rewards;
-       Printf.printf "\n";
-       print_rewards returns;
-       let length = List.length returns in
-       Printf.printf "Length of returns: %d\n" length; *)
     let mean =
       List.fold_left ( +. ) 0.0 returns /. float_of_int (List.length returns)
     in
@@ -150,15 +131,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     in
     standardized_returns_tensor
 
-  (* let print_tensor_info tensor =
-     let shape = Tensor.shape tensor in
-     let shape_str = String.concat ", " (List.map string_of_int shape) in
-     Printf.printf "Probs shape: [%s]\n%!" shape_str;
-     Printf.printf "Probs content: %s\n%!" (Tensor.to_string tensor ~line_size:80) *)
-
-  (* let print_tensor_version tensor name =
-     Printf.printf "Tensor: %s, Version: %d\n" name (Int64.to_int (Tensor._version tensor)) *)
-
   (*train model*)
   let train () =
     let learning_rate = 0.01 in
@@ -168,41 +140,26 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     for _episode = 1 to episode do
       let state, internal_state = Env.reset () in
       let state = Array.of_list state in
-      let rec run_step t state rewards probs internal_state =
-        (* Printf.printf "Time step T: %d\n" t; *)
+      let rec run_step
+        (t : int)
+        (state : float array)
+        (rewards : float list)
+        (probs : Tensor.t)
+        (internal_state : Env.t) : unit =
         if t >= max_steps then
-          (* Printf.printf "Episode %d Success: Time Steps: %d\n%!" episode t *)
           ()
         else
           let action, prob = select_action model state in
-          (* Printf.printf "Selected action: %d\n%!" action; *)
-          (* print_tensor_version probs "Probs before concatenation";
-             print_tensor_version prob "Prob to concatenate"; *)
           let probs =
             if Tensor.shape probs = [ 0 ] then prob
             else
-              (* Tensor.cat [probs; prob] ~dim:0 *)
-              (* prob *)
-              (* Printf.printf "here\n"; *)
               Tensor.cat [ probs; prob ] ~dim:0
           in
-
-          (* print_tensor_version probs "Probs after concatenation"; *)
-          (* Printf.printf "Probs requires grad: %b\n" (Tensor.requires_grad probs); *)
-          (* print_endline "state : ";
-             Array.iter (fun x -> Printf.printf "%f " x) state;
-             Printf.printf "\n";
-             print_endline "probs accumulated: ";
-             print_tensor_info probs; *)
           let passing_action_to_env =
             match action_bin with
             | Discrete _ -> [ float_of_int action ]
             | Continuous x -> [ State_action_env.bin_to_value action x ]
           in
-
-          (* Printf.printf "Action passed to environment: ";
-             List.iter (fun f -> Printf.printf "%f " f) passing_action_to_env;
-             Printf.printf "\n"; *)
           let response = Env.step internal_state passing_action_to_env in
           let next_state = response.observation in
           let reward = response.reward in
@@ -211,10 +168,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
           let next_state = Array.of_list next_state in
           let rewards = reward :: rewards in
           if is_done || truncated then (
-            (* if true then *)
-            let rewards_tensor = update_trajectories rewards gamma in
-            (* print_weights model#var_store; *)
-            (* print_gradients model#var_store; *)
+            let rewards_tensor = update_rewards rewards gamma in
             update_policy rewards_tensor probs optimizer;
             let total_reward = List.fold_left ( +. ) 0.0 rewards in
             Printf.printf "Episode %d: Total Reward: %f\n%!" _episode
