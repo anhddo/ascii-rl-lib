@@ -57,13 +57,27 @@ functor
             high_list = [ 1.; 1.; 8. ];
             num_bins = state_bin;
           }
-      | _ -> failwith "invalid environment"
+      | Blackjack ->
+          {
+            low_list = [ 4.; 1.; 0. ];
+            high_list = [ 21.; 10.; 1. ];
+            num_bins = state_bin;
+          }
+      | _ -> failwith "(state_action) invalid environment"
 
     let q_config =
       match M.env_type with
       | Cartpole ->
           {
             obs_dim = 4;
+            action_dim = 2;
+            state_bin;
+            is_continuous_action = false;
+            action_bin = Discrete 2;
+          }
+      | Blackjack ->
+          {
+            obs_dim = 3;
             action_dim = 2;
             state_bin;
             is_continuous_action = false;
