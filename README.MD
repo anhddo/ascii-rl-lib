@@ -4,7 +4,15 @@
 Reinforcement Learning has emerged as a powerful paradigm for solving complex decision-making problems across various domains. Our team is implementing RL algorithms and integrating them with simulation environments. The purpose of this project is to create a Reinforcement Learning library that enables users to train and test various RL algorithms within simulated environments. We implemented key algorithms like Q-learning, Policy Gradient, and Policy Gradient with Neural Network. We integrated with multiple simulation environments, including CartPole, Pendulum, and Blackjack, to verify correctness and robustness. Users will interact via a command-line interface, specifying parameters such as the algorithm, environment, and training configurations. The project is divided into two main components: the RL algorithm library and simulation environment integration, resulting in a comprehensive RL toolkit.
  
 # Implementation
-## Interaction protocol
+## Interaction protocol.
+In our implementation, the reinforcement learning algorithms and simulations interact through a well-defined interface. This interface allows the algorithms to interact with the simulations in a consistent manner, regardless of the specific simulation environment. The interface consists of the following key components:
+- **State**: Represents the current state of the simulation environment. It is a record type that encapsulates all relevant information about the environment at a given time step.
+- **Action**: Represents the action taken by the reinforcement learning algorithm in response to the current state. It is a variant type that can be either discrete or continuous, depending on the simulation environment.
+- **Reward**: Represents the reward received by the reinforcement learning algorithm for taking a specific action in a given state. It is a scalar value that quantifies the quality of the action taken.
+- **Step**: Represents the transition from one state to another based on the action taken by the reinforcement learning algorithm. It is a function that updates the state of the simulation environment and returns the reward for the action taken.
+- **Episode**: Represents a sequence of steps that occur from the initial state to a terminal state. It is a function that executes multiple steps until a terminal condition is met, such as reaching a maximum number of steps or a specific goal.
+
+![Picture Showing Simulations](https://images.spiceworks.com/wp-content/uploads/2022/09/29100907/Reinforcement-Learning-Model.png)
 ## Architecture
 
 ## Libraries
@@ -20,7 +28,6 @@ These simulations take a discrete action from the reinforcement learning algorit
 
 >Our simulations do not store their own state, as that is not good functional programming. Rather they take in a record as a parameter that represents the state, and returns a similar record
 
-![Picture Showing Simulations](https://images.spiceworks.com/wp-content/uploads/2022/09/29100907/Reinforcement-Learning-Model.png)
 
 We currently have implemented three classic simulations for actors to train on: Cartpole, Pendulum, and Blackjack. Descriptions of each are below.
 
