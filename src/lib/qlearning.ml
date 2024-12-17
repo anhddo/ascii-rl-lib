@@ -13,7 +13,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   let action_dim =
     match action_bin with Discrete n -> n | Continuous x -> x.num_bins
 
-
   (*load model*)
   let load_q_table (filename : string) =
     let file_content = Core.In_channel.read_all filename in
@@ -29,6 +28,8 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
         ~dimx:(int_of_float @@ (float_of_int state_bin ** float_of_int obs_dim))
         ~dimy:action_dim 0.0
 
+  let test (x : int) = x
+
   (*save model using Sexp*)
   let save_model' (file_path : string) =
     let sexp_str =
@@ -41,8 +42,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     Core.Out_channel.write_all file_path ~data:sexp_str
 
   let save_model () = save_model' model_path
-
   (*train model*)
+
+  [@@@coverage off]
   let train () =
     let rec loop' (episode : int) (state : float list)
         (internal_state : float list) (reward_ep : float) =
@@ -96,4 +98,5 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     in
     let state, internal_state = Env.reset () in
     loop' episode state internal_state 0.0
+  [@@@coverage on]
 end

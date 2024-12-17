@@ -22,3 +22,8 @@
  (name cartpole_test)
  (modules cartpole_test)
  (libraries cartpole ounit2 core))
+
+(test
+ (name qlearning_test)
+ (modules qlearning_test)
+ (libraries qlearning ounit2 core cartpole pendulum))
