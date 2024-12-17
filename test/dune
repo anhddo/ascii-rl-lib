@@ -27,3 +27,13 @@
  (name qlearning_test)
  (modules qlearning_test)
  (libraries qlearning ounit2 core cartpole pendulum base_algorithm))
+
+(test
+ (name vpg_test)
+ (modules vpg_test)
+ (libraries vpg ounit2 core cartpole pendulum base_algorithm))
+
+(test
+ (name vpgnn_test)
+ (modules vpgnn_test)
+ (libraries vpgnn ounit2 core cartpole pendulum base_algorithm))

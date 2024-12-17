@@ -36,6 +36,7 @@ include Algo_config
            (Core.Array.sexp_of_t Core.Float.sexp_of_t)
            vpg_params)
     in
+    Core_unix.mkdir_p (Core.Filename.dirname model_path);
     Core.Out_channel.write_all model_path ~data:sexp_str
 
   (* Select an action using softmax probability sampling *)

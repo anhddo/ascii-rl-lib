@@ -8,14 +8,14 @@
 (library
  (name vpg)
  (modules vpg)
- (libraries core simulation base_algorithm state_action utils)
+ (libraries core core_unix simulation base_algorithm state_action utils)
  (preprocess
   (pps bisect_ppx)))
 
 (library
  (name vpgnn)
  (modules vpgnn)
- (libraries core torch simulation base_algorithm state_action utils)
+ (libraries core core_unix torch simulation base_algorithm state_action utils)
  (preprocess
   (pps bisect_ppx)))
 

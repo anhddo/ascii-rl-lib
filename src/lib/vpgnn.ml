@@ -75,6 +75,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   (*Interface of Vpgnn. Wrap the 'save_vars' function*)
   let save_model () : unit =
     let vs = model.var_store in
+    Core_unix.mkdir_p (Core.Filename.dirname model_path);
     save_vars vs model_path;
     Printf.printf "Model saved to path: %s\n" model_path
 
