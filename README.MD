@@ -48,7 +48,7 @@ To train a Model, For example, to train a q-learning algorithm with the pendulum
 ```
 dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
 ```
-it would take a minute or two to complete 300000 episodes, we can obtain a relative good policy. to view the results of the trained q-learning algorithm with the pendulum simulation, you can add the `--render` argument:  
+It would take a minute or two to complete 300000 episodes, we can obtain a relative good policy. to view the results of the trained q-learning algorithm with the pendulum simulation, you can add the `--render` argument:  
 ```
 dune exec -- ./src/bin/main.exe --episode 3 --model-path data/pendulum.sexp --render
 ```
