@@ -23,7 +23,6 @@ let tests =
            end in
            let module Sim = Cartpole.Make (Sim_env) in
            let module Algo = Qlearning.Make (Algo_config) (Sim) in
-           (* Add your test logic here *)
            assert_equal 1 1 );
          ( "continuous test" >:: fun _ ->
            let module Sim_env = struct
@@ -32,7 +31,9 @@ let tests =
            end in
            let module Sim = Pendulum.Make (Sim_env) in
            let module Algo = Qlearning.Make (Algo_config) (Sim) in
-           (* Add your test logic here *)
+           Algo.save_model ();
+           let module Algo1 = Qlearning.Make (Algo_config) (Sim) in
+           Sys.remove Algo_config.model_path;
            assert_equal 1 1 );
        ]
 

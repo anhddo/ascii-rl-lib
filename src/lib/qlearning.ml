@@ -28,8 +28,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
         ~dimx:(int_of_float @@ (float_of_int state_bin ** float_of_int obs_dim))
         ~dimy:action_dim 0.0
 
-  let test (x : int) = x
-
   (*save model using Sexp*)
   let save_model' (file_path : string) =
     let sexp_str =
@@ -44,7 +42,6 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
   let save_model () = save_model' model_path
   (*train model*)
 
-  [@@@coverage off]
   let train () =
     let rec loop' (episode : int) (state : float list)
         (internal_state : float list) (reward_ep : float) =
@@ -98,5 +95,5 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     in
     let state, internal_state = Env.reset () in
     loop' episode state internal_state 0.0
-  [@@@coverage on]
+  [@@coverage off]
 end
