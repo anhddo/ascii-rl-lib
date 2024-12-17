@@ -6,11 +6,6 @@ functor
     include Simulation.T
 
     let env_type = Cartpole
-    let square (value : float) : float = Float.pow value 2.
-
-    let random_between (min : float) (max : float) : float =
-      let diff = max -. min in
-      Random.float diff +. min
 
     (* type t = float list Length is 5 | [ location of cart, velocity of cart, angle of pole, angular velocity of pole, steps_past_terminated ] *)
     (* type action = float list Length is 1 | [ push cart left (0.) or right (1.)] *)
@@ -30,10 +25,10 @@ functor
       let max_start = 0.05 in
       let observation =
         [
-          random_between min_start max_start;
-          random_between min_start max_start;
-          random_between min_start max_start;
-          random_between min_start max_start;
+          Utils.random_between min_start max_start;
+          Utils.random_between min_start max_start;
+          Utils.random_between min_start max_start;
+          Utils.random_between min_start max_start;
         ]
       in
       let starting_state = observation @ [ -1.; 0.0 ] in
@@ -83,12 +78,12 @@ functor
       let sintheta = Float.sin pole_angle in
       let costheta = Float.cos pole_angle in
       let x_acceleration_partial =
-        (force +. (pole_moment *. square pole_ang_velocity *. sintheta))
+        (force +. (pole_moment *. Utils.square pole_ang_velocity *. sintheta))
         /. total_mass
       in
       let denominator =
         pole_length
-        *. ((4.0 /. 3.0) -. (pole_mass *. square costheta /. total_mass))
+        *. ((4.0 /. 3.0) -. (pole_mass *. Utils.square costheta /. total_mass))
       in
       let pole_angular_acceleration =
         ((gravity *. sintheta) -. (costheta *. x_acceleration_partial))

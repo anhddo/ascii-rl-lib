@@ -8,36 +8,6 @@ end
 
 module CartpoleSet = Cartpole.Make (Config)
 
-module Helper_tests = struct
-  let random_between_tests _ =
-    let min_bound = -1000. in
-    let max_bound = 1000. in
-    let invariant (_ : int) =
-      let rand = CartpoleSet.random_between min_bound max_bound in
-      assert_bool "result not within bounds"
-        (Float.( <= ) rand max_bound && Float.( >= ) rand min_bound)
-    in
-    Quickcheck.test (Int.gen_incl 0 0) ~f:invariant
-
-  let square_tests _ =
-    assert_equal 0. @@ CartpoleSet.square 0.;
-    assert_equal 100. @@ CartpoleSet.square 10.;
-    assert_equal 49. @@ CartpoleSet.square (-7.);
-    assert_bool "Failed Percision"
-    @@ Float.( <= ) (Float.abs (12.4609 -. CartpoleSet.square 3.53)) 0.0001;
-    assert_bool "Failed Percision"
-    @@ Float.( <= )
-         (Float.abs (6787.123456 -. CartpoleSet.square (-82.384)))
-         0.0001
-
-  let series =
-    "Helper Function Tests"
-    >::: [
-           "Random Between Tests" >:: random_between_tests;
-           "Square Tests" >:: square_tests;
-         ]
-end
-
 (* Likely, these both will have to be Quickchecks *)
 module Action_tests = struct
   let create_tests _ =
@@ -96,6 +66,6 @@ module Action_tests = struct
 end
 
 let series =
-  "Cartpole Simutation Tests" >::: [ Helper_tests.series; Action_tests.series ]
+  "Cartpole Simutation Tests" >::: [ Action_tests.series ]
 
 let () = run_test_tt_main series

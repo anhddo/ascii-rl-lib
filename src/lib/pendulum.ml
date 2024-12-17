@@ -7,36 +7,13 @@ functor
 
     let env_type = Pendulum
 
-    (* Returns the squre of the float *)
-    let square (value : float) : float = Float.pow value 2.
-
-    (* Does floating point modulo *)
-    let modulo (dividend : float) (divisor : float) : float =
-      dividend -. (divisor *. floor (dividend /. divisor))
-
-    (* Normalizes an angle to be between -PI and PI*)
-    let normalize_angle (ang : float) : float =
-      let normalized = modulo (ang +. Float.pi) (2. *. Float.pi) 
-      in
-      Float.sub normalized Float.pi;;
-
-    (* Add These Tests And To .mli *)
-    let random_between (min : float) (max : float) : float =
-      let diff = max -. min in
-      Random.float diff +. min
-
-    let clip (min_value : 'a) (max_value : 'a) (value : 'a) : 'a =
-      if value < min_value then min_value
-      else if value > max_value then max_value
-      else value
-
     (* type t = float list Length is 2 | [ angle of pendulum from upright, angular velocity of pendulum ] *)
     (* type action = float list Length is 1 | [ amount of torque to apply ] *)
 
     (* Creates a new simulation *)
     let create () : t = [ 0.0; 0.0; 0.0 ]
 
-    let convert_fo_feature (sim : t) : float list =
+    let convert_to_feature (sim : t) : float list =
       let angle = List.nth sim 0 in
       let angular_speed = List.nth sim 1 in
       [ Stdlib.cos angle; Stdlib.sin angle; angular_speed ]
@@ -45,14 +22,13 @@ functor
     let reset () : t * t =
       (* clean screen *)
       if C.render then print_string "\027[2J\027[H";
-
-      (* TODO : possibly have the constants be held in the sim list *)
-      let random_starting_angle = random_between (-1.0 *. Float.pi) Float.pi in
-      let random_starting_angular_speed = random_between (-1.) 1. in
+      (* Generate Random Beginning State *)
+      let random_starting_angle = Utils.random_between (-1.0 *. Float.pi) Float.pi in
+      let random_starting_angular_speed = Utils.random_between (-1.) 1. in
       let internal_state =
         [ random_starting_angle; random_starting_angular_speed; 0. ]
       in
-      (convert_fo_feature internal_state, internal_state)
+      (convert_to_feature internal_state, internal_state)
 
     (* Applies the action to the environment, and returns the corresponding response *)
     let step (sim : t) (act : action) : response =
@@ -71,7 +47,7 @@ functor
           ],
           applied_torque (* Newton-Meters *) :: [] ) ->
           let applied_torque =
-            clip (Float.neg max_torque) max_torque applied_torque
+            Utils.clip (Float.neg max_torque) max_torque applied_torque
           in
           if C.render then ( 
             Printf.printf "\027[1;1H";
@@ -79,9 +55,9 @@ functor
             Printf.printf "Applied torque:\t %f\n" applied_torque);
           let reward =
             (* Penalizes high applied torque, high angular speeds, and deviation from the top position *)
-            old_ang |> normalize_angle |> square
-            |> Float.add @@ (0.1 *. square old_angspeed)
-            |> Float.add @@ (0.001 *. square applied_torque)
+            old_ang |> Utils.normalize_angle |> Utils.square
+            |> Float.add @@ (0.1 *. Utils.square old_angspeed)
+            |> Float.add @@ (0.001 *. Utils.square applied_torque)
             |> Float.mul (-1.)
           in
           let new_angspeed =
@@ -90,21 +66,21 @@ functor
               3. *. gravity /. (2. *. length) *. Float.sin old_ang
             in
             let applied_angaccleration =
-              3. /. (mass *. square length) *. applied_torque
+              3. /. (mass *. Utils.square length) *. applied_torque
             in
             old_angspeed
             |> Float.add
                @@ (gravity_angacceleration +. applied_angaccleration)
                   *. constant_timestep
-            |> clip (Float.neg max_angspeed) max_angspeed
+            |> Utils.clip (Float.neg max_angspeed) max_angspeed
           in
           let new_ang =
             old_ang 
             |> Float.add @@ (new_angspeed *. constant_timestep)
-            |> normalize_angle
+            |> Utils.normalize_angle
           in
           {
-            observation = convert_fo_feature [ new_ang; new_angspeed ];
+            observation = convert_to_feature [ new_ang; new_angspeed ];
             reward;
             terminated = false;
             truncated = timestep > 200.;
