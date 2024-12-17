@@ -13,6 +13,7 @@ functor
     (* Creates a new simulation *)
     let create () : t = [ 0.0; 0.0; 0.0 ]
 
+    (* Translates state into a features for the algorithm *)
     let convert_to_feature (sim : t) : float list =
       let angle = List.nth sim 0 in
       let angular_speed = List.nth sim 1 in
@@ -32,8 +33,8 @@ functor
 
     (* Applies the action to the environment, and returns the corresponding response *)
     let step (sim : t) (act : action) : response =
-      (* these constants can be changed to create variable environments *)
-      let constant_timestep = 0.05 (* seconds *) in
+      (* Create Constants for Environment *)
+      let constant_timestep = 0.05 in
       let gravity = 10. in
       let mass = 1. in
       let length = 1. in
@@ -46,13 +47,14 @@ functor
             timestep;
           ],
           applied_torque (* Newton-Meters *) :: [] ) ->
-          let applied_torque =
-            Utils.clip (Float.neg max_torque) max_torque applied_torque
+          let applied_torque = Utils.clip (Float.neg max_torque) max_torque applied_torque
           in
-          if C.render then ( 
-            Printf.printf "\027[1;1H";
-            (* move cursor to top left*)
-            Printf.printf "Applied torque:\t %f\n" applied_torque);
+          if C.render then 
+            begin
+              Printf.printf "\027[1;1H";
+              (* move cursor to top left*)
+              Printf.printf "Applied torque:\t %f\n" applied_torque 
+            end;
           let reward =
             (* Penalizes high applied torque, high angular speeds, and deviation from the top position *)
             old_ang |> Utils.normalize_angle |> Utils.square
@@ -61,7 +63,6 @@ functor
             |> Float.mul (-1.)
           in
           let new_angspeed =
-            (* TODO, EXPLAIN THE PHYSICS *)
             let gravity_angacceleration =
               3. *. gravity /. (2. *. length) *. Float.sin old_ang
             in
@@ -69,9 +70,7 @@ functor
               3. /. (mass *. Utils.square length) *. applied_torque
             in
             old_angspeed
-            |> Float.add
-               @@ (gravity_angacceleration +. applied_angaccleration)
-                  *. constant_timestep
+            |> Float.add @@ (gravity_angacceleration +. applied_angaccleration) *. constant_timestep
             |> Utils.clip (Float.neg max_angspeed) max_angspeed
           in
           let new_ang =
@@ -91,7 +90,6 @@ functor
 
     [@@@coverage off] (* turn off coverage for rendering *)
     let render (sim_state : t) : unit =
-      (* prem *)
       if C.render = true then
         let term_width = 80 in
         let term_height = 24 in

@@ -1,10 +1,3 @@
-(* blackjack.ml *)
-
-[@@@ocaml.warning "-27"]
-[@@@ocaml.warning "-32"]
-[@@@ocaml.warning "-34"]
-[@@@ocaml.warning "-69"]
-
 module Make =
 functor
   (C : Simulation.Config)
@@ -153,6 +146,8 @@ functor
               internal_state = state;
             }
 
+
+    [@@@coverage off] (* Turning off coverage *)
     (* Helper function to convert card value to string *)
     let card_name (value : float) : string =
       match int_of_float value with
@@ -225,4 +220,5 @@ functor
         in
         game_loop sim_state
       done
+      [@@@coverage on]
   end

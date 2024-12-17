@@ -34,7 +34,7 @@ module Action_tests = struct
     in
     Quickcheck.test (Int.gen_incl 0 0) ~f:invariant
 
-  let step_tests _ =
+  let step_tests_random _ =
     let invariant (move_int : int) =
       let move = Float.of_int move_int in
       let _, result = CartpoleSet.reset () in
@@ -56,12 +56,39 @@ module Action_tests = struct
     in
     Quickcheck.test (Int.gen_incl 0 1) ~f:invariant
 
+  let step_tests_set _ =
+    let invariant (move_int : int) =
+      let move = Float.of_int move_int in
+      let _, result = CartpoleSet.reset () in
+      let rec helper (state : CartpoleSet.t) (move : float) (left_moves : int) = 
+        if (left_moves > 0) then
+          let response = CartpoleSet.step state [ move ] in
+          (match (response.internal_state, response.reward, response.terminated) with
+          | [ cart_location; _; pole_angle; _; steps; _ ], reward, terminated ->
+              assert_bool "too extreme cart location"
+              @@ Float.( <= ) cart_location 4.8;
+              assert_bool "too extreme pole angle" @@ Float.( <= ) pole_angle 0.42;
+              assert_bool "reward not a set value"
+                (Float.( = ) reward 0. || Float.( = ) reward 1.);
+              assert_bool "steps not a set value"
+                (Float.( = ) steps 0. || Float.( = ) steps (-1.));
+              assert_bool "set reward should be truncated"
+              @@ not (Float.( = ) reward 0. && not terminated);
+          | _, _, _ -> ignore() );
+          if not response.terminated then
+            helper response.internal_state 1. (left_moves - 1)
+      in
+      helper result move 10
+    in
+    Quickcheck.test (Int.gen_incl 1 1) ~f:invariant
+
   let series =
     "Action Tests"
     >::: [
            "Create Tests" >:: create_tests;
            "Reset Tests " >:: reset_tests;
-           "Step Tests" >:: step_tests;
+           "Step Tests Random" >:: step_tests_random;
+           "Step Tests Set" >:: step_tests_set;
          ]
 end
 

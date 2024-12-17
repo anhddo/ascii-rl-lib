@@ -15,12 +15,14 @@ functor
 
     (* Resets the simulation and returns the first response again *)
     let reset () : t * t =
-      if C.render then (
-        print_string "\027[2J\027";
-        Printf.printf "\027[1;1H";
-        print_string "[Cartpole] Starting new episode\n";
-        flush stdout;
-        Unix.sleepf 0.5);
+      if C.render then 
+        begin
+          print_string "\027[2J\027";
+          Printf.printf "\027[1;1H";
+          print_string "[Cartpole] Starting new episode\n";
+          flush stdout;
+          Unix.sleepf 0.5
+        end;
       let min_start = -0.05 in
       let max_start = 0.05 in
       let observation =
@@ -36,6 +38,7 @@ functor
 
     (* Applies the action to the environment, and returns the corresponding response *)
     let step (sim : t) (act : action) : response =
+      (* Create Constants *)
       let gravity = 9.8 in
       let cart_mass = 1. in
       let pole_mass = 0.1 in
@@ -113,7 +116,7 @@ functor
       let reward, steps_past_terminated =
         match (terminated, steps_past_terminated >= 0.) with
         | false, _ -> (1.0, -1.)
-        | true, true -> (0., steps_past_terminated +. 1.)
+        | true, true -> (0., steps_past_terminated +. 1.) (* shouldn't get here *)
         | true, false -> (1., 0.)
       in
       let observation =
@@ -134,6 +137,8 @@ functor
         internal_state = new_state;
       }
 
+    (* Remove coverage for our own sake *)
+    [@@@coverage off]
     let render (sim_state : t) : unit =
       if C.render then
         let term_width = 80 in
@@ -239,4 +244,5 @@ functor
       let response = step sim_state action in
       render response.internal_state;
       simulate response.internal_state
+    [@@@coverage on]
   end
