@@ -20,28 +20,6 @@ Project description, introduction, and motivation. We can modify the content fro
 
 
 
-# Demonstration
-
-## Training
-
-[qlearning_training.gif] [vpg_training.gif] [vpgnn_training.gif]
-
-(in the same simulation, like cartpole)
-
-
-
-## Simulation
-
-[cartpole-qlearning.gif] [cartpole-vpg.gif] [cartpole-vpgnn.gif]
-
-[pendulum-qlearning.gif] [pendulum-vpg.gif] [pendulum-vpgnn.gif]
-
-[blackjack-qlearning.gif] [blackjack-vpg.gif]
-
-
-
-
-
 # How to run
 
 ## Environment
@@ -53,5 +31,23 @@ Project description, introduction, and motivation. We can modify the content fro
 ## Build and Run
 
 
+
+## Demonstration
+
+### Training
+
+[qlearning_training.gif] [vpg_training.gif] [vpgnn_training.gif]
+
+(in the same simulation, like cartpole)
+
+
+
+### Simulation
+
+[cartpole-qlearning.gif] [cartpole-vpg.gif] [cartpole-vpgnn.gif]
+
+[pendulum-qlearning.gif] [pendulum-vpg.gif] [pendulum-vpgnn.gif]
+
+[blackjack-qlearning.gif] [blackjack-vpg.gif]
 
 # Conclusion and Future Work
