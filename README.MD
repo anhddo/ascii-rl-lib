@@ -1,6 +1,7 @@
-# Group Members
- Jishuo Yang, Yang Shen, Spencer Ye, Anh Do 
 # Introduction
+
+![Reinforcement Learning](img/Inverted_Pendulum.gif)  
+
 Reinforcement Learning has emerged as a powerful paradigm for solving complex decision-making problems across various domains. Our team is implementing RL algorithms and integrating them with simulation environments. The purpose of this project is to create a Reinforcement Learning library that enables users to train and test various RL algorithms within simulated environments. We implemented key algorithms like Q-learning, Policy Gradient, and Policy Gradient with Neural Network. We integrated with multiple simulation environments, including CartPole, Pendulum, and Blackjack, to verify correctness and robustness. Users will interact via a command-line interface, specifying parameters such as the algorithm, environment, and training configurations. The project is divided into two main components: the RL algorithm library and simulation environment integration, resulting in a comprehensive RL toolkit.
  
 # Implementation
@@ -158,3 +159,6 @@ For future work:
 - More Environments: Integrating more simulations (e.g., Lunar Lander, Atari games, or custom robotics domains).
 - Enhanced Visualization and Monitoring: Improve the graphical interfaces or adding web-based dashboards for monitoring training progress and analyzing policies.
 - Performance Optimization: Explore optimization techniques, parallelization to handle more complex tasks and speed up training.
+
+# Group Members
+ Jishuo Yang, Yang Shen, Spencer Ye, Anh Do 
