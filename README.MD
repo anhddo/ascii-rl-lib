@@ -50,7 +50,7 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
 ```
 It would take a minute or two to complete 300000 episodes, we can obtain a relative good policy. to view the results of the trained q-learning algorithm with the pendulum simulation, you can add the `--render` argument:  
 ```
-dune exec -- ./src/bin/main.exe --episode 3 --model-path data/pendulum.sexp --render
+dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp --render
 ```
 
 ## Demonstration
