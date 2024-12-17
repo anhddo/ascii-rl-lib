@@ -95,5 +95,5 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
     in
     let state, internal_state = Env.reset () in
     loop' episode state internal_state 0.0
-  [@@coverage off]
+  (* [@@coverage off] *)
 end
