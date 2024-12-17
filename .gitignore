@@ -11,6 +11,7 @@
 *.coverage
 *.exe
 *.ps1
+*.ckpt
 
 # ocamlbuild working directory
 _build/
