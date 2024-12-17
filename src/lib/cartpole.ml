@@ -15,14 +15,12 @@ functor
 
     (* Resets the simulation and returns the first response again *)
     let reset () : t * t =
-      if C.render then 
-        begin
-          print_string "\027[2J\027";
-          Printf.printf "\027[1;1H";
-          print_string "[Cartpole] Starting new episode\n";
-          flush stdout;
-          Unix.sleepf 0.5
-        end;
+      if C.render then (
+        print_string "\027[2J\027";
+        Printf.printf "\027[1;1H";
+        print_string "[Cartpole] Starting new episode\n";
+        flush stdout;
+        Unix.sleepf 0.5);
       let min_start = -0.05 in
       let max_start = 0.05 in
       let observation =
@@ -116,7 +114,8 @@ functor
       let reward, steps_past_terminated =
         match (terminated, steps_past_terminated >= 0.) with
         | false, _ -> (1.0, -1.)
-        | true, true -> (0., steps_past_terminated +. 1.) (* shouldn't get here *)
+        | true, true ->
+            (0., steps_past_terminated +. 1.) (* shouldn't get here *)
         | true, false -> (1., 0.)
       in
       let observation =
@@ -139,6 +138,7 @@ functor
 
     (* Remove coverage for our own sake *)
     [@@@coverage off]
+
     let render (sim_state : t) : unit =
       if C.render then
         let term_width = 80 in
@@ -147,7 +147,9 @@ functor
         let track_min = -2.4 in
         let track_max = 2.4 in
         let track_range = track_max -. track_min in
-        let scale_x = float_of_int term_width /. track_range in
+
+        let scale_x = float_of_int term_width /. track_range *. 0.13 in
+        let scale_y = float_of_int term_height /. track_range *. 0.2 in
 
         match sim_state with
         | [
@@ -156,17 +158,16 @@ functor
          pole_angle;
          pole_ang_velocity;
          steps_past_terminated;
-         step;
         ] ->
-            (* Printf.printf "\027[2J\027[H"; *)
+            Printf.printf "\027[2J\027[H";
             let canvas = Array.make_matrix term_height term_width ' ' in
             for i = 0 to term_width - 1 do
               canvas.(pivot_row + 1).(i) <- '-'
             done;
 
-            let cart_col = int_of_float ((cart_x -. track_min) *. scale_x) in
-            let cart_str = "[===]" in
+            let cart_str = "[========]" in
             let cart_len = String.length cart_str in
+            let cart_col = int_of_float ((cart_x -. track_min) *. scale_x) in
             let cart_start =
               max 0 (min (term_width - cart_len) (cart_col - (cart_len / 2)))
             in
@@ -178,23 +179,23 @@ functor
             let pole_length = 1.5 in
             let scale_pole = 5.0 in
 
-            let x0 = cart_start + (cart_len / 2) in
+            let x0 = cart_start + (cart_len / 2) - 1 in
             let y0 = pivot_row in
+
             let pole_x_top =
-              float_of_int x0 +. (sin pole_angle *. scale_pole *. pole_length)
+              float_of_int x0
+              +. (Float.sin pole_angle *. scale_pole *. pole_length *. scale_x)
             in
             let pole_y_top =
-              float_of_int y0 -. (cos pole_angle *. scale_pole *. pole_length)
+              float_of_int y0
+              -. (Float.cos pole_angle *. scale_pole *. pole_length *. scale_y)
             in
 
             let x1 = int_of_float pole_x_top in
             let y1 = int_of_float pole_y_top in
 
-            let pole_char =
-              if pole_angle > 0.1 then '/'
-              else if pole_angle < -0.1 then '\\'
-              else '.'
-            in
+            let ch_end = '|' in
+            let ch_mid = '|' in
 
             let draw_line_with_char x0 y0 x1 y1 ch_end ch_mid =
               let dx = x1 - x0 in
@@ -209,25 +210,28 @@ functor
                     let yi = int_of_float y in
                     if xi >= 0 && xi < term_width && yi >= 0 && yi < term_height
                     then
-                      if i = steps then canvas.(yi).(xi) <- ch_end
-                      else canvas.(yi).(xi) <- ch_mid;
+                      if i = steps then (
+                        canvas.(yi).(xi) <- ch_end;
+                        if xi + 1 < term_width then canvas.(yi).(xi + 1) <- '|')
+                      else (
+                        canvas.(yi).(xi) <- ch_mid;
+                        if xi + 1 < term_width then canvas.(yi).(xi + 1) <- '|');
                     loop (i + 1) (x +. x_increment) (y +. y_increment))
                   else ()
                 in
                 loop 0 (float x0) (float y0)
             in
-            draw_line_with_char x0 y0 x1 y1 'O' pole_char;
 
-            Printf.printf "\027[1;1H";
+            draw_line_with_char x0 y0 x1 y1 ch_end ch_mid;
+
             Printf.printf
               "Cart Position: %f\n\
                Cart Velocity: %f\n\
                Pole Angle (rad): %f\n\
                Pole Angular Velocity: %f\n\
-               Steps Past Terminated: %f\n\n\
-              \               Steps: %d\n"
+               Steps Past Terminated: %f\n"
               cart_x cart_velocity pole_angle pole_ang_velocity
-              steps_past_terminated (int_of_float step);
+              steps_past_terminated;
 
             Array.iter
               (fun row ->
@@ -235,14 +239,14 @@ functor
                 print_newline ())
               canvas;
 
-            Unix.sleepf 0.05;
             flush stdout
-        | _ -> failwith "Invalid simulation state"
+        | _ -> failwith "Invalid state"
 
     let rec simulate (sim_state : t) =
       let action = [ (if Random.bool () then 1. else 0.) ] in
       let response = step sim_state action in
       render response.internal_state;
       simulate response.internal_state
+
     [@@@coverage on]
   end
