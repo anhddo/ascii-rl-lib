@@ -52,7 +52,7 @@ We currently have implemented three classic simulations for actors to train on: 
 ### Cartpole
 ![Cartpole gif](https://gymnasium.farama.org/_images/cart_pole.gif)
 - **Description**:  
-     In this classic control problem, the agent's task is to balance a pole attached to a moving cart. The pole starts in an upright position, and the agent must apply forces to the cart to prevent the pole from falling over
+     In this classic control problem, the agent's task is to balance a pole attached to a moving cart. The pole starts in an random position, and the agent must apply forces to the cart to prevent the pole from falling over
 - **Objective**:  
      Keep the pole balanced for as many time steps as possible without letting it fall or moving the cart out of bounds
 - **Action Space**:
@@ -67,11 +67,11 @@ We currently have implemented three classic simulations for actors to train on: 
 ### Pendulum
 ![Pendulum gif](https://gymnasium.farama.org/_images/pendulum.gif)
 - **Description**:  
-     The pendulum starts in a downward position, and the agent must apply torque to swing it into an upright position and keep it balanced. The action space and dynamics are continuous, requiring fine-grained control.
+     The pendulum starts in a random position, and the agent must apply torque to swing it into an upright position and keep it balanced. The action space and dynamics are continuous, requiring fine-grained control.
 - **Objective**:  
      Minimize the energy required to swing up and balance the pendulum upright while keeping it stable.
 - **Action Space**:
-     **Continuous**: A single scalar representing torque applied to the pendulum.
+     **Continuous**: A single float representing torque applied to the pendulum.
 - **Observation Space**:
     - Pendulum's Angular position (cosine and sine representation for periodicity).
     - Pendulum's angular velocity
@@ -80,13 +80,13 @@ We currently have implemented three classic simulations for actors to train on: 
 ### Blackjack
 ![Blackjack gif](https://gymnasium.farama.org/_images/blackjack.gif)
 - **Description**:  
-     A simulation of the popular card game where the agent learns to make decisions (e.g., hit or stand) based on the state of the game. The environment introduces stochasticity and partial observability, as the agent cannot see all cards in play.
+     A simulation of the popular card game where the agent learns to make decisions (hit or stand) based on the state of the game.
 - **Objective**:  
-     Maximize cumulative rewards by learning an optimal strategy for playing hands against a dealer.
+     Maximize wins by learning an optimal strategy for playing hands against a dealer.
 - **Action Space**:
     - **Discrete**:
         - Hit (draw another card).
-        - Stand (keep the current hand and end the turn).
+        - Stand (keep the current hand and end the turn)
 - **Observation Space**:
     - Current hand value
     - Dealer’s visible card
