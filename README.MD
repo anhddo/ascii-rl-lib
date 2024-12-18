@@ -51,7 +51,7 @@ We currently have implemented three classic simulations for actors to train on: 
 	
 --- 
 ### Cartpole
-
+![Cartpole gif](https://gymnasium.farama.org/_images/cart_pole.gif)
 - **Description**:  
      In this classic control problem, the agent's task is to balance a pole attached to a moving cart. The pole starts in an upright position, and the agent must apply forces to the cart to prevent the pole from falling over
 - **Objective**:  
@@ -66,7 +66,7 @@ We currently have implemented three classic simulations for actors to train on: 
 
 
 ### Pendulum
-
+![Pendulum gif](https://gymnasium.farama.org/_images/pendulum.gif)
 - **Description**:  
      The pendulum starts in a downward position, and the agent must apply torque to swing it into an upright position and keep it balanced. The action space and dynamics are continuous, requiring fine-grained control.
 - **Objective**:  
@@ -79,7 +79,7 @@ We currently have implemented three classic simulations for actors to train on: 
 
 
 ### Blackjack
-
+![Blackjack gif](https://gymnasium.farama.org/_images/blackjack.gif)
 - **Description**:  
      A simulation of the popular card game where the agent learns to make decisions (e.g., hit or stand) based on the state of the game. The environment introduces stochasticity and partial observability, as the agent cannot see all cards in play.
 - **Objective**:  
