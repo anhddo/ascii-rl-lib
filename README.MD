@@ -209,9 +209,9 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
 </div>
 
 <p align="center">
-  <img src="img/training-qlearning.gif" alt="train qlearning" width="100" />
-  <img src="img/training-vpg.gif" alt="train vpg" width="100" />
-  <img src="img/training-vpgnn.gif" alt="train vpgnn" width="100" />
+  <img src="img/training-qlearning.gif" alt="train qlearning" width="200" />
+  <img src="img/training-vpg.gif" alt="train vpg" width="200" />
+  <img src="img/training-vpgnn.gif" alt="train vpgnn" width="200" />
 </p>
 
 <p align="center">
