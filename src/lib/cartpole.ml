@@ -161,7 +161,7 @@ functor
             (* Printf.printf "\027[2J\027[H"; *)
             let canvas = Array.make_matrix term_height term_width ' ' in
             for i = 0 to term_width - 1 do
-              canvas.(pivot_row + 1).(i) <- '-'
+              canvas.(pivot_row).(i) <- '-'
             done;
 
             let cart_col = int_of_float ((cart_x -. track_min) *. scale_x) in
@@ -181,7 +181,7 @@ functor
             let x0 = cart_start + (cart_len / 2) in
             let y0 = pivot_row in
             let pole_x_top =
-              float_of_int x0 +. (sin pole_angle *. scale_pole *. pole_length)
+              float_of_int x0 +. (sin pole_angle *. scale_pole *. pole_length *. 2.)
             in
             let pole_y_top =
               float_of_int y0 -. (cos pole_angle *. scale_pole *. pole_length)
