@@ -25,7 +25,7 @@ In our implementation, the reinforcement learning algorithms and simulations int
 ## Overview
 The purpose of our simulations is to provide environments, also called _situations_, where reinforcement learning (RL) algorithms can train and evaluate their performance. These simulations serve as controlled, reproducible benchmarks to test the capabilities of various RL methods.
 
-These simulations take a discrete action from the reinforcement learning algorithm, called the _actor_, update its state, while also returning a reward for the actor's actions as it relates to the state.
+These simulations take an action from the reinforcement learning algorithm, called the _actor_, update its state, while also returning a reward for the actor's actions as it relates to the state.
 
 >Our simulations do not store their own state, as that is not good functional programming. Rather they take in a record as a parameter that represents the state, and returns a similar record
 
@@ -42,7 +42,6 @@ We currently have implemented three classic simulations for actors to train on: 
 - Simulations can be rendered through the command line. We chose this approach because:
 	- **Minimalism**: High-fidelity graphics are unnecessary for understanding the agents' interactions in these environments
 	- **Lightweight**: By avoiding graphical libraries, we minimize external dependencies, making the library easier to install and more portable
-	- **Debugging-Friendly**: Command-line outputs facilitate quick debugging and analysis without requiring a graphical interface
 	
 #### Modular Design
 - The simulations are designed with modularity in mind. Users can:
