@@ -25,10 +25,10 @@ The figure below shows the architecture of our library.
 ### Dependent Library
 
 - `core`
--  `core_unix`
--  `bisect_ppx`
--  `ounit2`
--  `torch` 
+- `core_unix`
+- `bisect_ppx`
+- `ounit2`
+- `torch` 
 
 ### **Torch Library**
 
@@ -193,9 +193,11 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
 
 ### Training
 
-[qlearning_training.gif] [vpg_training.gif] [vpgnn_training.gif]
+![train qlearning](img/training-qlearning.gif)
 
-(in the same simulation, like cartpole)
+![train qlearning](img/training-vpg.gif)
+
+![train qlearning](img/training-vpgnn.gif)
 
 
 
