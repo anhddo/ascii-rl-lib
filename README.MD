@@ -119,6 +119,34 @@ For more details, see [Q-Learning](https://en.wikipedia.org/wiki/Q-learning).
 
 
 ## Policy Gradient
+
+Policy Gradient is a reinforcement learning algorithm that directly optimizes the policy function:
+
+$$ \pi_\theta(a \mid s) $$
+
+This function represents the probability of taking action `a` in state `s`. Unlike value-based methods such as Q-Learning, Policy Gradient focuses on learning a parameterized policy that works in both discrete and continuous action spaces.
+
+The objective is to maximize the expected cumulative reward by adjusting the policy parameters $\theta$. In this project, Vanilla Policy Gradient (VPG) is implemented, which is one form of Policy Gradient and update policy with Reward. The gradient of the objective is computed using the following formula:
+
+$$
+\nabla_\theta J(\theta) = \mathbb{E}\big[ \nabla_\theta \log \pi_\theta(a_t \mid s_t) \cdot R_t \big]
+$$
+
+Where:
+- $\pi_\theta(a_t \mid s_t)$: The policy function, representing the probability of taking action $a_t$ in state $s_t$.
+- $R_t$: The cumulative reward, calculated as:
+
+$$
+R_t = \sum_{k=0}^\infty \gamma^k r_{t+k}
+$$
+
+Here:
+- $\gamma$: The discount factor, which determines the importance of future rewards.
+- $r_{t+k}$: The reward received at step $t+k$.
+
+For more details, see [Policy Gradient](https://spinningup.openai.com/en/latest/algorithms/vpg.html).
+
+
 ## Policy Gradient with Neural Network
 
 
