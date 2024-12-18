@@ -200,7 +200,7 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
 </p>
 
 <p align="center">
-  Training QLearning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Training VPG &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Training VPGNN
+  Training QLearning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Training VPG &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Training VPGNN
 </p>
 
 
