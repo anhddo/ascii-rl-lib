@@ -213,7 +213,7 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
 
 <p align="center">
   <img src="img/cartpole-qlearning.gif" alt="train qlearning" width="270" />
-  <img src="img/cartpole-vpg.gif" alt="train vpg" width="270" />
+  <img src="img/cartpole_vpg.gif" alt="train vpg" width="270" />
   <img src="img/cartpole-vpgnn.gif" alt="train vpgnn" width="270" />
 </p>
 
