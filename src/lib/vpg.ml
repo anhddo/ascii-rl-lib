@@ -91,9 +91,7 @@ include Algo_config
       
   (*train model*)
   let train () =
-    let learning_rate = 0.01 in
     let max_steps = 250 in
-    let gamma = 0.99 in
     for _episode = 1 to episode do
       let state, internal_state = Env.reset () in
       let state_bin = State_action_env.convert_state_to_bin state in
@@ -123,7 +121,7 @@ include Algo_config
           let rewards = reward :: rewards in
           if is_done || truncated then (
             let updated_trajectories = update_trajectories trajectories rewards gamma in
-          update_parameters updated_trajectories learning_rate;
+            update_parameters updated_trajectories learning_rate;
             let total_reward = List.fold_left (+.) 0.0 rewards in
             Printf.printf "Episode %d: Total Reward: %f\n%!" _episode total_reward
           )
