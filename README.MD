@@ -213,12 +213,23 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
 
 <p align="center">
   <img src="img/cartpole-qlearning.gif" alt="train qlearning" width="270" />
-  <img src="img/cartpole_vpg.gif" alt="train vpg" width="270" />
+  <img src="img/cartpole-vpg.gif" alt="train vpg" width="270" />
   <img src="img/cartpole-vpgnn.gif" alt="train vpgnn" width="270" />
 </p>
 
+
 <p align="center">
   Cartpole-QLearning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cartpole-VPG &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cartpole-VPGNN
+</p>
+
+<p align="center">
+  <img src="img/pendulum-qlearning.gif" alt="train qlearning" width="270" />
+  <img src="img/pendulum-vpg.gif" alt="train vpg" width="270" />
+  <img src="img/pendulum-vpgnn.gif" alt="train vpgnn" width="270" />
+</p>
+
+<p align="center">
+  Pendulum-QLearning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pendulum-VPG &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pendulum-VPGNN
 </p>
 
 
