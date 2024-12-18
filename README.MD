@@ -213,7 +213,9 @@ Explaination for basic parameters:
 - algo: Specify the algorithm (e.g., qlearning, vpg, vpgnn).
 - simulation: Specify the simulation environment (e.g., pendulum, cartpole, blackjack).
 - episode: The number of training episodes to run.
-- model-path: The file path for saving/loading the model
+- learning_rate: learning rate for the algorithm.
+- gamma: discount factor.
+- model-path: The file path for saving/loading the model.
 - render: Whether to render the simulation during training.
 
 To train a Model, For example, to train a q-learning algorithm with the pendulum simulation for 300000 episodes, you can run the following command:  
