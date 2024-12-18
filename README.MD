@@ -208,23 +208,23 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
   </div>
 </div>
 
-<p align="center" style="display: flex; justify-content: center; gap: 10px;">
-  <span style="text-align: center;">
-    <img src="img/training-qlearning.gif" alt="train qlearning" width="100" />
-    <br />
-    Training QLearning
-  </span>
-  <span style="text-align: center;">
-    <img src="img/training-vpg.gif" alt="train vpg" width="100" />
-    <br />
-    Training VPG
-  </span>
-  <span style="text-align: center;">
-    <img src="img/training-vpgnn.gif" alt="train vpgnn" width="100" />
-    <br />
-    Training VPGNN
-  </span>
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="img/training-qlearning.gif" alt="train qlearning" width="100" /><br />
+      Training QLearning
+    </td>
+    <td align="center">
+      <img src="img/training-vpg.gif" alt="train vpg" width="100" /><br />
+      Training VPG
+    </td>
+    <td align="center">
+      <img src="img/training-vpgnn.gif" alt="train vpgnn" width="100" /><br />
+      Training VPGNN
+    </td>
+  </tr>
+</table>
+
 
 
 
