@@ -121,7 +121,7 @@ include Algo_config
           let rewards = reward :: rewards in
           if is_done || truncated then (
             let updated_trajectories = update_trajectories trajectories rewards gamma in
-          update_parameters updated_trajectories learning_rate;
+            update_parameters updated_trajectories learning_rate;
             let total_reward = List.fold_left (+.) 0.0 rewards in
             Printf.printf "Episode %d: Total Reward: %f\n%!" _episode total_reward
           )
