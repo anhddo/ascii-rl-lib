@@ -1,8 +1,8 @@
-# Introduction
+# RLlib
 
 ![Reinforcement Learning](img/Inverted_Pendulum.gif)  
 
-Reinforcement Learning has emerged as a powerful paradigm for solving complex decision-making problems across various domains. Our team is implementing RL algorithms and integrating them with simulation environments. The purpose of this project is to create a Reinforcement Learning library that enables users to train and test various RL algorithms within simulated environments. We implemented key algorithms like Q-learning, Policy Gradient, and Policy Gradient with Neural Network. We integrated with multiple simulation environments, including CartPole, Pendulum, and Blackjack, to verify correctness and robustness. Users will interact via a command-line interface, specifying parameters such as the algorithm, environment, and training configurations. The project is divided into two main components: the RL algorithm library and simulation environment integration, resulting in a comprehensive RL toolkit.
+RLlib is a library that allows users to have a quick prototype of machine learning algorithms to solve games and other decision making problems. The library is implemented in OCaml, a functional programming language that is known for its strong type system and expressive syntax. The library is designed to be modular and extensible, allowing users to easily swap out different algorithms and simulation environments. The library currently supports three classic simulations: Cartpole, Pendulum, and Blackjack. The library also supports three reinforcement learning algorithms: Q-Learning, Policy Gradient, and Policy Gradient with Neural Network. The library is designed to be easy to use and understand, with a command-line interface that allows users to specify the algorithm, simulation environment, and training configurations.  
  
 # Implementation
 ## Interaction protocol.
@@ -13,8 +13,12 @@ In our implementation, the reinforcement learning algorithms and simulations int
 - **Step**: Represents the transition from one state to another based on the action taken by the reinforcement learning algorithm. It is a function that updates the state of the simulation environment and returns the reward for the action taken.
 - **Episode**: Represents a sequence of steps that occur from the initial state to a terminal state. It is a function that executes multiple steps until a terminal condition is met, such as reaching a maximum number of steps or a specific goal.
 
-![Picture Showing Simulations](https://images.spiceworks.com/wp-content/uploads/2022/09/29100907/Reinforcement-Learning-Model.png)
+![Picture Showing Simulations](img/protocol.png)
 ## Architecture
+The figure below shows the architecture of our library. 
+
+![architecture](img/architecture.png)
+
 
 ## Libraries
 
@@ -94,6 +98,14 @@ We currently have implemented three classic simulations for actors to train on: 
 
 # Algorithms
 ## Q-Learning
+Q-Learning is a model-free reinforcement learning algorithm that learns the value of an action in a particular state. The algorithm uses a Q-table to store the value of each action in each state. During training, the agent explores the environment by taking actions and updating the Q-table based on the rewards received. The Q-table is updated using the Bellman equation, which estimates the value of an action based on the immediate reward and the estimated value of the next state. Over time, the agent learns the optimal policy by selecting the action with the highest Q-value in each state.
+
+The update rule:
+$$Q(s, a) = Q(s, a) + \alpha \cdot (r + \gamma \cdot \max_{a'} Q(s', a') - Q(s, a))$$
+
+For more details, see [Q-Learning](https://en.wikipedia.org/wiki/Q-learning).
+
+
 ## Policy Gradient
 ## Policy Gradient with Neural Network
 
