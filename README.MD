@@ -35,16 +35,16 @@ We currently have implemented three classic simulations for actors to train on: 
 --- 
 ## Key Features
 
-##### Simplicity and Reproducibility
+#### Simplicity and Reproducibility
 - The environments are intentionally simple to ensure that results can be easily interpreted and replicated across different experiments. This simplicity allows users to focus on algorithmic performance without distractions caused by overly complex environments
 	
-##### Command-Line Rendering
+#### Command-Line Rendering
 - Simulations can be rendered through the command line. We chose this approach because:
 	- **Minimalism**: High-fidelity graphics are unnecessary for understanding the agents' interactions in these environments
 	- **Lightweight**: By avoiding graphical libraries, we minimize external dependencies, making the library easier to install and more portable
 	- **Debugging-Friendly**: Command-line outputs facilitate quick debugging and analysis without requiring a graphical interface
 	
-##### Modular Design
+#### Modular Design
 - The simulations are designed with modularity in mind. Users can:
 	- Swap out environments with minimal code changes
 	- Extend or create new simulations tailored to their specific needs
