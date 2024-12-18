@@ -193,12 +193,6 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
 
 ### Training
 
-![train qlearning](img/training-qlearning.gif)
-
-![train qlearning](img/training-vpg.gif)
-
-![train qlearning](img/training-vpgnn.gif)
-
 <div style="display: flex; justify-content: center; gap: 10px; white-space: nowrap; align-items: center;">
   <div style="text-align: center; width: 30%;">
     <img src="img/training-qlearning.gif" alt="train qlearning" style="width: 100%;" />
@@ -214,6 +208,23 @@ dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
   </div>
 </div>
 
+<p align="center" style="display: flex; justify-content: center; gap: 10px;">
+  <span style="text-align: center;">
+    <img src="img/training-qlearning.gif" alt="train qlearning" width="300" />
+    <br />
+    Training QLearning
+  </span>
+  <span style="text-align: center;">
+    <img src="img/training-vpg.gif" alt="train vpg" width="300" />
+    <br />
+    Training VPG
+  </span>
+  <span style="text-align: center;">
+    <img src="img/training-vpgnn.gif" alt="train vpgnn" width="300" />
+    <br />
+    Training VPGNN
+  </span>
+</p>
 
 
 
