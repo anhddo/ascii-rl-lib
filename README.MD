@@ -218,11 +218,11 @@ Explaination for basic parameters:
 
 To train a Model, For example, to train a q-learning algorithm with the pendulum simulation for 300000 episodes, you can run the following command:  
 ```
-dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp
+dune exec -- ./src/bin/main.exe --episode 300000 --model-path model/pendulum_qlearning.sexp --learning-rate 0.1 --gamma 0.99 --algo qlearning --simulation pendulum 
 ```
 It would take a minute or two to complete 300000 episodes, we can obtain a relative good policy. to view the results of the trained q-learning algorithm with the pendulum simulation, you can add the `--render` argument:  
 ```
-dune exec -- ./src/bin/main.exe --episode 300000 --model-path data/pendulum.sexp --render
+dune exec -- ./src/bin/main.exe --episode 300000 --model-path model/pendulum_qlearning.sexp --learning-rate 0.1 --gamma 0.99 --algo qlearning --simulation pendulum --render
 ```
 
 ## Demonstration
