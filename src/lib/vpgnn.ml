@@ -127,9 +127,9 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
 
   (*train model*)
   let train () =
-    let learning_rate = 0.01 in
+    (* let learning_rate = 0.01 in *)
     let max_steps = 250 in
-    let gamma = 0.7 in
+    (* let gamma = 0.7 in *)
     let optimizer = Optimizer.adam model.var_store ~learning_rate in
     for _episode = 1 to episode do
       let state, internal_state = Env.reset () in
