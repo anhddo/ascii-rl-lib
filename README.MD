@@ -149,6 +149,20 @@ For more details, see [Policy Gradient](https://spinningup.openai.com/en/latest/
 
 ## Policy Gradient with Neural Network
 
+In contrast to the standard Policy Gradient, which represents the policy $\pi_\theta(a \mid s)$ with parameterized weights or a table, Policy Gradient with Neural Network (PGNN) uses a neural network to parameterize the policy. This allows the algorithm to handle large or continuous state-action spaces effectively.
+
+Instead of directly associating parameters with actions, the neural network takes the state $s$ as input and outputs a probability distribution over actions. This is particularly useful in environments with complex or high-dimensional state spaces. The neural network outputs logits, which are transformed into probabilities using the softmax function. Actions are then sampled from this distribution.
+
+The policy is updated by backpropagating the gradient of the cumulative reward-weighted log-probabilities through the network. This is achieved by optimizing the following objective:
+
+$$
+\mathcal{L}(\theta) = -\mathbb{E}\big[ \log \pi_\theta(a_t \mid s_t) \cdot R_t \big]
+$$
+
+### Key Benefits
+- **Scalability**: Neural networks allow the policy to generalize across large or continuous state spaces.
+- **Representation Power**: Neural networks can capture complex, non-linear relationships between states and actions.
+- **Efficiency**: Parameter sharing in the network significantly reduces memory requirements compared to table-based representations.
 
 
 # How to run
