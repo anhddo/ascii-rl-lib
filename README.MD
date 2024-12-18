@@ -205,10 +205,6 @@ P.S. `Torch` installation refers to: [OCaml-torch user thread](https://courselor
 
 ## Build and Run
 
-make sure you have created a data folder at the root dictory by:
-```
-mkdir data
-```
 To build the project from the root directory:
 ```
 dune clean; dune build
