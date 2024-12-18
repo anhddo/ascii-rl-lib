@@ -1,0 +1,14 @@
+(lang dune 3.16)
+(generate_opam_files true)
+(authors "Anh Do" "Jishuo Yang" "Yang Shen" "Spencer Ye")
+(maintainers anhddo93@gmail.com)
+(package
+ (name rllib)
+ (allow_empty)
+ (synopsis "An OCaml Reinforcement Learning library that enables users to train and test various RL algorithms within simulated environments.")
+ (description "Our project focuses on creating a comprehensive Reinforcement Learning (RL) toolkit in OCaml, enabling users to train and test RL algorithms within simulated environments. The toolkit supports key algorithms, including Q-Learning, Vanilla Policy Gradient, and Policy Gradient with Neural Networks. To validate their performance, we integrated three classic simulations: CartPole, Pendulum, and Blackjack, each offering unique challenges for reinforcement learning agents.")
+ (depends
+  (ounit2 (>= 2.2.7))
+  (core (>= 0.17.1))
+  (torch (>= 0.17))
+))
