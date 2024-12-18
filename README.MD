@@ -3,7 +3,7 @@
 ![Reinforcement Learning](img/Inverted_Pendulum.gif)  
 
 RLlib is a library that allows users to have a quick prototype of machine learning algorithms to solve games and other decision making problems. The library is implemented in OCaml, a functional programming language that is known for its strong type system and expressive syntax. The library is designed to be modular and extensible, allowing users to easily swap out different algorithms and simulation environments. The library currently supports three classic simulations: Cartpole, Pendulum, and Blackjack. The library also supports three reinforcement learning algorithms: Q-Learning, Policy Gradient, and Policy Gradient with Neural Network. The library is designed to be easy to use and understand, with a command-line interface that allows users to specify the algorithm, simulation environment, and training configurations.  
- 
+
 # Implementation
 ## Interaction protocol.
 In our implementation, the reinforcement learning algorithms and simulations interact through a well-defined interface. This interface allows the algorithms to interact with the simulations in a consistent manner, regardless of the specific simulation environment. The interface consists of the following key components:
@@ -36,7 +36,7 @@ These simulations take an action from the reinforcement learning algorithm, call
 
 We currently have implemented three classic simulations for actors to train on: Cartpole, Pendulum, and Blackjack. Descriptions of each are below.
 
---- 
+---
 ## Key Features
 
 #### Simplicity and Reproducibility
@@ -52,7 +52,7 @@ We currently have implemented three classic simulations for actors to train on: 
 	- Swap out environments with minimal code changes
 	- Extend or create new simulations tailored to their specific needs
 	
---- 
+---
 ### Cartpole
 ![Cartpole gif](https://gymnasium.farama.org/_images/cart_pole.gif)
 - **Description**:  
@@ -117,9 +117,42 @@ For more details, see [Q-Learning](https://en.wikipedia.org/wiki/Q-learning).
 
 [Yang Shen] How to build environment using opam. How to install all libraries, including torch.
 
+### Prerequisites
 
+Before proceeding, ensure you have the following installed on your system:
+
+- Opam (version 2.1 or higher)
+- Python (version: `3.10–3.12` recommended, with `torch==2.3`)
+
+### OCaml Environment
+
+Create opam environment with Ocaml version - 5.1.1.
+
+```bash
+opam switch create RLlib ocaml-base-compiler.5.1.1
+opam switch RLlib
+eval $(opam env)
+```
+
+### Install Dependencies
+
+Install dependent libraries with the following commands.
+
+```
+opam install core core_unix bisect_ppx ounit2
+LIBTORCH=<path/to/you/python/site-package>/torch/ opam pin torch https://github.com/arbipher/torch.git#fix-macos
+```
+
+The following command can help to obtain `<path/to/you/python/site-package>/torch/`
+
+```bash
+python -c "import torch; print(torch.__path__[0])"
+```
+
+P.S. `Torch` installation refers to: [OCaml-torch user thread](https://courselore.org/courses/9034692226/conversations/164)
 
 ## Build and Run
+
 make sure you have created a data folder at the root dictory by:
 ```
 mkdir data
