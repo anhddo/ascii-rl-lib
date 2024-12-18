@@ -22,7 +22,19 @@ The figure below shows the architecture of our library.
 
 ## Libraries
 
-[Yang Shen] Mentioned all the dependent libraries. Decribe ocaml-torch.
+### Dependent Library
+
+- `core`
+-  `core_unix`
+-  `bisect_ppx`
+-  `ounit2`
+-  `torch` 
+
+### **Torch Library**
+
+The `torch` library in OCaml provides bindings to the LibTorch C++ API, which is the core of PyTorch. It enables machine learning and deep learning capabilities directly in OCaml, including tensor operations, model training, and GPU acceleration (if supported by the underlying system). This library is particularly useful for integrating PyTorch's powerful features into OCaml-based workflows.
+
+For more details, see [ocaml-torch](https://github.com/LaurentMazare/ocaml-torch).
 
 # Simulations
 
@@ -115,7 +127,7 @@ For more details, see [Q-Learning](https://en.wikipedia.org/wiki/Q-learning).
 
 ## Environment
 
-[Yang Shen] How to build environment using opam. How to install all libraries, including torch.
+**Note**: Only the Torch installation part is macOS-specific; all other steps are platform-independent. For other platforms, the Torch installation needs to be adjusted accordingly.
 
 ### Prerequisites
 
