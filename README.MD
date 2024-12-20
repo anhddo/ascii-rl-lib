@@ -2,7 +2,7 @@
 
 ![Reinforcement Learning](img/Inverted_Pendulum.gif)  
 
-RLlib is a library that allows users to have a quick prototype of machine learning algorithms to solve games and other decision making problems. The library is implemented in OCaml, a functional programming language that is known for its strong type system and expressive syntax. The library is designed to be modular and extensible, allowing users to easily swap out different algorithms and simulation environments. The library currently supports three classic simulations: Cartpole, Pendulum, and Blackjack. The library also supports three reinforcement learning algorithms: Q-Learning, Policy Gradient, and Policy Gradient with Neural Network. The library is designed to be easy to use and understand, with a command-line interface that allows users to specify the algorithm, simulation environment, and training configurations.  
+RLlib is a library that allows users to have a quick prototype of machine learning algorithms to solve games/control tasks. The library is implemented in OCaml, a functional programming language that is known for its strong type system and expressive syntax. The library is designed to be modular and extensible, allowing users to easily swap out different algorithms and simulation environments. The library currently supports three classic simulations: Cartpole, Pendulum, and Blackjack. The library also supports three reinforcement learning algorithms: Q-Learning, Policy Gradient, and Policy Gradient with Neural Network. 
 
 ## Demonstration
 
