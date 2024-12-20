@@ -1,4 +1,4 @@
-# RLlib
+# ascii-rl-lib
 
 ![Reinforcement Learning](img/Inverted_Pendulum.gif)  
 
@@ -294,4 +294,5 @@ For future work:
 - Performance Optimization: Explore optimization techniques, parallelization to handle more complex tasks and speed up training.
 
 # Group Members
- Jishuo Yang, Yang Shen, Spencer Ye, Anh Do 
+ Jishuo Yang, Yang Shen, Spencer Ye, Anh Do.  
+ Project for [601.429/629, Functional programming](https://pl.cs.jhu.edu/fpse/) at Johns Hopkins University.
