@@ -36,7 +36,7 @@ module Make (Algo_config : Algo_config) (Env : Simulation.S) = struct
            (Core.Array.sexp_of_t Core.Float.sexp_of_t)
            q_table)
     in
-    Core_unix.mkdir_p (Core.Filename.dirname file_path);
+    (* Sys.mkdir (Core.Filename.dirname file_path); *)
     Core.Out_channel.write_all file_path ~data:sexp_str
 
   let save_model () = save_model' model_path

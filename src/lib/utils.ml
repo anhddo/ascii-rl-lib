@@ -1,9 +1,9 @@
-open Torch
+(* open Torch
 
 type nn_model = {
   var_store : Var_store.t;
   forward : Tensor.t -> Tensor.t;
-}
+} *)
 
 let argmax (arr : 'a list) ~(compare : 'a -> 'a -> int) ~(init : 'a) : int =
   let rec loop' (arr : 'a list) (max : 'a) (index : int) (i : int) =

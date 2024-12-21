@@ -76,10 +76,10 @@ let () =
            | "qlearning" ->
                (module Qlearning.Make (Algo_config) (Sim)
                : Base_algorithm.Algo_base)
-           | "vpg" ->
+           (* | "vpg" ->
                (module Vpg.Make (Algo_config) (Sim) : Base_algorithm.Algo_base)
            | "vpgnn" ->
-               (module Vpgnn.Make (Algo_config) (Sim) : Base_algorithm.Algo_base)
+               (module Vpgnn.Make (Algo_config) (Sim) : Base_algorithm.Algo_base) *)
            | _ -> failwith "Unknown algorithm")
   end in
   Algo.train ();

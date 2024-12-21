@@ -1,9 +1,3 @@
-open Torch
-
-type nn_model = {
-  var_store : Var_store.t;
-  forward : Tensor.t -> Tensor.t;
-}
 
 val argmax : 'a list -> compare:('a -> 'a -> int) -> init:'a -> int
 

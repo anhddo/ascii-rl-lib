@@ -1,18 +1,18 @@
 (executable
  (name main)
- (libraries qlearning vpg vpgnn core pendulum base_algorithm))
+ (libraries qlearning core pendulum base_algorithm))
 
-(executable
- (name pendulum_main)
- (modules pendulum_main)
- (libraries pendulum core unix))
+; (executable
+;  (name pendulum_main)
+;  (modules pendulum_main)
+;  (libraries pendulum core unix))
 
-(executable
- (name blackjack_main)
- (modules blackjack_main)
- (libraries blackjack core unix))
+; (executable
+;  (name blackjack_main)
+;  (modules blackjack_main)
+;  (libraries blackjack core unix))
 
-(executable
- (name cartpole_main)
- (modules cartpole_main)
- (libraries cartpole))
+; (executable
+;  (name cartpole_main)
+;  (modules cartpole_main)
+;  (libraries cartpole))

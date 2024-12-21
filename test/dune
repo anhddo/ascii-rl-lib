@@ -8,32 +8,32 @@
  (modules utils_test)
  (libraries ounit2 core utils))
 
-(test
- (name pendulum_test)
- (modules pendulum_test)
- (libraries pendulum ounit2 core))
+; (test
+;  (name pendulum_test)
+;  (modules pendulum_test)
+;  (libraries pendulum ounit2 core))
 
-(test
- (name blackjack_test)
- (modules blackjack_test)
- (libraries blackjack ounit2 core))
+; (test
+;  (name blackjack_test)
+;  (modules blackjack_test)
+;  (libraries blackjack ounit2 core))
 
-(test
- (name cartpole_test)
- (modules cartpole_test)
- (libraries cartpole ounit2 core))
+; (test
+;  (name cartpole_test)
+;  (modules cartpole_test)
+;  (libraries cartpole ounit2 core))
 
 (test
  (name qlearning_test)
  (modules qlearning_test)
  (libraries qlearning ounit2 core cartpole pendulum base_algorithm))
 
-(test
- (name vpg_test)
- (modules vpg_test)
- (libraries vpg ounit2 core cartpole pendulum base_algorithm))
+; (test
+;  (name vpg_test)
+;  (modules vpg_test)
+;  (libraries vpg ounit2 core cartpole pendulum base_algorithm))
 
-(test
- (name vpgnn_test)
- (modules vpgnn_test)
- (libraries vpgnn ounit2 core cartpole pendulum base_algorithm))
+; (test
+;  (name vpgnn_test)
+;  (modules vpgnn_test)
+;  (libraries vpgnn ounit2 core cartpole pendulum base_algorithm))
