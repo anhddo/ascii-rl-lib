@@ -66,7 +66,6 @@ let () =
       (val match Sim_env.simulation_name with
            | "pendulum" -> (module Pendulum.Make (Sim_env) : Simulation.S)
            | "cartpole" -> (module Cartpole.Make (Sim_env) : Simulation.S)
-           | "blackjack" -> (module Blackjack.Make (Sim_env) : Simulation.S)
            | _ -> failwith "Unknown simulation")
   end in
   (* Choose the algorithm modules *)
@@ -76,10 +75,6 @@ let () =
            | "qlearning" ->
                (module Qlearning.Make (Algo_config) (Sim)
                : Base_algorithm.Algo_base)
-           (* | "vpg" ->
-               (module Vpg.Make (Algo_config) (Sim) : Base_algorithm.Algo_base)
-           | "vpgnn" ->
-               (module Vpgnn.Make (Algo_config) (Sim) : Base_algorithm.Algo_base) *)
            | _ -> failwith "Unknown algorithm")
   end in
   Algo.train ();

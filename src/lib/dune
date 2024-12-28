@@ -22,7 +22,7 @@
 (library
  (name base_algorithm)
  (modules base_algorithm)
- (libraries core simulation pendulum cartpole blackjack)
+ (libraries core simulation pendulum cartpole)
  (preprocess
   (pps bisect_ppx)))
 
@@ -54,12 +54,6 @@
  (preprocess
   (pps bisect_ppx)))
 
-(library
- (name blackjack)
- (modules blackjack)
- (libraries utils core unix simulation)
- (preprocess
-  (pps bisect_ppx)))
 
 (library
  (name simulation)
@@ -67,8 +61,3 @@
  (libraries core unix)
  (preprocess
   (pps bisect_ppx)))
-
-; (library
-;  (name gym_env)
-;  (modules gym_env)
-;  (libraries core pyml simulation pendulum))
