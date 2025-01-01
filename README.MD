@@ -276,19 +276,3 @@ It would take a minute or two to complete 300000 episodes, we can obtain a relat
 ```
 dune exec -- ./src/bin/main.exe --episode 300000 --model-path model/pendulum_qlearning.sexp --learning-rate 0.1 --gamma 0.99 --algo qlearning --simulation pendulum --render
 ```
-
-
-
-
-
-
-
-
-# Conclusion and Future Work
-Our project demonstrates the implementation of key RL algorithms—Q-Learning, Vanilla Policy Gradient, and Policy Gradient with Neural Networks—within OCaml codebase. By integrating these algorithms with diverse simulation environments, we have shown that our approach is both versatile and extensible. The use of functors and well-defined interfaces makes it straightforward to incorporate new algorithms or simulation engines. Our toolkit serves as a practical platform for experimenting with RL ideas.
-
-For future work:
-- Additional Algorithms: Expand the algorithm library to include Actor-Critic methods, PPO, DQN variations, or advanced algorithms like Soft Actor-Critic.
-- More Environments: Integrating more simulations (e.g., Lunar Lander, Atari games, or custom robotics domains).
-- Enhanced Visualization and Monitoring: Improve the graphical interfaces or adding web-based dashboards for monitoring training progress and analyzing policies.
-- Performance Optimization: Explore optimization techniques, parallelization to handle more complex tasks and speed up training.
