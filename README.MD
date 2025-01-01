@@ -292,7 +292,3 @@ For future work:
 - More Environments: Integrating more simulations (e.g., Lunar Lander, Atari games, or custom robotics domains).
 - Enhanced Visualization and Monitoring: Improve the graphical interfaces or adding web-based dashboards for monitoring training progress and analyzing policies.
 - Performance Optimization: Explore optimization techniques, parallelization to handle more complex tasks and speed up training.
-
-# Group Members
- Jishuo Yang, Yang Shen, Spencer Ye, Anh Do.  
- Project for [601.429/629, Functional programming](https://pl.cs.jhu.edu/fpse/) at Johns Hopkins University.
